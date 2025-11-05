@@ -26,7 +26,7 @@ export default function WelcomeScreen() {
         onPress={() => router.replace("/(onboarding)/role-selection")}
         className="w-full items-end"
       >
-        <ThemedText variant="h50">Skip</ThemedText>
+        <ThemedText variant="h300">Skip</ThemedText>
       </TouchableOpacity>
 
       {/* Swiper */}
@@ -39,13 +39,16 @@ export default function WelcomeScreen() {
         onIndexChanged={(index) => setActiveIndex(index)}
       >
         {onboardingData.map((item) => (
-          <View key={item.id} className="flex-1 items-center justify-center px-6 pb-10">
+          <View key={item.id} className="gap- flex-1 items-center justify-center gap-5">
             <Image source={item.image} className="h-[320px] w-[320px]" resizeMode="contain" />
-            <Text className="mt-10 text-center font-puffin-bold text-h700 text-dodger-blue-500">
-              {item.title}
-            </Text>
-            <ThemedText variant="h200">{item.subtitle}</ThemedText>
-            <Text className="text-center text-h500 text-neutral-600">{item.subtitle}</Text>
+            <View>
+              <ThemedText variant="h700" color="primary" className="text-center">
+                {item.title}
+              </ThemedText>
+              <ThemedText variant="h400" color="secondary" className="text-center">
+                {item.subtitle}
+              </ThemedText>
+            </View>
           </View>
         ))}
       </Swiper>
@@ -55,9 +58,9 @@ export default function WelcomeScreen() {
         onPress={handleNext}
         className="mx-auto mb-8 w-11/12 rounded-2xl bg-dodger-blue-600 py-4"
       >
-        <Text className="text-center font-puffin-semibold text-h500 text-white">
+        <ThemedText variant="h400" color="primary" className="text-center">
           {isLastSlide ? "Get Started" : "Next"}
-        </Text>
+        </ThemedText>
       </TouchableOpacity>
     </SafeAreaContainer>
   );
