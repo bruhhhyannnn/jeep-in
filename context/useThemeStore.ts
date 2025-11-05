@@ -21,7 +21,8 @@ export const useThemeStore = create<ThemeState>((set) => ({
     }),
 
   setTheme: (theme) => {
-    colorScheme.set(theme === "system" ? (Appearance.getColorScheme() as Theme) : theme);
+    const resolvedTheme = theme === "system" ? (Appearance.getColorScheme() as Theme) : theme;
+    colorScheme.set(resolvedTheme);
     set({ theme });
   },
 }));

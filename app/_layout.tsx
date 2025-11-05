@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
+import { Appearance } from "react-native";
 import { useThemeStore } from "@/context/useThemeStore";
-import { colorScheme } from "nativewind";
 
 export default function RootLayout() {
-  const { theme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
 
   const [fontsLoaded] = useFonts({
     "Puffin-Regular": require("../assets/fonts/Puffin-Regular.otf"),
@@ -19,10 +19,17 @@ export default function RootLayout() {
     "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
 
+  // Load theme
   useEffect(() => {
-    colorScheme.set(theme);
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      if (theme === "system") {
+        setTheme("system");
+      }
+    });
+    return () => subscription.remove();
   }, [theme]);
 
+  // Load fonts
   useEffect(() => {
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded]);
