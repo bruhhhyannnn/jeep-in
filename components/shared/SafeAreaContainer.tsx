@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
-import { ThemedView } from "@/components/shared";
+import ThemedView from "@/components/shared/ThemedView";
 
 export default function SafeAreaContainer({
   className,

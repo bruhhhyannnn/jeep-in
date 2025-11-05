@@ -1,14 +1,15 @@
 import { TouchableOpacity } from "react-native";
 import { cn } from "@/lib/utils";
-import { ThemedText, Icon } from "@/components/shared";
+import ThemedText from "@/components/shared/ThemedText";
+import Icon from "@/components/shared/Icon";
 
 type ButtonTextProps = {
   label: string;
   onPress: () => void;
   variant?: "primary" | "secondary"; // secondary = cancel
   iconName?: string;
-  fullWidth?: boolean;
   disabled?: boolean;
+  showChevron?: boolean;
 };
 
 export default function ButtonText({
@@ -16,18 +17,18 @@ export default function ButtonText({
   onPress,
   variant = "primary",
   iconName,
-  fullWidth = true,
   disabled = false,
+  showChevron = false,
 }: ButtonTextProps) {
   const baseStyle =
-    "flex-row items-center justify-center gap-2 rounded-full py-4 active:opacity-70";
+    "w-full mx-auto flex-row items-center gap-2 rounded-full px-6 py-4 active:opacity-70";
 
   const styles = cn(
     baseStyle,
     variant === "primary" && "bg-dodger-blue-600",
     variant === "secondary" && "bg-neutral-300 dark:bg-neutral-800",
-    fullWidth && "mx-auto w-full",
     disabled && "opacity-50",
+    showChevron ? "justify-between" : "justify-center",
   );
 
   return (
@@ -51,13 +52,17 @@ export default function ButtonText({
           color={variant === "primary" ? "#edf9ff" : "#737373"}
         />
       )}
-      <ThemedText
-        variant="h400"
-        className="text-center"
-        color={variant === "primary" ? "primary" : "secondary"}
-      >
+      <ThemedText variant="h400" color={variant === "primary" ? "primary" : "secondary"}>
         {label}
       </ThemedText>
+      {showChevron && (
+        <Icon
+          family="Ionicons"
+          name={"chevron-forward"}
+          size={20}
+          color={variant === "primary" ? "#edf9ff" : "#737373"}
+        />
+      )}
     </TouchableOpacity>
   );
 }
