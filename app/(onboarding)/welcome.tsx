@@ -1,10 +1,15 @@
-import { useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
 import Swiper from "react-native-swiper";
+import { useRef, useState } from "react";
+import { Image, View } from "react-native";
 import { router } from "expo-router";
-import { onboardingData } from "../../data/onboardingData";
-import ThemedText from "@/components/shared/ThemedText";
-import SafeAreaContainer from "@/components/shared/SafeAreaContainer";
+import { onboardingData } from "@/data/onboardingData";
+import {
+  SafeAreaContainer,
+  ButtonText,
+  ButtonBack,
+  ThemedView,
+  ThemedText,
+} from "@/components/shared";
 
 export default function WelcomeScreen() {
   const swiperRef = useRef<Swiper>(null);
@@ -22,46 +27,43 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaContainer className="items-center justify-center">
       {/* Skip Button */}
-      <TouchableOpacity
-        onPress={() => router.replace("/(onboarding)/role-selection")}
-        className="w-full items-end"
-      >
-        <ThemedText variant="h300">Skip</ThemedText>
-      </TouchableOpacity>
+      <View className="w-full items-end">
+        <ButtonBack label="Skip" onPress={() => router.replace("/(onboarding)/role-selection")} />
+      </View>
 
-      {/* Swiper */}
+      {/* Swiper Cards */}
       <Swiper
         ref={swiperRef}
         loop={false}
         showsPagination={true}
-        dot={<View className="mx-1 h-1 w-8 rounded-full bg-neutral-400/50" />}
+        dot={<View className="mx-1 h-1 w-8 rounded-full bg-neutral-600" />}
         activeDot={<View className="mx-1 h-1 w-8 rounded-full bg-dodger-blue-600" />}
         onIndexChanged={(index) => setActiveIndex(index)}
       >
         {onboardingData.map((item) => (
-          <View key={item.id} className="gap- flex-1 items-center justify-center gap-5">
-            <Image source={item.image} className="h-[320px] w-[320px]" resizeMode="contain" />
-            <View>
-              <ThemedText variant="h700" color="primary" className="text-center">
+          <ThemedView
+            key={item.id}
+            variant="bg_light"
+            className="mx-1 mt-16 items-center justify-center gap-5 rounded-3xl p-5"
+          >
+            <View className="overflow-hidden rounded-2xl">
+              <Image source={item.image} className="h-[320px] w-[320px]" resizeMode="cover" />
+            </View>
+
+            <View className="drop-shadow-lg">
+              <ThemedText variant="h700" className="text-center">
                 {item.title}
               </ThemedText>
               <ThemedText variant="h400" color="secondary" className="text-center">
                 {item.subtitle}
               </ThemedText>
             </View>
-          </View>
+          </ThemedView>
         ))}
       </Swiper>
 
-      {/* Next / Get Started */}
-      <TouchableOpacity
-        onPress={handleNext}
-        className="mx-auto mb-8 w-11/12 rounded-2xl bg-dodger-blue-600 py-4"
-      >
-        <ThemedText variant="h400" color="primary" className="text-center">
-          {isLastSlide ? "Get Started" : "Next"}
-        </ThemedText>
-      </TouchableOpacity>
+      {/* Next / Get Started Button */}
+      <ButtonText label={isLastSlide ? "Get Started" : "Next"} onPress={handleNext} />
     </SafeAreaContainer>
   );
 }
