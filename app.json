@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "jeepin-commuter-ui",
-    "slug": "jeepin-commuter-ui",
+    "name": "JEEP-IN 2.0",
+    "slug": "jeep-in-2-0",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "jeepincommuterui",
+    "scheme": "jeepin2",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -19,11 +19,13 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.bruhhhyannnn.jeepin2"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
