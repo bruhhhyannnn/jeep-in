@@ -42,8 +42,8 @@ export default function ThemedText({
 
   const colors = {
     default: "text-neutral-900 dark:text-neutral-50",
-    primary: "text-dodger-blue-600 dark:text-dodger-blue-600",
-    secondary: "text-neutral-600 dark:text-neutral-600",
+    primary: "text-dodger-blue-50",
+    secondary: "text-neutral-500",
   };
 
   return (
