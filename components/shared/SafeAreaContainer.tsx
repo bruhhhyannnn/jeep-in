@@ -1,6 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
+import { ThemedView } from "@/components/shared";
 
 export default function SafeAreaContainer({
   className,
@@ -8,12 +9,14 @@ export default function SafeAreaContainer({
   ...props
 }: ViewProps & { children: React.ReactNode }) {
   return (
-    <SafeAreaView
-      edges={["top", "left", "right"]}
-      className={cn("flex-1 bg-dodger-blue-bg-light-50 p-5 dark:bg-neutral-bg-dark-100", className)}
-      {...props}
-    >
-      {children}
-    </SafeAreaView>
+    <ThemedView className="flex-1">
+      <SafeAreaView
+        edges={["top", "left", "right"]}
+        className={cn("flex-1 p-5", className)}
+        {...props}
+      >
+        {children}
+      </SafeAreaView>
+    </ThemedView>
   );
 }
