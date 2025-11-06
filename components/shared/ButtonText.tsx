@@ -44,24 +44,12 @@ export default function ButtonText({
         elevation: 6, // Android
       }}
     >
-      {iconName && (
-        <Icon
-          family="Ionicons"
-          name={iconName}
-          size={20}
-          color={variant === "primary" ? "#edf9ff" : "#737373"}
-        />
-      )}
+      {iconName && <Icon name={iconName} color={variant === "primary" ? "#edf9ff" : "#737373"} />}
       <ThemedText variant="h400" color={variant === "primary" ? "primary" : "secondary"}>
         {label}
       </ThemedText>
       {showChevron && (
-        <Icon
-          family="Ionicons"
-          name={"chevron-forward"}
-          size={20}
-          color={variant === "primary" ? "#edf9ff" : "#737373"}
-        />
+        <Icon name={"chevron-forward"} color={variant === "primary" ? "#edf9ff" : "#737373"} />
       )}
     </TouchableOpacity>
   );
