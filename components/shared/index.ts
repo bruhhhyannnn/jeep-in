@@ -2,5 +2,9 @@ export { default as SafeAreaContainer } from "@/components/shared/SafeAreaContai
 export { default as ThemedView } from "@/components/shared/ThemedView";
 export { default as ThemedText } from "@/components/shared/ThemedText";
 export { default as ButtonText } from "@/components/shared/ButtonText";
+export { default as ButtonIcon } from "@/components/shared/ButtonIcon";
 export { default as ButtonBack } from "@/components/shared/ButtonBack";
 export { default as Icon } from "@/components/shared/Icon";
+export { default as BottomSheetContainer } from "@/components/shared/BottomSheetContainer";
+export { default as ThemedTextInput } from "@/components/shared/ThemedTextInput";
+export { default as CustomTextInput } from "@/components/shared/CustomTextInput";
