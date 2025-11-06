@@ -3,16 +3,24 @@ import { ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
 import ThemedView from "@/components/shared/ThemedView";
 
+interface SafeAreaContainerProps extends ViewProps {
+  showPadding?: boolean;
+  children: React.ReactNode;
+}
+
 export default function SafeAreaContainer({
   className,
   children,
+  showPadding = true,
   ...props
-}: ViewProps & { children: React.ReactNode }) {
+}: SafeAreaContainerProps) {
+  const paddingClass = showPadding ? "p-5" : "";
+
   return (
     <ThemedView className="flex-1">
       <SafeAreaView
         edges={["top", "left", "right"]}
-        className={cn("flex-1 p-5", className)}
+        className={cn("flex-1", paddingClass, className)}
         {...props}
       >
         {children}

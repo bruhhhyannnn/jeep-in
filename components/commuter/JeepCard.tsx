@@ -1,9 +1,12 @@
-import { TouchableOpacity } from "react-native";
-import { ThemedText, ThemedView } from "@/components/shared";
+import { TouchableOpacity, View } from "react-native";
+import { ThemedText, ThemedView, Icon } from "@/components/shared";
+import { JeepStatusBadge } from "@/components/commuter";
+// TODO: make a type for this one someday
+import { JeepStatus } from "./JeepStatusBadge";
 
 type JeepCardProps = {
   plateNo: string;
-  status: string;
+  status: JeepStatus; // change this to react to status badge
   nextStop: string;
   onPress?: () => void;
 };
@@ -12,10 +15,20 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
   return (
     <TouchableOpacity onPress={onPress}>
       <ThemedView variant="bg_light" className="rounded-full px-6 py-2">
-        <ThemedText variant="h500">{plateNo}</ThemedText>
-        <ThemedText color="secondary">
-          {status} — Next Stop: {nextStop}
-        </ThemedText>
+        <View className="flex-row items-start gap-2">
+          <ThemedText variant="h600">{plateNo}</ThemedText>
+          {/* TODO: change someday to make a file for types.ts */}
+          <JeepStatusBadge variant={status} />
+        </View>
+        <View className="flex-row gap-2">
+          <Icon
+            family="MaterialCommunityIcons"
+            name="map-marker-right-outline"
+            size={16}
+            color={"#737373"}
+          />
+          <ThemedText color="secondary">{nextStop}</ThemedText>
+        </View>
       </ThemedView>
     </TouchableOpacity>
   );

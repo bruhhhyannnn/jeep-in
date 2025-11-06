@@ -2,8 +2,11 @@ import { View } from "react-native";
 import { ThemedText, CustomTextInput } from "@/components/shared";
 import JeepCard from "@/components/commuter/JeepCard";
 import StopCard from "@/components/commuter/StopCard";
+import { useRouter } from "expo-router";
 
 export default function DefaultContent() {
+  const router = useRouter();
+
   return (
     <View className="gap-6">
       {/* Search Bar */}
@@ -11,19 +14,37 @@ export default function DefaultContent() {
 
       {/* Near Jeeps */}
       <View className="gap-2">
-        <ThemedText variant="h500">Nearby Jeepneys</ThemedText>
+        <ThemedText variant="h400">Nearby Jeepneys</ThemedText>
         <View className="gap-2">
-          <JeepCard plateNo="IAE 2730" status="On Route" nextStop="MMSU Gate 3" />
-          <JeepCard plateNo="IAE 5012" status="Stationed" nextStop="Paoay Terminal" />
+          <JeepCard
+            plateNo="IAE 2730"
+            status="On route"
+            nextStop="MMSU Gate 3"
+            onPress={() => router.push("/(commuter)/home/jeepney/IAE 2730")}
+          />
+          <JeepCard
+            plateNo="IAE 5012"
+            status="Stationed"
+            nextStop="Paoay Terminal"
+            onPress={() => router.push("/(commuter)/home/jeepney/IAE 5012")}
+          />
         </View>
       </View>
 
       {/* Near Stops */}
       <View className="gap-2">
-        <ThemedText variant="h500">Nearby Stops</ThemedText>
+        <ThemedText variant="h400">Nearby Stops</ThemedText>
         <View className="gap-2">
-          <StopCard name="MMSU Gate 3" location="Batac City" />
-          <StopCard name="PhilRice Institute" location="Batac City" />
+          <StopCard
+            location="MMSU Gate 3"
+            address="Batac City"
+            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+          />
+          <StopCard
+            location="PhilRice Institute"
+            address="Batac City"
+            onPress={() => router.push("/(commuter)/home/stop/PhilRice Institute")}
+          />
         </View>
       </View>
     </View>
