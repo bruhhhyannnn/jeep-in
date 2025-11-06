@@ -16,16 +16,14 @@ export default function JeepneyInfoScreen() {
             <ThemedText variant="h600">{id}</ThemedText>
             <JeepStatusBadge />
           </View>
-          <ThemedText variant="h200" color="secondary">
-            Going Paoay route
-          </ThemedText>
+          <ThemedText color="secondary">Going Paoay route</ThemedText>
         </View>
 
         {/* Stop Cards */}
         <View className="flex-row gap-3">
           {/* Last Stop */}
           <View className="flex-1 gap-1">
-            <ThemedText variant="h400" className="uppercase">
+            <ThemedText variant="h300" className="uppercase">
               Last Stop
             </ThemedText>
             <StopCard
@@ -37,7 +35,7 @@ export default function JeepneyInfoScreen() {
 
           {/* Next Stop */}
           <View className="flex-1 gap-1">
-            <ThemedText variant="h400" className="uppercase">
+            <ThemedText variant="h300" className="uppercase">
               Next Stop
             </ThemedText>
             <StopCard
