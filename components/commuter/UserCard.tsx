@@ -1,27 +1,25 @@
 import { TouchableOpacity, View } from "react-native";
-import { ThemedView, ThemedText, Icon } from "@/components/shared";
+import { ThemedText, ThemedView, Icon } from "@/components/shared";
 
-type StopCardProps = {
-  location: string;
-  address: string;
+type JeepCardProps = {
   onPress?: () => void;
 };
 
-export default function StopCard({ location, address, onPress }: StopCardProps) {
+export default function UserCard({ onPress }: JeepCardProps) {
   return (
     <TouchableOpacity onPress={onPress}>
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
+        {/* Content Container */}
         <View className="flex-1 flex-row items-center gap-3">
-          {/* Bus Stop Icon */}
+          {/* Bus Icon */}
           <View>
-            <Icon family="MaterialCommunityIcons" name="bus-stop" size={28} />
+            <Icon family="MaterialCommunityIcons" name="account" size={28} />
           </View>
 
           {/* Content */}
           <View className="flex-1">
-            {/* Location & Address */}
-            <ThemedText variant="h500">{location}</ThemedText>
-            <ThemedText color="secondary">{address}</ThemedText>
+            {/* Plate Number and Status Badge */}
+            <ThemedText variant="h500">Your Location</ThemedText>
           </View>
         </View>
 

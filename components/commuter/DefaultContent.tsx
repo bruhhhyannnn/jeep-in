@@ -25,7 +25,7 @@ export default function DefaultContent() {
           <JeepCard
             plateNo="IAE 5012"
             status="Stationed"
-            nextStop="Paoay Terminal"
+            nextStop="Bingao Elementary & National High School"
             onPress={() => router.push("/(commuter)/home/jeepney/IAE 5012")}
           />
         </View>
@@ -41,9 +41,11 @@ export default function DefaultContent() {
             onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
           />
           <StopCard
-            location="PhilRice Institute"
+            location="Bingao Elementary & National High School"
             address="Batac City"
-            onPress={() => router.push("/(commuter)/home/stop/PhilRice Institute")}
+            onPress={() =>
+              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+            }
           />
         </View>
       </View>

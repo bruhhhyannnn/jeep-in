@@ -1,7 +1,8 @@
 import React from "react";
 import { ViewProps } from "react-native";
 import Icon from "@/components/shared/Icon";
-import { ThemedView, ThemedTextInput } from "@/components/shared";
+import ThemedView from "@/components/shared/ThemedView";
+import ThemedTextInput from "@/components/shared/ThemedTextInput";
 
 interface CustomTextInputProps extends ViewProps {
   placeholder: string;

@@ -19,7 +19,7 @@ export default function MapLayout({
       <View className="flex-1">
         {/* Map Placeholder */}
         <View className="flex-1 items-center justify-center bg-black">
-          <ThemedText variant="h600" color="secondary">
+          <ThemedText variant="h600" color="primary">
             Mapbox Map will go here
           </ThemedText>
         </View>

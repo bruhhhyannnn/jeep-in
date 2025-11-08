@@ -4,7 +4,7 @@ import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/shared";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
 
-export default function StopPointScreen() {
+export default function StopPointInfoScreen() {
   const { id } = useLocalSearchParams();
 
   return (
