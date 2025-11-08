@@ -20,7 +20,7 @@ export default function JeepneyInfoScreen() {
         </View>
 
         {/* Stop Cards */}
-        <View className="flex-row gap-3">
+        <View className="gap-3">
           {/* Last Stop */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
@@ -39,9 +39,11 @@ export default function JeepneyInfoScreen() {
               Next Stop
             </ThemedText>
             <StopCard
-              location="Crossing"
+              location="Bingao Elementary & National High School"
               address="Batac City"
-              onPress={() => router.push("/(commuter)/home/stop/Crossing")}
+              onPress={() =>
+                router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+              }
             />
           </View>
         </View>
