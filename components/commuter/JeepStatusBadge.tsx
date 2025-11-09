@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/shared";
 import { cn } from "@/lib/utils";
 
+// TODO: add this to a types.ts someday
 export type JeepStatus = "On route" | "Stationed" | "Out of service";
 
 type JeepCardProps = {
@@ -17,7 +18,7 @@ export default function JeepStatusBadge({ variant = "On route" }: JeepCardProps)
 
   return (
     <ThemedText
-      variant="h100"
+      variant="h200"
       color="primary"
       className={cn("rounded-full px-2 py-0.5 text-center shadow-md", variantStyles[variant])}
     >

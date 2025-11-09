@@ -1,4 +1,4 @@
-import MapLayout from "@/components/layout/MapLayout";
+import { MapLayout } from "@/components/commuter/layout/";
 import { StopCard, UserCard } from "@/components/commuter";
 import { Icon, ThemedText } from "@/components/shared";
 import { useLocalSearchParams, router } from "expo-router";

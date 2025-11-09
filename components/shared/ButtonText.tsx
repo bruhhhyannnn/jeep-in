@@ -7,9 +7,11 @@ type ButtonTextProps = {
   label: string;
   onPress: () => void;
   variant?: "primary" | "secondary"; // secondary = cancel
+  // TODO: add also here family name for the icons
   iconName?: string;
   disabled?: boolean;
   showChevron?: boolean;
+  fullWidth?: boolean;
 };
 
 export default function ButtonText({
@@ -19,9 +21,9 @@ export default function ButtonText({
   iconName,
   disabled = false,
   showChevron = false,
+  fullWidth = false,
 }: ButtonTextProps) {
-  const baseStyle =
-    "w-full mx-auto flex-row items-center gap-2 rounded-full px-6 py-4 active:opacity-70";
+  const baseStyle = "mx-auto flex-row items-center gap-2 rounded-full px-4 py-2 active:opacity-70";
 
   const styles = cn(
     baseStyle,
@@ -29,6 +31,7 @@ export default function ButtonText({
     variant === "secondary" && "bg-neutral-300 dark:bg-neutral-800",
     disabled && "opacity-50",
     showChevron ? "justify-between" : "justify-center",
+    fullWidth ? "flex-1 justify-center" : "self-center",
   );
 
   return (
@@ -36,6 +39,7 @@ export default function ButtonText({
       onPress={onPress}
       disabled={disabled}
       className={styles}
+      // TODO: make the secondary to not have shadow effect
       style={{
         shadowColor: "#0A0A0A",
         shadowOffset: { width: 0, height: 4 },

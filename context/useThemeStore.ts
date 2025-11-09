@@ -1,3 +1,4 @@
+// TODO: this is unused, might delete or not
 import { create } from "zustand";
 import { Appearance } from "react-native";
 import { colorScheme } from "nativewind";

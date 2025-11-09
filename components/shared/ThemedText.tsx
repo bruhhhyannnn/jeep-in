@@ -27,17 +27,17 @@ export default function ThemedText({
   ...props
 }: ThemedTextProps) {
   const variants = {
-    hero10: "text-[55px] leading-[1.3] font-puffin-extrabold-italic",
-    h900: "text-[50px] leading-[1.3] font-puffin-bold",
-    h800: "text-[42px] leading-[1.3] font-puffin-bold",
-    h700: "text-[34px] leading-[1.35] font-puffin-semibold",
-    h600: "text-[27px] leading-[1.4] font-puffin-semibold",
-    h500: "text-[22px] leading-[1.45] font-puffin-medium",
-    h400: "text-[20px] leading-[1.45] font-puffin-medium",
-    h300: "text-[17px] leading-[1.45] font-puffin-medium",
-    h200: "text-[15px] leading-[1.4] font-puffin",
-    h100: "text-[13px] leading-[1.3] font-puffin",
-    h50: "text-[12px] leading-[1.2] font-puffin",
+    hero10: "text-hero10 font-puffin-extrabold-italic",
+    h900: "text-h900 font-puffin-bold",
+    h800: "text-h800 font-puffin-bold",
+    h700: "text-h700 font-puffin-semibold",
+    h600: "text-h600 font-puffin-semibold",
+    h500: "text-h500 font-puffin-medium",
+    h400: "text-h400 font-puffin-medium",
+    h300: "text-h300 font-puffin-medium",
+    h200: "text-h200 font-puffin",
+    h100: "text-h100 font-puffin",
+    h50: "text-h50 font-puffin",
   };
 
   const colors = {

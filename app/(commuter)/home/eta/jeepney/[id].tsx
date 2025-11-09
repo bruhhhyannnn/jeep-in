@@ -1,8 +1,8 @@
-import MapLayout from "@/components/layout/MapLayout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, Icon } from "@/components/shared";
 import { JeepCard, StopCard } from "@/components/commuter";
+import { MapLayout } from "@/components/commuter/layout/";
 
 export default function EtaJeepneyInfoScreen() {
   const { id } = useLocalSearchParams();

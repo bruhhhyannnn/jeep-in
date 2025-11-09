@@ -1,4 +1,4 @@
-import MapLayout from "@/components/layout/MapLayout";
+import { MapLayout } from "@/components/commuter/layout/";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, ButtonText } from "@/components/shared";

@@ -2,6 +2,7 @@ import { TouchableOpacity } from "react-native";
 import Icon from "@/components/shared/Icon";
 
 type ButtonTextProps = {
+  // also add family icon later here
   iconName: string;
   onPress?: () => void;
   disabled?: boolean;

@@ -1,4 +1,4 @@
-import MapLayout from "@/components/layout/MapLayout";
+import { MapLayout } from "@/components/commuter/layout/";
 import { StopTitleBadge } from "@/components/commuter";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/shared";
 import { useLocalSearchParams, router } from "expo-router";

@@ -6,5 +6,7 @@ export { default as ButtonIcon } from "@/components/shared/ButtonIcon";
 export { default as ButtonBack } from "@/components/shared/ButtonBack";
 export { default as Icon } from "@/components/shared/Icon";
 export { default as BottomSheetContainer } from "@/components/shared/BottomSheetContainer";
+export { default as BottomSheetModalBase } from "@/components/shared/BottomSheetModalBase";
+export { default as BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
 export { default as ThemedTextInput } from "@/components/shared/ThemedTextInput";
 export { default as CustomTextInput } from "@/components/shared/CustomTextInput";

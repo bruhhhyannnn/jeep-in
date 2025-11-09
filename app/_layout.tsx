@@ -19,7 +19,7 @@ export default function RootLayout() {
     "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
 
-  // Load theme
+  // TODO: this is unused Load theme
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       if (theme === "system") {

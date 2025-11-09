@@ -4,8 +4,8 @@ import {
   SafeAreaContainer,
   ThemedText,
   ThemedView,
+  ButtonBack,
 } from "@/components/shared";
-import ButtonBack from "@/components/shared/ButtonBack";
 
 export default function MapLayout({
   title,
