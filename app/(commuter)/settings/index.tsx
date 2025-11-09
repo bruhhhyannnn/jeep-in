@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { ThemedText, ButtonText, SafeAreaContainer, ButtonBack } from "@/components/shared";
-import { ButtonCard } from "@/components/settings";
+import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/shared";
+import { ButtonCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   // actual file
@@ -36,15 +36,17 @@ const SettingsScreen = () => {
             {/* Header */}
             <View>
               <View className="self-start">
-                <ButtonBack showIcon label="Go Back" />
+                <ButtonBack showIcon label="Go Back" color="primary" />
               </View>
               <View className="items-center justify-center p-10">
                 <ThemedText variant="h900" className="uppercase">
                   🥳
                 </ThemedText>
+                {/* TODO: make this as to be dynamic on what user changes someday */}
                 <ThemedText variant="hero10" color="primary" className="uppercase">
                   Hello User!
                 </ThemedText>
+                {/* TODO: make this as to react when this app is installed to this device, someday */}
                 <ThemedText variant="h200" color="primary">
                   Since Jan. 1 2025
                 </ThemedText>
@@ -52,26 +54,23 @@ const SettingsScreen = () => {
             </View>
 
             {/* Getting Around Section */}
-            <View className="">
+            <View className="gap-1">
               <ThemedText variant="h400" color="primary">
                 Getting around
               </ThemedText>
               <View className="flex-row items-center gap-2">
-                <View className="flex-1 rounded-2xl bg-dodger-blue-600 p-4 dark:bg-dodger-blue-600">
-                  <ButtonText
-                    label="Stop points"
-                    onPress={() => stopPointsRef.current?.open()}
-                    iconName="map-outline"
-                  />
-                </View>
-
-                <View className="flex-1 rounded-2xl bg-dodger-blue-600 p-4 dark:bg-dodger-blue-600">
-                  <ButtonText
-                    label="Fare guide"
-                    onPress={() => fareGuideRef.current?.open()}
-                    iconName="cash-outline"
-                  />
-                </View>
+                <ButtonCard
+                  label="Stop points"
+                  iconName="map-outline"
+                  variant="secondary"
+                  onPress={() => stopPointsRef.current?.open()}
+                />
+                <ButtonCard
+                  label="Fare guide"
+                  iconName="cash-outline"
+                  variant="secondary"
+                  onPress={() => fareGuideRef.current?.open()}
+                />
               </View>
             </View>
 
@@ -87,7 +86,7 @@ const SettingsScreen = () => {
                   showTopRounded
                   onPress={() => accessibilityRef.current?.open()}
                 />
-                <View className="h-0.5 bg-dodger-blue-400" />
+                <Divider />
                 <ButtonCard
                   label="Themes and avatar"
                   iconName="color-palette-outline"
@@ -104,14 +103,14 @@ const SettingsScreen = () => {
               </ThemedText>
               <View>
                 <ButtonCard
-                  label="Settings and accessibility"
+                  label="Get support"
                   showTopRounded
                   iconName="mail-outline"
                   onPress={() => supportRef.current?.open()}
                 />
-                <View className="h-0.5 bg-dodger-blue-400" />
+                <Divider />
                 <ButtonCard
-                  label="Themes and avatar"
+                  label="About JEEP-IN"
                   showBottomRounded
                   iconName="information-circle-outline"
                   onPress={() => aboutRef.current?.open()}
@@ -120,10 +119,10 @@ const SettingsScreen = () => {
             </View>
 
             {/* Footer Logo */}
-            <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-4 shadow-xl">
+            <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-4">
               <Image
                 source={require("@/assets/images/logo-jeep-in-2.png")}
-                className="aspect-[44/13] h-20"
+                className="aspect-[44/13] h-16"
                 resizeMode="contain"
               />
             </View>
