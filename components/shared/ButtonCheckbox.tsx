@@ -1,27 +1,32 @@
 import { TouchableOpacity, View } from "react-native";
 import { ThemedView, ThemedText, Icon } from "@/components/shared";
 
-type RouteCardProps = {
-  route: string;
+type ButtonCheckboxProps = {
+  label: string;
+  iconName: string;
   checked: boolean;
   onToggle?: () => void;
 };
 
-// TODO: change the default name of this because its mislead, should be checkbox route card or somth
-export default function RouteCard({ route, checked, onToggle }: RouteCardProps) {
+export default function ButtonCheckbox({
+  label,
+  iconName,
+  checked,
+  onToggle,
+}: ButtonCheckboxProps) {
   return (
     <TouchableOpacity onPress={onToggle}>
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
-        <View className="flex-1 flex-row items-center gap-3">
+        <View className="flex-1 flex-row items-center gap-2">
           {/* Road Icon */}
           <View>
-            <Icon family="MaterialCommunityIcons" name="road-variant" size={28} />
+            <Icon family="MaterialCommunityIcons" name={iconName} />
           </View>
 
           {/* Content */}
           <View className="flex-1">
-            {/* Route Name */}
-            <ThemedText variant="h500">{route}</ThemedText>
+            {/* Label Name */}
+            <ThemedText variant="h500">{label}</ThemedText>
           </View>
         </View>
 

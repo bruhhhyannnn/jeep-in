@@ -127,6 +127,7 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
           const selected = theme === opt.value;
 
           return (
+            // TODO: make this is a component for ButtonRadio
             <TouchableOpacity
               key={opt.value}
               onPress={() => handleSelect(opt.value)} // ✅ updates theme instantly

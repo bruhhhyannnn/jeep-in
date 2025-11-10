@@ -10,3 +10,4 @@ export { default as BottomSheetModalBase } from "@/components/shared/BottomSheet
 export { default as BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
 export { default as ThemedTextInput } from "@/components/shared/ThemedTextInput";
 export { default as CustomTextInput } from "@/components/shared/CustomTextInput";
+export { default as ButtonCheckbox } from "@/components/shared/ButtonCheckbox";

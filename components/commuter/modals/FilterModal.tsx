@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import RouteCard from "@/components/commuter/RouteCard";
-import { ThemedText, ButtonText, BottomSheetModalBase } from "@/components/shared/";
+import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/shared/";
 import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
 
 export type FilterModalRef = {
@@ -35,13 +34,15 @@ const FilterModal = forwardRef<FilterModalRef>((_, ref) => {
           </ThemedText>
           {/* Cards */}
           {/* TODO: Add dynamic cards later on */}
-          <RouteCard
-            route="Going Paoay Route"
+          <ButtonCheckbox
+            label="Going Paoay Route"
+            iconName="road-variant"
             checked={selectedRoutes.includes("Going Paoay Route")}
             onToggle={() => toggleRoute("Going Paoay Route")}
           />
-          <RouteCard
-            route="Going Laoag Route"
+          <ButtonCheckbox
+            label="Going Laoag Route"
+            iconName="road-variant"
             checked={selectedRoutes.includes("Going Laoag Route")}
             onToggle={() => toggleRoute("Going Laoag Route")}
           />
