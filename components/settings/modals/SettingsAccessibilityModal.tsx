@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View, Switch } from "react-native";
-import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/shared";
+import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/shared";
 import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
 
 export type SettingsAccessibilityModalRef = {
@@ -21,16 +21,24 @@ const SettingsAccessibilityModal = forwardRef<SettingsAccessibilityModalRef>((_,
   return (
     <BottomSheetModalBase title="Accessibility Settings" ref={baseRef}>
       <View className="gap-4">
-        <View className="flex-row items-center justify-between">
-          <ThemedText>High Contrast Mode</ThemedText>
-          <Switch value={highContrast} onValueChange={setHighContrast} />
-        </View>
-        <View className="flex-row items-center justify-between">
-          <ThemedText>Large Text</ThemedText>
-          <Switch value={largeText} onValueChange={setLargeText} />
-        </View>
+        <ThemedText className="text-center">Coming soon… Feature under development.</ThemedText>
 
-        <ButtonText label="Done" onPress={() => baseRef.current?.close()} />
+        {/* TODO: make this as a button someday, ButtonSwitch.tsx */}
+        {/* TODO: think about the functionalities of these someday of what to do */}
+        <ThemedView
+          variant="bg_light"
+          className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
+        >
+          <ThemedText color="secondary">High Contrast Mode</ThemedText>
+          <Switch value={highContrast} disabled onValueChange={setHighContrast} />
+        </ThemedView>
+        <ThemedView
+          variant="bg_light"
+          className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
+        >
+          <ThemedText color="secondary">Large Text</ThemedText>
+          <Switch value={largeText} disabled onValueChange={setLargeText} />
+        </ThemedView>
       </View>
     </BottomSheetModalBase>
   );
