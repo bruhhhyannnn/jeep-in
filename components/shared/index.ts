@@ -1,4 +1,5 @@
 export { default as SafeAreaContainer } from "@/components/shared/SafeAreaContainer";
+export { default as MapContainer } from "@/components/shared/MapContainer";
 export { default as ThemedView } from "@/components/shared/ThemedView";
 export { default as ThemedText } from "@/components/shared/ThemedText";
 export { default as ButtonText } from "@/components/shared/ButtonText";

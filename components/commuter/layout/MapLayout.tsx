@@ -5,6 +5,7 @@ import {
   ThemedText,
   ThemedView,
   ButtonBack,
+  MapContainer,
 } from "@/components/shared";
 
 export default function MapLayout({
@@ -16,13 +17,14 @@ export default function MapLayout({
 }) {
   return (
     <SafeAreaContainer showPadding={false}>
-      <View className="flex-1">
-        {/* TODO: add and validate for the map placeholder here */}
-        <View className="relative flex-1 items-center justify-center bg-red-500">
-          <ThemedText variant="h600" color="primary">
-            Mapbox Map will go here
-          </ThemedText>
-        </View>
+      <View className="flex-1 bg-neutral-300 dark:bg-black">
+        {/* Map Area */}
+        <MapContainer>
+          {/* just a placeholder, remove it once MapboxMap is now available */}
+          <View className="flex-1 items-center justify-center">
+            <ThemedText variant="h600">Mapbox Map will go here</ThemedText>
+          </View>
+        </MapContainer>
 
         {/* Header */}
         <ThemedView className="absolute left-0 right-0 top-0 flex-row items-center gap-3 rounded-b-2xl border-x border-b border-neutral-300 px-5 py-4 dark:border-neutral-700">

@@ -10,7 +10,7 @@ type BottomSheetContainerProps = {
 
 export default function BottomSheetContainer({
   children,
-  snapPoints = ["10%", "37%", "94%"],
+  snapPoints = ["10%", "37%", "93%"],
   initialIndex = 1,
 }: BottomSheetContainerProps) {
   const bottomSheetRef = useRef<BottomSheet>(null);

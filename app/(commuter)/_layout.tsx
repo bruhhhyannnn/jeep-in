@@ -1,17 +1,20 @@
-// import { useEffect } from "react";
-// import { router } from "expo-router";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Stack } from "expo-router";
 
-// export default function RootLayout() {
-//   useEffect(() => {
-//     const checkRole = async () => {
-//       const role = await AsyncStorage.getItem("userRole");
-//       if (!role) router.replace("/onboarding");
-//       else if (role === "commuter") router.replace("/(commuter)/home");
-//       else router.replace("/(driver)/home");
-//     };
-//     checkRole();
-//   }, []);
-
-//   return null;
-// }
+export default function CommuterLayout() {
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "fade_from_bottom",
+      }}
+    >
+      <Stack.Screen
+        name="settings/index"
+        options={{
+          animation: "slide_from_right",
+          gestureEnabled: true,
+        }}
+      />
+    </Stack>
+  );
+}
