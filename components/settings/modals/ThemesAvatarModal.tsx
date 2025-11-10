@@ -4,6 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
+import type { ThemeMode } from "@/types";
 
 const ThemesAvatarModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -93,16 +94,16 @@ function NicknameView({ onBack }: { onBack: () => void }) {
 
 // Appearance View
 function AppearanceView({ onBack }: { onBack: () => void }) {
-  const { theme, setTheme } = useThemeStore(); // ✅ get from global store
+  const { theme, setTheme } = useThemeStore();
 
-  const options = [
+  const options: { label: string; value: ThemeMode }[] = [
     { label: "System", value: "system" },
     { label: "Light", value: "light" },
     { label: "Dark", value: "dark" },
-  ] as const;
+  ];
 
   // TODO: revalidate functionality if its really working
-  const handleSelect = (newTheme: "system" | "light" | "dark") => {
+  const handleSelect = (newTheme: ThemeMode) => {
     setTheme(newTheme);
     colorScheme.set(newTheme);
   };

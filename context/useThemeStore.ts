@@ -2,17 +2,16 @@
 import { create } from "zustand";
 import { Appearance } from "react-native";
 import { colorScheme } from "nativewind";
-
-type Theme = "light" | "dark" | "system";
+import type { ThemeMode } from "@/types";
 
 interface ThemeState {
-  theme: Theme;
+  theme: ThemeMode;
   toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: ThemeMode) => void;
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  theme: (Appearance.getColorScheme() as Theme) || "light",
+  theme: (Appearance.getColorScheme() as ThemeMode) || "light",
 
   toggleTheme: () =>
     set((state) => {
@@ -22,7 +21,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     }),
 
   setTheme: (theme) => {
-    const resolvedTheme = theme === "system" ? (Appearance.getColorScheme() as Theme) : theme;
+    const resolvedTheme = theme === "system" ? (Appearance.getColorScheme() as ThemeMode) : theme;
     colorScheme.set(resolvedTheme);
     set({ theme });
   },
