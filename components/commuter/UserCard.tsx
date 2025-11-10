@@ -13,7 +13,7 @@ export default function UserCard({ onPress }: JeepCardProps) {
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Icon */}
           <View>
-            <Icon family="MaterialCommunityIcons" name="account" size={28} />
+            <Icon name="person" />
           </View>
 
           {/* Content */}
@@ -25,7 +25,7 @@ export default function UserCard({ onPress }: JeepCardProps) {
 
         {/* Chevron Right Icon */}
         <View>
-          <Icon family="MaterialCommunityIcons" name="chevron-right" />
+          <Icon name="chevron-forward" />
         </View>
       </ThemedView>
     </TouchableOpacity>

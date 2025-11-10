@@ -35,8 +35,7 @@ export default function ButtonCheckbox({
         {/* Checkbox Icon */}
         <View>
           <Icon
-            family="MaterialCommunityIcons"
-            name={checked ? "checkbox-marked" : "checkbox-blank-outline"}
+            name={checked ? "checkbox" : "square-outline"}
             color={checked ? "#1E90FF" : "#737373"}
           />
         </View>

@@ -23,7 +23,7 @@ export default function EtaStopPointInfoScreen() {
           {/* User Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              You
+              FROM
             </ThemedText>
             <UserCard
               onPress={() => {
@@ -34,13 +34,13 @@ export default function EtaStopPointInfoScreen() {
 
           {/* Icon Indicator */}
           <View className="items-center">
-            <Icon family="MaterialCommunityIcons" name="arrow-down-right" size={28} />
+            <Icon name="arrow-down-circle-outline" size={26} />
           </View>
 
           {/* Stop Point Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              Stop point
+              TO
             </ThemedText>
             <StopCard
               location={id.toString()}

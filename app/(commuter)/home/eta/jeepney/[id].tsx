@@ -23,7 +23,7 @@ export default function EtaJeepneyInfoScreen() {
           {/* Jeepney Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              Jeepney
+              FROM JEEPNEY LOCATION
             </ThemedText>
             <JeepCard
               plateNo={id.toString()}
@@ -34,13 +34,13 @@ export default function EtaJeepneyInfoScreen() {
 
           {/* Icon Indicator */}
           <View className="items-center">
-            <Icon family="MaterialCommunityIcons" name="arrow-down-right" size={28} />
+            <Icon name="arrow-down-circle-outline" size={26} />
           </View>
 
           {/* Stop Point Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              Stop Point
+              TO STOP POINT
             </ThemedText>
             <StopCard
               location="Bingao Elementary & National High School"

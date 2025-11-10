@@ -19,7 +19,7 @@ const HomeScreen = () => {
         <View className="relative flex-1 bg-neutral-300 dark:bg-black">
           {/* Map Area */}
           <MapContainer fullScreen>
-            {/* just a placeholder, remove it once MapboxMap is now available */}
+            {/* TODO: just a placeholder, remove it once MapboxMap is now available */}
             <View className="flex-1 items-center justify-center">
               <ThemedText variant="h600">Mapbox Map will go here</ThemedText>
             </View>

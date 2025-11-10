@@ -20,7 +20,8 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Icon */}
           <View>
-            <Icon family="MaterialCommunityIcons" name="bus" size={28} />
+            {/* TODO: revalidate icon size */}
+            <Icon family="MaterialCommunityIcons" name="bus" size={26} />
           </View>
 
           {/* Content */}
@@ -35,12 +36,7 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
             {/* Next Stop */}
             {nextStop && (
               <View className="flex-row gap-2">
-                <Icon
-                  family="MaterialCommunityIcons"
-                  name="map-marker-right-outline"
-                  size={16}
-                  color={"#737373"}
-                />
+                <Icon name="return-down-forward-outline" size={16} color={"#737373"} />
                 <ThemedText color="secondary" className="flex-1">
                   {nextStop}
                 </ThemedText>
@@ -51,7 +47,7 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
 
         {/* Chevron right */}
         <View>
-          <Icon family="MaterialCommunityIcons" name="chevron-right" />
+          <Icon name="chevron-forward" />
         </View>
       </ThemedView>
     </TouchableOpacity>

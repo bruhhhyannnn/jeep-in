@@ -14,7 +14,8 @@ export default function StopCard({ location, address, onPress }: StopCardProps) 
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Stop Icon */}
           <View>
-            <Icon family="MaterialCommunityIcons" name="bus-stop" size={28} />
+            {/* TODO: revalidate icon size */}
+            <Icon family="MaterialCommunityIcons" name="bus-stop" size={26} />
           </View>
 
           {/* Content */}
@@ -27,7 +28,7 @@ export default function StopCard({ location, address, onPress }: StopCardProps) 
 
         {/* Chevron Right Icon */}
         <View>
-          <Icon family="MaterialCommunityIcons" name="chevron-right" />
+          <Icon name="chevron-forward" />
         </View>
       </ThemedView>
     </TouchableOpacity>

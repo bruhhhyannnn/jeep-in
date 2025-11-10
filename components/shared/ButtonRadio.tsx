@@ -19,8 +19,7 @@ export default function ButtonRadio({ label, selected, onPress }: ButtonRadioPro
         <ThemedText>{label}</ThemedText>
 
         <Icon
-          family="MaterialCommunityIcons"
-          name={selected ? "radiobox-marked" : "radiobox-blank"}
+          name={selected ? "radio-button-on-outline" : "radio-button-off-outline"}
           color="#1E90FF"
         />
       </ThemedView>

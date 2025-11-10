@@ -24,7 +24,7 @@ export default function StopPointInfoScreen() {
             Address
           </ThemedText>
           <ThemedView variant="bg_light" className="flex-row gap-2 rounded-full px-6 py-4">
-            <Icon family="MaterialCommunityIcons" name="map-marker-outline"></Icon>
+            <Icon name="location-outline" />
             <ThemedText variant="h400">Barangay 4, San Nicolas</ThemedText>
           </ThemedView>
         </View>
