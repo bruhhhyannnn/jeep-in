@@ -1,12 +1,8 @@
 import React, { forwardRef, useRef, useImperativeHandle, ReactNode } from "react";
 import { BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useColorScheme } from "nativewind";
+import { BottomSheetModalBaseRef } from "@/types";
 import ThemedText from "@/components/ui/ThemedText";
-
-export type BottomSheetModalBaseRef = {
-  open: () => void;
-  close: () => void;
-};
 
 interface BottomSheetModalBaseProps {
   title: string;

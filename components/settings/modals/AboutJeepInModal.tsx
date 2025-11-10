@@ -1,16 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import * as Clipboard from "expo-clipboard";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 import { openWebsite } from "@/lib/linkActions";
 import { Share, ToastAndroid, View } from "react-native";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type AboutJeepInModalRef = {
-  open: () => void;
-  close: () => void;
-};
-
-const AboutJeepInModal = forwardRef<AboutJeepInModalRef>((_, ref) => {
+const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [view, setView] = useState<"default" | "dataAttribution" | "privacyPolicy">("default");
 

@@ -3,30 +3,23 @@ import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
 import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetModalBaseRef } from "@/types";
 import {
-  // actual file
   StopPointsModal,
   FareGuideModal,
   SettingsAccessibilityModal,
   ThemesAvatarModal,
   GetSupportModal,
   AboutJeepInModal,
-  // ref
-  StopPointsModalRef,
-  FareGuideModalRef,
-  SettingsAccessibilityModalRef,
-  ThemesAvatarModalRef,
-  GetSupportModalRef,
-  AboutJeepInModalRef,
 } from "@/components/settings/modals";
 
 const SettingsScreen = () => {
-  const stopPointsRef = useRef<StopPointsModalRef>(null);
-  const fareGuideRef = useRef<FareGuideModalRef>(null);
-  const accessibilityRef = useRef<SettingsAccessibilityModalRef>(null);
-  const themesAvatarRef = useRef<ThemesAvatarModalRef>(null);
-  const supportRef = useRef<GetSupportModalRef>(null);
-  const aboutRef = useRef<AboutJeepInModalRef>(null);
+  const stopPointsRef = useRef<BottomSheetModalBaseRef>(null);
+  const fareGuideRef = useRef<BottomSheetModalBaseRef>(null);
+  const accessibilityRef = useRef<BottomSheetModalBaseRef>(null);
+  const themesAvatarRef = useRef<BottomSheetModalBaseRef>(null);
+  const supportRef = useRef<BottomSheetModalBaseRef>(null);
+  const aboutRef = useRef<BottomSheetModalBaseRef>(null);
 
   return (
     <SafeAreaContainer className="flex-1 bg-dodger-blue-700 dark:bg-dodger-blue-950">

@@ -2,14 +2,10 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type GetSupportModalRef = {
-  open: () => void;
-  close: () => void;
-};
 
-const GetSupportModal = forwardRef<GetSupportModalRef>((_, ref) => {
+const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [view, setView] = useState<"default" | "help" | "contactUs">("default");
 
@@ -20,7 +16,7 @@ const GetSupportModal = forwardRef<GetSupportModalRef>((_, ref) => {
 
   return (
     <BottomSheetModalBase
-      title={view === "default" ? "Get Support" : view === "help" ? "JEEP-IN help" : "Contact us"}
+      title={view === "default" ? "Get support" : view === "help" ? "JEEP-IN help" : "Contact us"}
       ref={baseRef}
     >
       {view === "default" ? (
@@ -82,6 +78,7 @@ function HelpView({ onBack }: { onBack: () => void }) {
         </ThemedText>
       </View>
       <View>
+        {/* TODO: change this title someday */}
         <ThemedText variant="h500" className="uppercase">
           WHAT CAN WE HELP YOU WITH?
         </ThemedText>

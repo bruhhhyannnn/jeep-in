@@ -36,7 +36,7 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
             {/* Next Stop */}
             {nextStop && (
               <View className="flex-row gap-2">
-                <Icon name="return-down-forward-outline" size={16} color={"#737373"} />
+                <Icon name="return-down-forward-outline" size={18} color={"#737373"} />
                 <ThemedText color="secondary" className="flex-1">
                   {nextStop}
                 </ThemedText>

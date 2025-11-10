@@ -4,13 +4,14 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import { useRouter } from "expo-router";
 import { ThemedText, ButtonIcon, BottomSheetContainer, MapContainer } from "@/components/ui";
-import { FilterModal, FilterModalRef } from "@/components/commuter/modals/";
+import { FilterModal } from "@/components/commuter/modals/";
 import { DefaultContent } from "@/components/commuter/sections/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BottomSheetModalBaseRef } from "@/types";
 
 const HomeScreen = () => {
   const router = useRouter();
-  const filterModalRef = useRef<FilterModalRef>(null);
+  const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
   const { top } = useSafeAreaInsets();
 
   return (

@@ -1,16 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/ui/";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type FilterModalRef = {
-  open: () => void;
-  close: () => void;
-};
-
-const FilterModal = forwardRef<FilterModalRef>((_, ref) => {
-  // BottomSheet Modal logic
+const FilterModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
+
   useImperativeHandle(ref, () => ({
     open: () => baseRef.current?.open(),
     close: () => baseRef.current?.close(),
@@ -24,8 +19,11 @@ const FilterModal = forwardRef<FilterModalRef>((_, ref) => {
     );
   };
 
+  // TODO: Add dynamic cards later on
+  const ROUTES = ["Going Paoay Route", "Going Laoag Route"];
+
   return (
-    <BottomSheetModalBase title="Filer Routes" ref={baseRef}>
+    <BottomSheetModalBase title="Filter Routes" ref={baseRef}>
       <View className="gap-5">
         <View className="gap-2">
           {/* Content */}
@@ -33,26 +31,29 @@ const FilterModal = forwardRef<FilterModalRef>((_, ref) => {
             Show only
           </ThemedText>
           {/* Cards */}
-          {/* TODO: Add dynamic cards later on */}
-          <ButtonCheckbox
-            label="Going Paoay Route"
-            iconName="road-variant"
-            checked={selectedRoutes.includes("Going Paoay Route")}
-            onToggle={() => toggleRoute("Going Paoay Route")}
-          />
-          <ButtonCheckbox
-            label="Going Laoag Route"
-            iconName="road-variant"
-            checked={selectedRoutes.includes("Going Laoag Route")}
-            onToggle={() => toggleRoute("Going Laoag Route")}
-          />
+          {ROUTES.map((route) => (
+            <ButtonCheckbox
+              key={route}
+              label={route}
+              iconName="road-variant"
+              checked={selectedRoutes.includes(route)}
+              onToggle={() => toggleRoute(route)}
+            />
+          ))}
         </View>
 
         {/* Cancel & Apply button */}
         <View className="flex-row items-center gap-2">
           <ButtonText label="Cancel" variant="secondary" onPress={() => baseRef.current?.close()} />
           <View className="flex-1">
-            <ButtonText label="Apply" fullWidth onPress={() => console.log("Apply filters")} />
+            <ButtonText
+              label="Apply"
+              fullWidth
+              onPress={() => {
+                console.log("Apply filters", selectedRoutes);
+                baseRef.current?.close();
+              }}
+            />
           </View>
         </View>
       </View>

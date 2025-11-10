@@ -2,16 +2,12 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 import { StopCard } from "@/components/commuter";
 import { useRouter } from "expo-router";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type StopPointsModalRef = {
-  open: () => void;
-  close: () => void;
-};
 
-const StopPointsModal = forwardRef<StopPointsModalRef>((_, ref) => {
+const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [view, setView] = useState<"default" | "help">("default");
 

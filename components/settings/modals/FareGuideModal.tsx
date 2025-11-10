@@ -2,14 +2,9 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type FareGuideModalRef = {
-  open: () => void;
-  close: () => void;
-};
-
-const FareGuideModal = forwardRef<FareGuideModalRef>((_, ref) => {
+const FareGuideModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [view, setView] = useState<"default" | "help">("default");
 

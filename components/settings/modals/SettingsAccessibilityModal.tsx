@@ -1,14 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View, Switch } from "react-native";
 import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type SettingsAccessibilityModalRef = {
-  open: () => void;
-  close: () => void;
-};
-
-const SettingsAccessibilityModal = forwardRef<SettingsAccessibilityModalRef>((_, ref) => {
+const SettingsAccessibilityModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [highContrast, setHighContrast] = useState(false);
   const [largeText, setLargeText] = useState(false);

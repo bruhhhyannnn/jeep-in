@@ -3,14 +3,9 @@ import { colorScheme } from "nativewind";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { BottomSheetModalBaseRef } from "@/types";
 
-export type ThemesAvatarModalRef = {
-  open: () => void;
-  close: () => void;
-};
-
-const ThemesAvatarModal = forwardRef<ThemesAvatarModalRef>((_, ref) => {
+const ThemesAvatarModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
   const [view, setView] = useState<"default" | "nickname" | "appearance">("default");
 
@@ -76,7 +71,9 @@ function DefaultThemesAvatarView({
 function NicknameView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
-      <ThemedText variant="h400">Customize avatar (coming soon)</ThemedText>
+      <ThemedText variant="h400" className="text-center">
+        Customize avatar (coming soon)
+      </ThemedText>
 
       {/* Cancel & Apply button */}
       <View className="flex-row items-center gap-2">
