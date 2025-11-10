@@ -18,7 +18,7 @@ export default function MapLayout({
     <SafeAreaContainer showPadding={false}>
       <View className="flex-1">
         {/* TODO: add and validate for the map placeholder here */}
-        <View className="flex-1 items-center justify-center bg-red-500">
+        <View className="relative flex-1 items-center justify-center bg-red-500">
           <ThemedText variant="h600" color="primary">
             Mapbox Map will go here
           </ThemedText>
@@ -30,7 +30,7 @@ export default function MapLayout({
         </ThemedView>
 
         {/* Bottom Content */}
-        <BottomSheetContainer snapPoints={["10%", "37%", "91%"]}>{children}</BottomSheetContainer>
+        <BottomSheetContainer>{children}</BottomSheetContainer>
       </View>
     </SafeAreaContainer>
   );
