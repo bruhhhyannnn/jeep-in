@@ -1,7 +1,10 @@
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import { callNumber, sendEmail } from "@/lib/openActions";
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/shared";
 import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
+import { StopCard } from "@/components/commuter";
+import { useRouter } from "expo-router";
 
 export type StopPointsModalRef = {
   open: () => void;
@@ -10,6 +13,7 @@ export type StopPointsModalRef = {
 
 const StopPointsModal = forwardRef<StopPointsModalRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
+  const [view, setView] = useState<"default" | "help">("default");
 
   useImperativeHandle(ref, () => ({
     open: () => baseRef.current?.open(),
@@ -17,20 +21,149 @@ const StopPointsModal = forwardRef<StopPointsModalRef>((_, ref) => {
   }));
 
   return (
-    <BottomSheetModalBase title="Stop Points" ref={baseRef}>
-      <View className="gap-4">
-        <ThemedText variant="h400">List of available jeepney stops</ThemedText>
-
-        <View className="gap-2">
-          <ThemedText>• MMSU Gate 3</ThemedText>
-          <ThemedText>• PhilRice Institute</ThemedText>
-          <ThemedText>• Paoay Terminal</ThemedText>
-        </View>
-
-        <ButtonText label="Go Back" variant="secondary" onPress={() => baseRef.current?.close()} />
-      </View>
+    <BottomSheetModalBase
+      title={view === "default" ? "Stop Points" : "Help | Stop Point"}
+      ref={baseRef}
+    >
+      {view === "default" ? (
+        <DefaultStopPoints onHelp={() => setView("help")} />
+      ) : (
+        <HelpStopPoints onBack={() => setView("default")} />
+      )}
     </BottomSheetModalBase>
   );
 });
 
 export default StopPointsModal;
+
+// Default View
+function DefaultStopPoints({ onHelp }: { onHelp: () => void }) {
+  const router = useRouter();
+
+  return (
+    <View className="gap-4">
+      {/* Going laoag route */}
+      {/* TODO: render actual stop points here, all of it */}
+      <View className="gap-1">
+        <ThemedText variant="h500" className="uppercase">
+          Going laoag route
+        </ThemedText>
+        <View className="gap-2">
+          <StopCard
+            location="MMSU Gate 3"
+            address="Batac City"
+            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+          />
+          <StopCard
+            location="Bingao Elementary & National High School"
+            address="Batac City"
+            onPress={() =>
+              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+            }
+          />
+        </View>
+      </View>
+
+      {/* Going paoay route */}
+      {/* TODO: render actual stop points here, all of it */}
+      <View className="gap-1">
+        <ThemedText variant="h500" className="uppercase">
+          Going paoay route
+        </ThemedText>
+        <View className="gap-2">
+          <StopCard
+            location="MMSU Gate 3"
+            address="Batac City"
+            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+          />
+          <StopCard
+            location="Bingao Elementary & National High School"
+            address="Batac City"
+            onPress={() =>
+              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+            }
+          />
+        </View>
+      </View>
+
+      {/* Button help information */}
+      <View className="self-start">
+        <ButtonText
+          label="Help Info"
+          variant="secondary"
+          iconName="information-circle-outline"
+          onPress={onHelp}
+        />
+      </View>
+    </View>
+  );
+}
+
+// Help Info View
+function HelpStopPoints({ onBack }: { onBack: () => void }) {
+  return (
+    <View className="gap-4">
+      {/* What's It Do Section */}
+      <View>
+        <ThemedText variant="h500" className="uppercase">
+          WHAT'S IT DO?
+        </ThemedText>
+        <ThemedText color="secondary">
+          Provides a list of stop points or pickup points of commonly known PUV stops.
+        </ThemedText>
+      </View>
+
+      {/* Concern or Complaints Section */}
+      <View>
+        <ThemedText variant="h500" className="uppercase">
+          CONCERNS OR COMPLAINTS?
+        </ThemedText>
+        <ThemedText color="secondary">
+          Contact the JEEP-IN team hotline or email address.
+        </ThemedText>
+
+        {/* Contact Cards */}
+        <View className="mt-1 gap-2">
+          {/* TODO: all this information here should be in another data file */}
+          <ButtonText
+            label="+63 918 217 8716"
+            variant="tertiary"
+            iconName="call-outline"
+            showChevron
+            fullWidth
+            onPress={() => callNumber("+639182178716")}
+          />
+          <ButtonText
+            label="+63 949 924 8562"
+            variant="tertiary"
+            iconName="call-outline"
+            showChevron
+            fullWidth
+            onPress={() => callNumber("+639499248562")}
+          />
+          <ButtonText
+            label="jeepin.official@gmail.com"
+            variant="tertiary"
+            iconName="mail-outline"
+            showChevron
+            fullWidth
+            onPress={() => sendEmail("jeepin.official@gmail.com", "JEEP-IN Support Request")}
+          />
+          <ButtonText
+            label="mangapit.bryan@gmail.com"
+            variant="tertiary"
+            iconName="mail-outline"
+            showChevron
+            fullWidth
+            onPress={() => sendEmail("mangapit.bryan@gmail.com", "JEEP-IN Support Request")}
+          />
+        </View>
+      </View>
+
+      {/* Go Back Button */}
+      <View className="self-start">
+        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+      </View>
+    </View>
+  );
+}
