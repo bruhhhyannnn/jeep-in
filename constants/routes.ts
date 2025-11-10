@@ -12,7 +12,7 @@ export const ROUTES = {
 
   commuter: {
     layout: "/(commuter)",
-    home: "/(commuter)/home",
+    home: "/(commuter)/home", // TODO: this is set as default for now
     settings: "/(commuter)/settings",
 
     // Nested commuter pages

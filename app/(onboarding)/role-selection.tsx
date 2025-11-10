@@ -47,6 +47,7 @@ const RoleSelectionScreen = () => {
               label="Operator"
               showChevron={true}
               fullWidth
+              // TODO: change this someday to driver home not commuter home
               onPress={() => router.push(ROUTES.commuter.home)}
             />
           </View>
