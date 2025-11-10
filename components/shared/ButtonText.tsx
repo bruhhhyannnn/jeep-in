@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { cn } from "@/lib/utils";
 import ThemedText from "@/components/shared/ThemedText";
 import Icon from "@/components/shared/Icon";
@@ -6,8 +6,11 @@ import Icon from "@/components/shared/Icon";
 type ButtonTextProps = {
   label: string;
   onPress: () => void;
-  variant?: "primary" | "secondary"; // secondary = cancel
-  // TODO: add also here family name for the icons
+  // * primary: default blue;
+  // * secondary: go back or cancel;
+  // * tertiary: settings buttons;
+  variant?: "primary" | "secondary" | "tertiary";
+  // TODO: will be adding family icons here
   iconName?: string;
   disabled?: boolean;
   showChevron?: boolean;
@@ -23,15 +26,15 @@ export default function ButtonText({
   showChevron = false,
   fullWidth = false,
 }: ButtonTextProps) {
-  const baseStyle = "mx-auto flex-row items-center gap-2 rounded-full px-4 py-2 active:opacity-70";
+  const baseStyle =
+    "flex-row items-center justify-center gap-2 rounded-full px-4 py-2 active:opacity-70";
 
   const styles = cn(
     baseStyle,
-    variant === "primary" && "bg-dodger-blue-600",
-    variant === "secondary" && "bg-neutral-300 dark:bg-neutral-800",
+    getBackgroundColor(variant),
     disabled && "opacity-50",
     showChevron ? "justify-between" : "justify-center",
-    fullWidth ? "flex-1 justify-center" : "self-center",
+    fullWidth ? "w-full" : "",
   );
 
   return (
@@ -39,22 +42,62 @@ export default function ButtonText({
       onPress={onPress}
       disabled={disabled}
       className={styles}
-      // TODO: make the secondary to not have shadow effect
-      style={{
-        shadowColor: "#0A0A0A",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 4, // Android
-      }}
+      style={[
+        {
+          shadowColor: "#0A0A0A",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          // only primary and secondary has shadow
+          elevation: variant === "primary" || variant === "tertiary" ? 4 : 0,
+        },
+        !fullWidth && { alignSelf: "flex-start" },
+      ]}
     >
-      {iconName && <Icon name={iconName} color={variant === "primary" ? "#edf9ff" : "#737373"} />}
-      <ThemedText variant="h400" color={variant === "primary" ? "primary" : "secondary"}>
-        {label}
-      </ThemedText>
-      {showChevron && (
-        <Icon name={"chevron-forward"} color={variant === "primary" ? "#edf9ff" : "#737373"} />
-      )}
+      <View className="flex-row items-center justify-center gap-2">
+        {iconName && <Icon name={iconName} color={getIconColor(variant)} />}
+        <ThemedText variant="h400" color={getTextColor(variant)}>
+          {label}
+        </ThemedText>
+      </View>
+      {showChevron && <Icon name="chevron-forward" color={getIconColor(variant)} />}
     </TouchableOpacity>
   );
+}
+
+// TODO: will change the type here someday to be a global type of the button types someday
+function getBackgroundColor(variant: string) {
+  switch (variant) {
+    case "primary":
+      return "bg-dodger-blue-600";
+    case "secondary":
+    case "tertiary":
+      return "bg-neutral-300 dark:bg-neutral-800";
+    default:
+      return "bg-dodger-blue-600";
+  }
+}
+
+function getTextColor(variant: string) {
+  switch (variant) {
+    case "primary":
+    case "tertiary":
+      return "primary";
+    case "secondary":
+      return "secondary";
+    default:
+      return "primary";
+  }
+}
+
+function getIconColor(variant: string) {
+  switch (variant) {
+    case "primary":
+    case "tertiary":
+      return "#edf9ff";
+    case "secondary":
+      return "#737373";
+    default:
+      return "#737373";
+  }
 }
