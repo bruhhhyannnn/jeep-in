@@ -39,11 +39,13 @@ const RoleSelectionScreen = () => {
             <ButtonText
               label="Commuter"
               showChevron={true}
+              fullWidth
               onPress={() => router.push("/(commuter)/home")}
             />
             <ButtonText
               label="Operator"
               showChevron={true}
+              fullWidth
               onPress={() => router.push("/(commuter)/home")}
             />
           </View>

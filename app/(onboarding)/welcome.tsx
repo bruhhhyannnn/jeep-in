@@ -63,7 +63,7 @@ export default function WelcomeScreen() {
       </Swiper>
 
       {/* Next / Get Started Button */}
-      <ButtonText label={isLastSlide ? "Get Started" : "Next"} onPress={handleNext} />
+      <ButtonText label={isLastSlide ? "Get Started" : "Next"} fullWidth onPress={handleNext} />
     </SafeAreaContainer>
   );
 }
