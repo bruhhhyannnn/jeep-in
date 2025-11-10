@@ -2,31 +2,27 @@ import { TouchableOpacity, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { ThemedText, Icon } from "@/components/shared";
 
-type ButtonCard = {
+type SettingsCardProp = {
   label: string;
   onPress: () => void;
-  variant?: "secondary"; // secondary = getting around section
-  // TODO: add also here family name for the icons
+  variant?: "default" | "secondary"; // secondary = getting around section
+  // TODO: maybe add also here family name for the icons
   iconName: string;
-  showTopRounded?: boolean;
-  showBottomRounded?: boolean;
 };
 
-export default function ButtonCard({
+export default function SettingsCard({
   label,
   onPress,
-  variant,
+  variant = "default",
   iconName,
-  showTopRounded,
-  showBottomRounded,
-}: ButtonCard) {
-  const baseStyle = "flex-row gap-2 bg-dodger-blue-600 active:opacity-70";
+}: SettingsCardProp) {
+  const baseStyle =
+    "flex-row items-center gap-2 bg-dodger-blue-600 dark:bg-dodger-blue-800 active:opacity-70";
 
   const styles = cn(
     baseStyle,
+    variant === "default" && "p-4",
     variant === "secondary" && "h-24 flex-1 items-end rounded-2xl px-4 py-2",
-    showTopRounded && "items-center rounded-t-2xl p-4",
-    showBottomRounded && "items-center rounded-b-2xl p-4",
   );
 
   return (

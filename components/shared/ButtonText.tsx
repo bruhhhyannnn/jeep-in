@@ -8,7 +8,7 @@ type ButtonTextProps = {
   onPress: () => void;
   // * primary: default blue;
   // * secondary: go back or cancel;
-  // * tertiary: settings buttons;
+  // ! tertiary: settings buttons;  remove this ASAP and just use secondary!
   variant?: "primary" | "secondary" | "tertiary";
   // TODO: will be adding family icons here
   iconName?: string;

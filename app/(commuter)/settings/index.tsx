@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/shared";
-import { ButtonCard, Divider } from "@/components/settings";
+import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   // actual file
@@ -29,7 +29,7 @@ const SettingsScreen = () => {
   const aboutRef = useRef<AboutJeepInModalRef>(null);
 
   return (
-    <SafeAreaContainer className="flex-1 bg-dodger-blue-700">
+    <SafeAreaContainer className="flex-1 bg-dodger-blue-700 dark:bg-dodger-blue-950">
       <BottomSheetModalProvider>
         <ScrollView showsVerticalScrollIndicator={false} className="overflow-visible">
           <View className="gap-6">
@@ -59,13 +59,13 @@ const SettingsScreen = () => {
                 Getting around
               </ThemedText>
               <View className="flex-row items-center gap-2">
-                <ButtonCard
+                <SettingsCard
                   label="Stop points"
                   iconName="map-outline"
                   variant="secondary"
                   onPress={() => stopPointsRef.current?.open()}
                 />
-                <ButtonCard
+                <SettingsCard
                   label="Fare guide"
                   iconName="cash-outline"
                   variant="secondary"
@@ -79,18 +79,16 @@ const SettingsScreen = () => {
               <ThemedText variant="h400" color="primary">
                 Preferences
               </ThemedText>
-              <View>
-                <ButtonCard
+              <View className="overflow-hidden rounded-2xl">
+                <SettingsCard
                   label="Settings and accessibility"
                   iconName="settings-outline"
-                  showTopRounded
                   onPress={() => accessibilityRef.current?.open()}
                 />
                 <Divider />
-                <ButtonCard
+                <SettingsCard
                   label="Themes and avatar"
                   iconName="color-palette-outline"
-                  showBottomRounded
                   onPress={() => themesAvatarRef.current?.open()}
                 />
               </View>
@@ -101,17 +99,15 @@ const SettingsScreen = () => {
               <ThemedText variant="h400" color="primary">
                 Help center
               </ThemedText>
-              <View>
-                <ButtonCard
+              <View className="overflow-hidden rounded-2xl">
+                <SettingsCard
                   label="Get support"
-                  showTopRounded
                   iconName="mail-outline"
                   onPress={() => supportRef.current?.open()}
                 />
                 <Divider />
-                <ButtonCard
+                <SettingsCard
                   label="About JEEP-IN"
-                  showBottomRounded
                   iconName="information-circle-outline"
                   onPress={() => aboutRef.current?.open()}
                 />
@@ -119,7 +115,7 @@ const SettingsScreen = () => {
             </View>
 
             {/* Footer Logo */}
-            <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-4">
+            <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-4 dark:bg-dodger-blue-800">
               <Image
                 source={require("@/assets/images/logo-jeep-in-2.png")}
                 className="aspect-[44/13] h-16"

@@ -1,4 +1,4 @@
-import { useThemeStore } from "@/context/useThemeStore"; // adjust import if different
+import { useThemeStore } from "@/context/useThemeStore";
 import { colorScheme } from "nativewind";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
@@ -129,7 +129,6 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
           return (
             <TouchableOpacity
               key={opt.value}
-              activeOpacity={0.7}
               onPress={() => handleSelect(opt.value)} // ✅ updates theme instantly
             >
               <ThemedView
