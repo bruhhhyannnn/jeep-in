@@ -1,6 +1,6 @@
-import { MapLayout } from "@/components/commuter/layout/";
+import { MapLayout } from "@/components/layout";
 import { StopTitleBadge } from "@/components/commuter";
-import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/shared";
+import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
 

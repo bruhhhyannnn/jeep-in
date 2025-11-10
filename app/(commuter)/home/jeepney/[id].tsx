@@ -1,7 +1,7 @@
-import { MapLayout } from "@/components/commuter/layout/";
+import { MapLayout } from "@/components/layout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { ThemedText, ButtonText } from "@/components/shared";
+import { ThemedText, ButtonText } from "@/components/ui";
 import { JeepStatusBadge, StopCard } from "@/components/commuter";
 
 export default function JeepneyInfoScreen() {

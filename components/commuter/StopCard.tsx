@@ -1,5 +1,5 @@
 import { TouchableOpacity, View } from "react-native";
-import { ThemedView, ThemedText, Icon } from "@/components/shared";
+import { ThemedView, ThemedText, Icon } from "@/components/ui";
 
 type StopCardProps = {
   location: string;

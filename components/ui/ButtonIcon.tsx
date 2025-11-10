@@ -1,5 +1,5 @@
 import { TouchableOpacity } from "react-native";
-import Icon from "@/components/shared/Icon";
+import Icon from "@/components/ui/Icon";
 
 type ButtonTextProps = {
   // also add family icon later here

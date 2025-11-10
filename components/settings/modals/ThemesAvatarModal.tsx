@@ -2,8 +2,8 @@ import { useThemeStore } from "@/context/useThemeStore";
 import { colorScheme } from "nativewind";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/shared";
-import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
+import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/ui";
+import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 
 export type ThemesAvatarModalRef = {
   open: () => void;

@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/shared/";
-import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
+import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/ui/";
+import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 
 export type FilterModalRef = {
   open: () => void;

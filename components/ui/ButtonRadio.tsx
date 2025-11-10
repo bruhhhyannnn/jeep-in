@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
-import ThemedView from "@/components/shared/ThemedView";
-import ThemedText from "@/components/shared/ThemedText";
-import Icon from "@/components/shared/Icon";
+import ThemedView from "@/components/ui/ThemedView";
+import ThemedText from "@/components/ui/ThemedText";
+import Icon from "@/components/ui/Icon";
 
 type ButtonRadioProps = {
   label: string;

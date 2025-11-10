@@ -1,5 +1,5 @@
 import { TouchableOpacity, View } from "react-native";
-import { ThemedText, ThemedView, Icon } from "@/components/shared";
+import { ThemedText, ThemedView, Icon } from "@/components/ui";
 
 type JeepCardProps = {
   onPress?: () => void;

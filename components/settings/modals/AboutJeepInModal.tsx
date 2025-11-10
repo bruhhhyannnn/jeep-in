@@ -1,8 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import * as Clipboard from "expo-clipboard";
-import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/shared";
-import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
-import { openWebsite } from "@/lib/openActions";
+import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
+import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
+import { openWebsite } from "@/lib/linkActions";
 import { Share, ToastAndroid, View } from "react-native";
 
 export type AboutJeepInModalRef = {

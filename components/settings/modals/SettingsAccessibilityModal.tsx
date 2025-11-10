@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View, Switch } from "react-native";
-import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/shared";
-import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
+import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/ui";
+import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 
 export type SettingsAccessibilityModalRef = {
   open: () => void;

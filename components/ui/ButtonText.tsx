@@ -1,7 +1,7 @@
 import { TouchableOpacity, View } from "react-native";
 import { cn } from "@/lib/utils";
-import ThemedText from "@/components/shared/ThemedText";
-import Icon from "@/components/shared/Icon";
+import ThemedText from "@/components/ui/ThemedText";
+import Icon from "@/components/ui/Icon";
 
 type ButtonTextProps = {
   label: string;

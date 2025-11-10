@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/shared";
+import { ThemedText } from "@/components/ui";
 
 type StopTitleBadgeProps = {
   title: string;

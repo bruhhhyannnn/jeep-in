@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/shared";
+import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
 import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {

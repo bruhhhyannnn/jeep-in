@@ -1,8 +1,8 @@
-import { callNumber, sendEmail } from "@/lib/openActions";
+import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/shared";
-import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
+import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/ui";
+import { BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
 
 export type FareGuideModalRef = {
   open: () => void;

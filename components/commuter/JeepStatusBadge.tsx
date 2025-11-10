@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/shared";
+import { ThemedText } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 // TODO: add this to a types.ts someday

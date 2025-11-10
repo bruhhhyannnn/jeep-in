@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
-import ThemedView from "@/components/shared/ThemedView";
+import ThemedView from "@/components/ui/ThemedView";
 
 interface SafeAreaContainerProps extends ViewProps {
   showPadding?: boolean;

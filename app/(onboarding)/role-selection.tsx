@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { View, Image } from "react-native";
-import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/shared";
+import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
 
 const RoleSelectionScreen = () => {
   const router = useRouter();

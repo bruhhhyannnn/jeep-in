@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { useRouter } from "expo-router";
-import { ThemedText, CustomTextInput } from "@/components/shared/";
+import { ThemedText, CustomTextInput } from "@/components/ui/";
 import { JeepCard, StopCard } from "@/components/commuter";
 
 export default function DefaultContent() {

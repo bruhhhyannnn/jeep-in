@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import ThemedText from "@/components/shared/ThemedText";
-import Icon from "@/components/shared/Icon";
+import ThemedText from "@/components/ui/ThemedText";
+import Icon from "@/components/ui/Icon";
 
 type ButtonBackProps = {
   label?: string;

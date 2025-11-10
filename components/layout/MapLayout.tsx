@@ -6,7 +6,7 @@ import {
   ThemedView,
   ButtonBack,
   MapContainer,
-} from "@/components/shared";
+} from "@/components/ui";
 
 export default function MapLayout({
   title,

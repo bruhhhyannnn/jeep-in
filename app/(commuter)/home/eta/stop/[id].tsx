@@ -1,6 +1,6 @@
-import { MapLayout } from "@/components/commuter/layout/";
+import { MapLayout } from "@/components/layout";
 import { StopCard, UserCard } from "@/components/commuter";
-import { Icon, ThemedText } from "@/components/shared";
+import { Icon, ThemedText } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
 

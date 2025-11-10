@@ -1,6 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { cn } from "@/lib/utils";
-import { ThemedText, Icon } from "@/components/shared";
+import { ThemedText, Icon } from "@/components/ui";
 
 type SettingsCardProp = {
   label: string;

@@ -3,13 +3,7 @@ import { useRef, useState } from "react";
 import { Image, View } from "react-native";
 import { router } from "expo-router";
 import { onboardingData } from "@/data/onboardingData";
-import {
-  SafeAreaContainer,
-  ButtonText,
-  ButtonBack,
-  ThemedView,
-  ThemedText,
-} from "@/components/shared";
+import { SafeAreaContainer, ButtonText, ButtonBack, ThemedView, ThemedText } from "@/components/ui";
 
 export default function WelcomeScreen() {
   const swiperRef = useRef<Swiper>(null);
