@@ -1,14 +1,8 @@
 import { useThemeStore } from "@/context/useThemeStore";
 import { colorScheme } from "nativewind";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
-import {
-  BottomSheetModalBase,
-  ButtonText,
-  Icon,
-  ThemedText,
-  ThemedView,
-} from "@/components/shared";
+import { View } from "react-native";
+import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/shared";
 import { BottomSheetModalBaseRef } from "@/components/shared/BottomSheetModalBase";
 
 export type ThemesAvatarModalRef = {
@@ -123,31 +117,14 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
       </ThemedText>
 
       <View className="gap-2">
-        {options.map((opt) => {
-          const selected = theme === opt.value;
-
-          return (
-            // TODO: make this is a component for ButtonRadio
-            <TouchableOpacity
-              key={opt.value}
-              onPress={() => handleSelect(opt.value)} // ✅ updates theme instantly
-            >
-              <ThemedView
-                variant="bg_light"
-                className="flex-row items-center justify-between rounded-full px-6 py-4 shadow-lg"
-              >
-                <ThemedText>{opt.label}</ThemedText>
-
-                <Icon
-                  family="MaterialCommunityIcons"
-                  name={selected ? "radiobox-marked" : "radiobox-blank"}
-                  color="#1E90FF"
-                  size={22}
-                />
-              </ThemedView>
-            </TouchableOpacity>
-          );
-        })}
+        {options.map((opt) => (
+          <ButtonRadio
+            key={opt.value}
+            label={opt.label}
+            selected={theme === opt.value}
+            onPress={() => handleSelect(opt.value)}
+          />
+        ))}
       </View>
 
       {/* Go Back Button */}

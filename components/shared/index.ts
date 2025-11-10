@@ -11,3 +11,4 @@ export { default as BottomSheetModalBaseRef } from "@/components/shared/BottomSh
 export { default as ThemedTextInput } from "@/components/shared/ThemedTextInput";
 export { default as CustomTextInput } from "@/components/shared/CustomTextInput";
 export { default as ButtonCheckbox } from "@/components/shared/ButtonCheckbox";
+export { default as ButtonRadio } from "@/components/shared/ButtonRadio";
