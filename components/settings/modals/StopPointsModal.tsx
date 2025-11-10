@@ -26,9 +26,9 @@ const StopPointsModal = forwardRef<StopPointsModalRef>((_, ref) => {
       ref={baseRef}
     >
       {view === "default" ? (
-        <DefaultStopPoints onHelp={() => setView("help")} />
+        <DefaultStopPointsView onHelp={() => setView("help")} />
       ) : (
-        <HelpStopPoints onBack={() => setView("default")} />
+        <HelpStopPointsView onBack={() => setView("default")} />
       )}
     </BottomSheetModalBase>
   );
@@ -37,7 +37,7 @@ const StopPointsModal = forwardRef<StopPointsModalRef>((_, ref) => {
 export default StopPointsModal;
 
 // Default View
-function DefaultStopPoints({ onHelp }: { onHelp: () => void }) {
+function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
   const router = useRouter();
 
   return (
@@ -100,7 +100,7 @@ function DefaultStopPoints({ onHelp }: { onHelp: () => void }) {
 }
 
 // Help Info View
-function HelpStopPoints({ onBack }: { onBack: () => void }) {
+function HelpStopPointsView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
       {/* What's It Do Section */}

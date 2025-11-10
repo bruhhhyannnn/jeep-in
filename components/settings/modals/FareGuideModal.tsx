@@ -24,9 +24,9 @@ const FareGuideModal = forwardRef<FareGuideModalRef>((_, ref) => {
       ref={baseRef}
     >
       {view === "default" ? (
-        <DefaultFareGuide onHelp={() => setView("help")} />
+        <DefaultFareGuideView onHelp={() => setView("help")} />
       ) : (
-        <HelpFareGuide onBack={() => setView("default")} />
+        <HelpFareGuideView onBack={() => setView("default")} />
       )}
     </BottomSheetModalBase>
   );
@@ -35,7 +35,7 @@ const FareGuideModal = forwardRef<FareGuideModalRef>((_, ref) => {
 export default FareGuideModal;
 
 // Default View
-function DefaultFareGuide({ onHelp }: { onHelp: () => void }) {
+function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
   // TODO: Get actual fare matrix table here someday
   const data = [
     {
@@ -143,7 +143,7 @@ function DefaultFareGuide({ onHelp }: { onHelp: () => void }) {
 }
 
 // Help Info View
-function HelpFareGuide({ onBack }: { onBack: () => void }) {
+function HelpFareGuideView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
       {/* What's It Do Section */}

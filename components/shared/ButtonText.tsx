@@ -71,8 +71,9 @@ function getBackgroundColor(variant: string) {
     case "primary":
       return "bg-dodger-blue-600";
     case "secondary":
-    case "tertiary":
       return "bg-neutral-300 dark:bg-neutral-800";
+    case "tertiary":
+      return "bg-neutral-bg-light-200 dark:bg-neutral-bg-dark-200 px-6 py-4";
     default:
       return "bg-dodger-blue-600";
   }
@@ -81,10 +82,11 @@ function getBackgroundColor(variant: string) {
 function getTextColor(variant: string) {
   switch (variant) {
     case "primary":
-    case "tertiary":
       return "primary";
     case "secondary":
       return "secondary";
+    case "tertiary":
+      return "default";
     default:
       return "primary";
   }
@@ -93,10 +95,11 @@ function getTextColor(variant: string) {
 function getIconColor(variant: string) {
   switch (variant) {
     case "primary":
-    case "tertiary":
       return "#edf9ff";
     case "secondary":
       return "#737373";
+    case "tertiary":
+      return;
     default:
       return "#737373";
   }

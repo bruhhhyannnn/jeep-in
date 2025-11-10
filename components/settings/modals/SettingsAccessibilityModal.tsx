@@ -25,20 +25,22 @@ const SettingsAccessibilityModal = forwardRef<SettingsAccessibilityModalRef>((_,
 
         {/* TODO: make this as a button someday, ButtonSwitch.tsx */}
         {/* TODO: think about the functionalities of these someday of what to do */}
-        <ThemedView
-          variant="bg_light"
-          className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
-        >
-          <ThemedText color="secondary">High Contrast Mode</ThemedText>
-          <Switch value={highContrast} disabled onValueChange={setHighContrast} />
-        </ThemedView>
-        <ThemedView
-          variant="bg_light"
-          className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
-        >
-          <ThemedText color="secondary">Large Text</ThemedText>
-          <Switch value={largeText} disabled onValueChange={setLargeText} />
-        </ThemedView>
+        <View className="gap-2">
+          <ThemedView
+            variant="bg_light"
+            className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
+          >
+            <ThemedText color="secondary">High Contrast Mode</ThemedText>
+            <Switch value={highContrast} disabled onValueChange={setHighContrast} />
+          </ThemedView>
+          <ThemedView
+            variant="bg_light"
+            className="flex-row items-center justify-between rounded-full px-6 shadow-lg"
+          >
+            <ThemedText color="secondary">Large Text</ThemedText>
+            <Switch value={largeText} disabled onValueChange={setLargeText} />
+          </ThemedView>
+        </View>
       </View>
     </BottomSheetModalBase>
   );

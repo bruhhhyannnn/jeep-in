@@ -47,7 +47,7 @@ const FilterModal = forwardRef<FilterModalRef>((_, ref) => {
           />
         </View>
 
-        {/* Cancel & Filter button */}
+        {/* Cancel & Apply button */}
         <View className="flex-row items-center gap-2">
           <ButtonText label="Cancel" variant="secondary" onPress={() => baseRef.current?.close()} />
           <View className="flex-1">

@@ -7,6 +7,7 @@ type RouteCardProps = {
   onToggle?: () => void;
 };
 
+// TODO: change the default name of this because its mislead, should be checkbox route card or somth
 export default function RouteCard({ route, checked, onToggle }: RouteCardProps) {
   return (
     <TouchableOpacity onPress={onToggle}>
