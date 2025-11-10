@@ -17,8 +17,8 @@ export default function MapLayout({
   return (
     <SafeAreaContainer showPadding={false}>
       <View className="flex-1">
-        {/* Map Placeholder */}
-        <View className="flex-1 items-center justify-center bg-black">
+        {/* TODO: add and validate for the map placeholder here */}
+        <View className="flex-1 items-center justify-center bg-red-500">
           <ThemedText variant="h600" color="primary">
             Mapbox Map will go here
           </ThemedText>
