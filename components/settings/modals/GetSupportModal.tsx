@@ -88,7 +88,7 @@ function HelpView({ onBack }: { onBack: () => void }) {
         <ThemedText color="secondary">
           - How can I track a modern jeepney?{"\n\t\t"}- You can view live jeepney locations and
           routes from the home screen map.{"\n"}- What if a jeepney location seems outdated?
-          {"\n\t\t"}- The driver’s device might have lost signal. Try refreshing or checking again
+          {"\n\t\t"}- The driver's device might have lost signal. Try refreshing or checking again
           later.{"\n"}- Why do some stops not appear?{"\n\t\t"}- They may belong to another route
           filter. Use the filter button to show other routes.
         </ThemedText>
