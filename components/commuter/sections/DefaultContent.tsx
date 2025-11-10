@@ -15,6 +15,7 @@ export default function DefaultContent() {
       <View className="gap-2">
         <ThemedText variant="h400">Nearby Jeepneys</ThemedText>
         <View className="gap-2">
+          {/* TODO: load actual jeeps here */}
           <JeepCard
             plateNo="IAE 2730"
             status="On route"
@@ -34,6 +35,7 @@ export default function DefaultContent() {
       <View className="gap-2">
         <ThemedText variant="h400">Nearby Stops</ThemedText>
         <View className="gap-2">
+          {/* TODO: load actual jeeps here */}
           <StopCard
             location="MMSU Gate 3"
             address="Batac City"
