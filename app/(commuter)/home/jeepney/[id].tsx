@@ -50,11 +50,13 @@ export default function JeepneyInfoScreen() {
         </View>
 
         {/* Get ETA Button */}
-        <ButtonText
-          label="Get ETA"
-          onPress={() => router.push(ROUTES.commuter.etaJeepney(id.toString()))}
-          iconName="timer-outline"
-        />
+        <View className="self-center">
+          <ButtonText
+            label="Get ETA"
+            iconName="timer-outline"
+            onPress={() => router.push(ROUTES.commuter.etaJeepney(id.toString()))}
+          />
+        </View>
       </View>
     </MapLayout>
   );

@@ -31,11 +31,13 @@ export default function StopPointInfoScreen() {
         </View>
 
         {/* Get Directions Button */}
-        <ButtonText
-          label="Get Directions"
-          onPress={() => router.push(ROUTES.commuter.etaStop(id.toString()))}
-          iconName="timer-outline"
-        />
+        <View className="self-center">
+          <ButtonText
+            label="Get Directions"
+            onPress={() => router.push(ROUTES.commuter.etaStop(id.toString()))}
+            iconName="timer-outline"
+          />
+        </View>
       </View>
     </MapLayout>
   );

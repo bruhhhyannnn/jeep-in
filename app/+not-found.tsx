@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { ThemedText, ThemedView, ButtonText } from "@/components/ui";
@@ -22,9 +23,8 @@ export default function NotFoundScreen() {
         <View className="w-full">
           <ButtonText
             label="Go Back Home"
-            variant="primary"
             iconName="home-outline"
-            onPress={() => router.replace("/")}
+            onPress={() => router.replace(ROUTES.root.index)}
           />
         </View>
       </View>
