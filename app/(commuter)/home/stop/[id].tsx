@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { StopTitleBadge } from "@/components/commuter";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
@@ -32,7 +33,7 @@ export default function StopPointInfoScreen() {
         {/* Get Directions Button */}
         <ButtonText
           label="Get Directions"
-          onPress={() => router.push(`/(commuter)/home/eta/stop/${id}`)}
+          onPress={() => router.push(ROUTES.commuter.etaStop(id.toString()))}
           iconName="timer-outline"
         />
       </View>

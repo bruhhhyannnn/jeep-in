@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
@@ -5,7 +6,6 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/commuter";
 import { useRouter } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
-
 
 const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -48,13 +48,13 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
           <StopCard
             location="MMSU Gate 3"
             address="Batac City"
-            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
           />
           <StopCard
             location="Bingao Elementary & National High School"
             address="Batac City"
             onPress={() =>
-              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
             }
           />
         </View>
@@ -70,13 +70,13 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
           <StopCard
             location="MMSU Gate 3"
             address="Batac City"
-            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
           />
           <StopCard
             location="Bingao Elementary & National High School"
             address="Batac City"
             onPress={() =>
-              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
             }
           />
         </View>

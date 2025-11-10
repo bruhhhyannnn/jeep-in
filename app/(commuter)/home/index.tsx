@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -30,7 +31,7 @@ const HomeScreen = () => {
           <View style={{ top: top + 28 }} className="absolute right-6 gap-4">
             <ButtonIcon
               iconName="settings-outline"
-              onPress={() => router.push("/(commuter)/settings")}
+              onPress={() => router.push(ROUTES.commuter.settings)}
             />
             <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open()} />
             <ButtonIcon

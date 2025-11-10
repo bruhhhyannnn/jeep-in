@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { useRouter } from "expo-router";
 import { View, Image } from "react-native";
 import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
@@ -40,13 +41,13 @@ const RoleSelectionScreen = () => {
               label="Commuter"
               showChevron={true}
               fullWidth
-              onPress={() => router.push("/(commuter)/home")}
+              onPress={() => router.push(ROUTES.commuter.home)}
             />
             <ButtonText
               label="Operator"
               showChevron={true}
               fullWidth
-              onPress={() => router.push("/(commuter)/home")}
+              onPress={() => router.push(ROUTES.commuter.home)}
             />
           </View>
         </ThemedView>

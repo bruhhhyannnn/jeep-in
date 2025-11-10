@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, Icon } from "@/components/ui";
@@ -28,7 +29,7 @@ export default function EtaJeepneyInfoScreen() {
             <JeepCard
               plateNo={id.toString()}
               status="On route"
-              onPress={() => router.push("/(commuter)/home/jeepney/IAE 2730")}
+              onPress={() => router.push(ROUTES.commuter.jeepney("IAE 2730"))}
             />
           </View>
 
@@ -46,7 +47,7 @@ export default function EtaJeepneyInfoScreen() {
               location="Bingao Elementary & National High School"
               address="Batac City"
               onPress={() =>
-                router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+                router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
               }
             />
           </View>

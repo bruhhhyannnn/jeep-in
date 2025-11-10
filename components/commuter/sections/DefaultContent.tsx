@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { ThemedText, CustomTextInput } from "@/components/ui/";
@@ -20,13 +21,13 @@ export default function DefaultContent() {
             plateNo="IAE 2730"
             status="On route"
             nextStop="MMSU Gate 3"
-            onPress={() => router.push("/(commuter)/home/jeepney/IAE 2730")}
+            onPress={() => router.push(ROUTES.commuter.jeepney("IAE 2730"))}
           />
           <JeepCard
             plateNo="IAE 5012"
             status="Stationed"
             nextStop="Bingao Elementary & National High School"
-            onPress={() => router.push("/(commuter)/home/jeepney/IAE 5012")}
+            onPress={() => router.push(ROUTES.commuter.jeepney("IAE 5012"))}
           />
         </View>
       </View>
@@ -39,13 +40,13 @@ export default function DefaultContent() {
           <StopCard
             location="MMSU Gate 3"
             address="Batac City"
-            onPress={() => router.push("/(commuter)/home/stop/MMSU Gate 3")}
+            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
           />
           <StopCard
             location="Bingao Elementary & National High School"
             address="Batac City"
             onPress={() =>
-              router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
             }
           />
         </View>

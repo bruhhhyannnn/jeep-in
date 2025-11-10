@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { StopCard, UserCard } from "@/components/commuter";
 import { Icon, ThemedText } from "@/components/ui";
@@ -45,7 +46,7 @@ export default function EtaStopPointInfoScreen() {
             <StopCard
               location={id.toString()}
               address="Batac City"
-              onPress={() => router.push(`/(commuter)/home/stop/${id}`)}
+              onPress={() => router.push(ROUTES.commuter.stop(id.toString()))}
             />
           </View>
         </View>

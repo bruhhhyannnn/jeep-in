@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
@@ -29,7 +30,7 @@ export default function JeepneyInfoScreen() {
             <StopCard
               location="Pik a Bun"
               address="Batac City"
-              onPress={() => router.push("/(commuter)/home/stop/Pik a Bun")}
+              onPress={() => router.push(ROUTES.commuter.stop("Pik a Bun"))}
             />
           </View>
 
@@ -42,7 +43,7 @@ export default function JeepneyInfoScreen() {
               location="Bingao Elementary & National High School"
               address="Batac City"
               onPress={() =>
-                router.push("/(commuter)/home/stop/Bingao Elementary & National High School")
+                router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
               }
             />
           </View>
@@ -51,7 +52,7 @@ export default function JeepneyInfoScreen() {
         {/* Get ETA Button */}
         <ButtonText
           label="Get ETA"
-          onPress={() => router.push(`/(commuter)/home/eta/jeepney/${id}`)}
+          onPress={() => router.push(ROUTES.commuter.etaJeepney(id.toString()))}
           iconName="timer-outline"
         />
       </View>

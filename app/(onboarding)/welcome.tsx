@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants";
 import Swiper from "react-native-swiper";
 import { useRef, useState } from "react";
 import { Image, View } from "react-native";
@@ -12,7 +13,7 @@ export default function WelcomeScreen() {
 
   const handleNext = () => {
     if (isLastSlide) {
-      router.replace("/(onboarding)/role-selection");
+      router.replace(ROUTES.onboarding.roleSelection);
     } else {
       swiperRef.current?.scrollBy(1);
     }
@@ -22,7 +23,7 @@ export default function WelcomeScreen() {
     <SafeAreaContainer className="items-center justify-center">
       {/* Skip Button */}
       <View className="w-full items-end">
-        <ButtonBack label="Skip" onPress={() => router.replace("/(onboarding)/role-selection")} />
+        <ButtonBack label="Skip" onPress={() => router.replace(ROUTES.onboarding.roleSelection)} />
       </View>
 
       {/* Swiper Cards */}
