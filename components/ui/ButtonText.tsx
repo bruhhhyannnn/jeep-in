@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { cn } from "@/lib/utils";
 import ThemedText from "@/components/ui/ThemedText";
 import Icon from "@/components/ui/Icon";
