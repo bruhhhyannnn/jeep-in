@@ -10,7 +10,6 @@ type ButtonTextProps = {
   // * secondary: go back or cancel;
   // ! tertiary: settings buttons;  remove this ASAP and just use secondary!
   variant?: "primary" | "secondary" | "tertiary";
-  // TODO: will be adding family icons here
   iconName?: string;
   disabled?: boolean;
   showChevron?: boolean;
