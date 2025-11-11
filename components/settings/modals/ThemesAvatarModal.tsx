@@ -1,7 +1,6 @@
 import { STRINGS } from "@/constants";
 import { useNicknameStore } from "@/context/useNicknameStore";
 import { useThemeStore } from "@/context/useThemeStore";
-import { colorScheme } from "nativewind";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import {
@@ -126,10 +125,8 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
     { label: "Dark", value: "dark" },
   ];
 
-  // TODO: revalidate functionality if its really working
   const handleSelect = (newTheme: ThemeMode) => {
     setTheme(newTheme);
-    colorScheme.set(newTheme);
   };
 
   return (

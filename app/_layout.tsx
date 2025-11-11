@@ -7,9 +7,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Appearance } from "react-native";
 import { useThemeStore } from "@/context/useThemeStore";
+import { colorScheme } from "nativewind";
 
 export default function RootLayout() {
-  const { theme, setTheme } = useThemeStore();
+  const { theme } = useThemeStore();
 
   const [fontsLoaded] = useFonts({
     "Puffin-Regular": require("../assets/fonts/Puffin-Regular.otf"),
@@ -19,11 +20,11 @@ export default function RootLayout() {
     "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
 
-  // TODO: this is unused Load theme
+  // Load theme
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      if (theme === "system") {
-        setTheme("system");
+    const subscription = Appearance.addChangeListener(({ colorScheme: systemScheme }) => {
+      if (theme === "system" && systemScheme) {
+        colorScheme.set(systemScheme);
       }
     });
     return () => subscription.remove();

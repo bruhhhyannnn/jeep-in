@@ -1,4 +1,3 @@
-// TODO: this is unused, might delete or not
 import { create } from "zustand";
 import { Appearance } from "react-native";
 import { colorScheme } from "nativewind";
@@ -6,23 +5,27 @@ import type { ThemeMode } from "@/types";
 
 interface ThemeState {
   theme: ThemeMode;
-  toggleTheme: () => void;
   setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  theme: (Appearance.getColorScheme() as ThemeMode) || "light",
+  theme: "system",
+
+  setTheme: (theme) => {
+    if (theme === "system") {
+      const sysTheme = Appearance.getColorScheme() as ThemeMode;
+      colorScheme.set(sysTheme);
+    } else {
+      colorScheme.set(theme);
+    }
+    set({ theme });
+  },
 
   toggleTheme: () =>
     set((state) => {
-      const newTheme = state.theme === "light" ? "dark" : "light";
-      colorScheme.set(newTheme);
-      return { theme: newTheme };
+      const next = state.theme === "light" ? "dark" : "light";
+      colorScheme.set(next);
+      return { theme: next };
     }),
-
-  setTheme: (theme) => {
-    const resolvedTheme = theme === "system" ? (Appearance.getColorScheme() as ThemeMode) : theme;
-    colorScheme.set(resolvedTheme);
-    set({ theme });
-  },
 }));
