@@ -1,11 +1,9 @@
 import { ThemedText } from "@/components/ui";
 import { cn } from "@/lib/utils";
-
-// TODO: add this to a types.ts someday
-export type JeepStatus = "On route" | "Stationed" | "Out of service";
+import { JeepneyStatus } from "@/types";
 
 type JeepCardProps = {
-  variant?: JeepStatus;
+  variant?: JeepneyStatus;
 };
 
 export default function JeepStatusBadge({ variant = "On route" }: JeepCardProps) {

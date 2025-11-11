@@ -1,13 +1,11 @@
 import { TouchableOpacity, View } from "react-native";
 import { ThemedText, ThemedView, Icon } from "@/components/ui";
 import JeepStatusBadge from "@/components/commuter/JeepStatusBadge";
-// TODO: make a type for this one someday
-import { JeepStatus } from "@/components/commuter/JeepStatusBadge";
+import { JeepneyStatus } from "@/types";
 
 type JeepCardProps = {
   plateNo: string;
-  // TODO: change this to react to status badge and make the type be in a types.ts someday
-  status: JeepStatus;
+  status: JeepneyStatus;
   nextStop?: string;
   onPress?: () => void;
 };
@@ -29,7 +27,6 @@ export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCar
             {/* Plate Number & Status Badge */}
             <View className="flex-row items-start gap-2">
               <ThemedText variant="h600">{plateNo}</ThemedText>
-              {/* TODO: change someday to make a file for types.ts */}
               <JeepStatusBadge variant={status} />
             </View>
 
