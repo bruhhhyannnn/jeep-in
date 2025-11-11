@@ -3,6 +3,9 @@
     "name": "JEEP-IN 2.0",
     "slug": "jeep-in-2-0",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "jeepin2",
