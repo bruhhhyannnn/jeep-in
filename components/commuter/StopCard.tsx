@@ -1,5 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { ThemedView, ThemedText, Icon } from "@/components/ui";
+import { SHADOWS } from "@/style/shadow";
 
 type StopCardProps = {
   location: string;
@@ -9,7 +10,7 @@ type StopCardProps = {
 
 export default function StopCard({ location, address, onPress }: StopCardProps) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={SHADOWS.style} className="rounded-full">
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Stop Icon */}

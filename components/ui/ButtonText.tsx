@@ -41,8 +41,10 @@ export default function ButtonText({
       className={styles}
       style={[SHADOWS.style, !fullWidth && { alignSelf: "flex-start" }]}
     >
-      {iconName && <Icon name={iconName} />}
-      <ThemedText variant="h400">{label}</ThemedText>
+      {iconName && <Icon name={iconName} color={variant === "primary" ? "#edf9ff" : undefined} />}
+      <ThemedText variant="h400" color={variant === "primary" ? "primary" : undefined}>
+        {label}
+      </ThemedText>
     </TouchableOpacity>
   );
 }

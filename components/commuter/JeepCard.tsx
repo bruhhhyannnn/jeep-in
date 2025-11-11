@@ -2,6 +2,7 @@ import { TouchableOpacity, View } from "react-native";
 import { ThemedText, ThemedView, Icon } from "@/components/ui";
 import JeepStatusBadge from "@/components/commuter/JeepStatusBadge";
 import { JeepneyStatus } from "@/types";
+import { SHADOWS } from "@/style/shadow";
 
 type JeepCardProps = {
   plateNo: string;
@@ -12,7 +13,7 @@ type JeepCardProps = {
 
 export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCardProps) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={SHADOWS.style} className="rounded-full">
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
         {/* Content Container */}
         <View className="flex-1 flex-row items-center gap-3">

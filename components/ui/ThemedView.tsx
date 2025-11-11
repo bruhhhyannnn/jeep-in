@@ -15,7 +15,7 @@ export default function ThemedView({
 }: ThemedViewProps) {
   const variants = {
     bg: "bg-neutral-bg-light-100 dark:bg-neutral-bg-dark-100",
-    bg_light: "bg-neutral-bg-light-200 dark:bg-neutral-bg-dark-200 shadow-lg",
+    bg_light: "bg-neutral-bg-light-200 dark:bg-neutral-bg-dark-200 ",
   };
 
   return (
