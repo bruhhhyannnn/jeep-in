@@ -1,7 +1,7 @@
 export const ROUTES = {
   root: {
     index: "/",
-    notFound: "/_not-found",
+    notFound: "/_not-found", //TODO: i think this is unused
   },
 
   onboarding: {
@@ -24,6 +24,8 @@ export const ROUTES = {
 
   driver: {
     layout: "/(driver)",
-    dashboard: "/(driver)/index",
+    auth: "/(driver)/auth/login",
+    home: "/(driver)/home",
+    settings: "/(driver)/settings",
   },
 } as const;

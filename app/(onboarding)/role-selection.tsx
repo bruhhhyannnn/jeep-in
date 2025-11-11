@@ -45,8 +45,7 @@ const RoleSelectionScreen = () => {
             <ButtonText
               label={STRINGS.onboarding.roleSelection.operator}
               fullWidth
-              // TODO: change this someday to driver home not commuter home
-              onPress={() => router.replace(ROUTES.commuter.home)}
+              onPress={() => router.push(ROUTES.driver.auth)}
             />
           </View>
         </ThemedView>
