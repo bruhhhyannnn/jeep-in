@@ -24,7 +24,7 @@ const FilterModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const ROUTES = ["Going Paoay Route", "Going Laoag Route"];
 
   return (
-    <BottomSheetModalBase title={STRINGS.commuter.filterRoutes} ref={baseRef}>
+    <BottomSheetModalBase title={STRINGS.commuter.home.filterRoutes} ref={baseRef}>
       <View className="gap-5">
         <View className="gap-2">
           {/* Content */}

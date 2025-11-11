@@ -84,7 +84,6 @@ function HelpView({ onBack }: { onBack: () => void }) {
         </ThemedText>
       </View>
       <View>
-        {/* TODO: change this title someday */}
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.help.commonQuestions}
         </ThemedText>
