@@ -1,19 +1,38 @@
 import { ROUTES } from "@/constants";
-import { View } from "react-native";
+import { Keyboard, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useRouter } from "expo-router";
 import { ThemedText, ButtonIcon, BottomSheetContainer, MapContainer } from "@/components/ui";
 import { FilterModal } from "@/components/commuter/modals/";
 import { DefaultContent } from "@/components/commuter/sections/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BottomSheetModalBaseRef } from "@/types";
+import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
+import { useFocusEffect } from "expo-router";
 
 const HomeScreen = () => {
   const router = useRouter();
   const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
   const { top } = useSafeAreaInsets();
+  const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
+
+  // React to keyboard show and hide for the bottom sheet to expand
+  useFocusEffect(
+    React.useCallback(() => {
+      const showSub = Keyboard.addListener("keyboardDidShow", () => {
+        bottomSheetRef.current?.expand();
+      });
+      const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+        bottomSheetRef.current?.collapse();
+      });
+
+      return () => {
+        showSub.remove();
+        hideSub.remove();
+      };
+    }, []),
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -41,7 +60,7 @@ const HomeScreen = () => {
           </View>
 
           {/* Bottom Sheet */}
-          <BottomSheetContainer>
+          <BottomSheetContainer ref={bottomSheetRef}>
             <DefaultContent />
           </BottomSheetContainer>
 

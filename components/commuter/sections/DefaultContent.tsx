@@ -10,7 +10,7 @@ export default function DefaultContent() {
   return (
     <View className="gap-6">
       {/* Search Bar */}
-      <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} />
+      <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} iconName="search" />
 
       {/* Near Jeeps */}
       <View className="gap-2">
