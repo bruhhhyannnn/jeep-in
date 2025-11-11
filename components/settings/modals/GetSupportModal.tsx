@@ -1,9 +1,9 @@
+import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
-
 
 const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -16,7 +16,13 @@ const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
 
   return (
     <BottomSheetModalBase
-      title={view === "default" ? "Get support" : view === "help" ? "JEEP-IN help" : "Contact us"}
+      title={
+        view === "default"
+          ? STRINGS.settings.getSupport.title
+          : view === "help"
+            ? STRINGS.settings.getSupport.help.title
+            : STRINGS.settings.getSupport.contactUs.title
+      }
       ref={baseRef}
     >
       {view === "default" ? (
@@ -46,7 +52,7 @@ function DefaultGetSupportView({
   return (
     <View className="gap-4">
       <ButtonText
-        label="Help"
+        label={STRINGS.settings.getSupport.help.title}
         variant="tertiary"
         iconName="information-circle-outline"
         showChevron
@@ -54,7 +60,7 @@ function DefaultGetSupportView({
         onPress={onHelp}
       />
       <ButtonText
-        label="Contact Us"
+        label={STRINGS.settings.getSupport.contactUs.title}
         variant="tertiary"
         iconName="call-outline"
         showChevron
@@ -71,38 +77,42 @@ function HelpView({ onBack }: { onBack: () => void }) {
     <View className="gap-4">
       <View>
         <ThemedText variant="h500" className="uppercase">
-          WHAT CAN WE HELP YOU WITH?
+          {STRINGS.settings.getSupport.help.helpYouWith}
         </ThemedText>
         <ThemedText color="secondary">
-          Provides answers and support information for JEEP-IN users.
+          {STRINGS.settings.getSupport.help.helpYouWithContent}
         </ThemedText>
       </View>
       <View>
         {/* TODO: change this title someday */}
         <ThemedText variant="h500" className="uppercase">
-          WHAT CAN WE HELP YOU WITH?
+          {STRINGS.settings.getSupport.help.commonQuestions}
         </ThemedText>
-        <ThemedText color="secondary">
-          - How can I track a modern jeepney?{"\n\t\t"}- You can view live jeepney locations and
-          routes from the home screen map.{"\n"}- What if a jeepney location seems outdated?
-          {"\n\t\t"}- The driver's device might have lost signal. Try refreshing or checking again
-          later.{"\n"}- Why do some stops not appear?{"\n\t\t"}- They may belong to another route
-          filter. Use the filter button to show other routes.
-        </ThemedText>
+        <View className="gap-1">
+          {STRINGS.settings.getSupport.help.commonQuestionsContent.map((item, i) => {
+            const [question, answer] = item.split(" - ");
+
+            return (
+              <View key={i}>
+                <ThemedText className="mb-1">• {question.trim()}</ThemedText>
+                <ThemedText className="ml-2" color="secondary">{`- ${answer.trim()}`}</ThemedText>
+              </View>
+            );
+          })}
+        </View>
       </View>
       <View>
         <ThemedText variant="h500" className="uppercase">
-          REPORTS & TECHNICAL ISSUES
+          {STRINGS.settings.getSupport.help.reportsTechnicalIssues}
         </ThemedText>
         <ThemedText color="secondary">
-          If you experience bugs or incorrect location data, please contact the JEEP-IN support
-          under the Contact Us setting.
+          {STRINGS.settings.getSupport.help.reportsTechnicalIssuesContent}
         </ThemedText>
       </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );
@@ -114,86 +124,88 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
     <View className="gap-4">
       <View>
         <ThemedText variant="h500" className="uppercase">
-          GET IN TOUCH WITH US
+          {STRINGS.settings.getSupport.contactUs.getInTouch}
         </ThemedText>
         <ThemedText color="secondary">
-          We're here to help you with feedback, suggestions, or partnership inquiries.
+          {STRINGS.settings.getSupport.contactUs.getInTouchContent}
         </ThemedText>
       </View>
 
       <View>
         <ThemedText variant="h500" className="uppercase">
-          SUPPORT
+          {STRINGS.settings.getSupport.contactUs.support}
         </ThemedText>
-        <ThemedText color="secondary">For technical issues or commuter feedback:</ThemedText>
+        <ThemedText color="secondary">
+          {STRINGS.settings.getSupport.contactUs.supportContent}
+        </ThemedText>
         <View className="mt-1 gap-2">
-          {/* TODO: all this information here should be in another data file */}
           <ButtonText
-            label="jeepin.official@gmail.com"
+            label={STRINGS.settings.jeepinEmail}
             variant="tertiary"
             iconName="mail-outline"
             showChevron
             fullWidth
-            onPress={() => sendEmail("jeepin.official@gmail.com", "JEEP-IN Support Request")}
+            onPress={() =>
+              sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
+            }
           />
           <ButtonText
-            label="+63 918 217 8716"
+            label={STRINGS.settings.developerPhoneNumber1}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639182178716")}
+            onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
           <ButtonText
-            label="+63 949 924 8562"
+            label={STRINGS.settings.developerPhoneNumber2}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639499248562")}
+            onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
           />
         </View>
       </View>
 
       <View>
         <ThemedText variant="h500" className="uppercase">
-          OPERATIONS
+          {STRINGS.settings.getSupport.contactUs.operations}
         </ThemedText>
         <ThemedText color="secondary">
-          For concerns about jeepney schedules or stop points:
+          {STRINGS.settings.getSupport.contactUs.operationsContent}
         </ThemedText>
         <View className="mt-1 gap-2">
-          {/* TODO: all this information here should be in another data file */}
           <ButtonText
-            label="inminc.pgin@gmail.com"
+            label={STRINGS.settings.mincEmail}
             variant="tertiary"
             iconName="mail-outline"
             showChevron
             fullWidth
-            onPress={() => sendEmail("inminc.pgin@gmail.com")}
+            onPress={() => sendEmail(STRINGS.settings.mincEmail)}
           />
           <ButtonText
-            label="+63 995 856 4729"
+            label={STRINGS.settings.mincPhoneNumber1}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639958564729")}
+            onPress={() => callNumber(STRINGS.settings.mincPhoneNumber1.trim())}
           />
           <ButtonText
-            label="+63 939 722 3025"
+            label={STRINGS.settings.mincPhoneNumber2}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639397223025")}
+            onPress={() => callNumber(STRINGS.settings.mincPhoneNumber2.trim())}
           />
         </View>
       </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

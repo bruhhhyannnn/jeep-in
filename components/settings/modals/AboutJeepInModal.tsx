@@ -1,3 +1,4 @@
+import { STRINGS } from "@/constants";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import * as Clipboard from "expo-clipboard";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
@@ -49,26 +50,25 @@ function DefaultAboutJeepInView({
   onDataAttribution: () => void;
   onPrivacyPolicy: () => void;
 }) {
-  const handleFacebook = () => openWebsite("https://facebook.com/jeepin.ilocos");
+  const handleFacebook = () => openWebsite(STRINGS.settings.about.likeFb.content);
   const handleShare = async () => {
-    const message =
-      "🚐 Check out JEEP-IN — the modern jeepney tracking app for Ilocos Norte! Track routes, stops, and more. Download or visit: https://jeepin.ilocos.app";
+    const message = STRINGS.settings.about.share.content;
 
     await Clipboard.setStringAsync(message);
     ToastAndroid.show("Copied to clipboard!", 2.0);
     await Share.share({ message });
   };
-  const handleVisitPage = () => openWebsite("https://jeepin.ilocos.app");
+  const handleVisitPage = () => openWebsite(STRINGS.settings.about.visit.content);
 
   return (
     <View className="gap-4">
       {/* Love JEEP-IN Section */}
       <View className="gap-2">
         <ThemedText variant="h500" className="uppercase">
-          Love JEEP-IN?
+          {STRINGS.settings.about.loveSection}
         </ThemedText>
         <ButtonText
-          label="Like on facebook"
+          label={STRINGS.settings.about.likeFb.title}
           variant="tertiary"
           iconName="thumbs-up-outline"
           showChevron
@@ -76,7 +76,7 @@ function DefaultAboutJeepInView({
           onPress={handleFacebook}
         />
         <ButtonText
-          label="Share with friends"
+          label={STRINGS.settings.about.share.title}
           variant="tertiary"
           iconName="megaphone-outline"
           showChevron
@@ -84,7 +84,7 @@ function DefaultAboutJeepInView({
           onPress={handleShare}
         />
         <ButtonText
-          label="Visit our page"
+          label={STRINGS.settings.about.visit.title}
           variant="tertiary"
           iconName="document-text-outline"
           showChevron
@@ -96,10 +96,10 @@ function DefaultAboutJeepInView({
       {/* Legal Section */}
       <View className="gap-2">
         <ThemedText variant="h500" className="uppercase">
-          LEGAL
+          {STRINGS.settings.about.legalSection}
         </ThemedText>
         <ButtonText
-          label="Data Attribution"
+          label={STRINGS.settings.about.dataAttribution.title}
           variant="tertiary"
           iconName="file-tray-full-outline"
           showChevron
@@ -107,7 +107,7 @@ function DefaultAboutJeepInView({
           onPress={onDataAttribution}
         />
         <ButtonText
-          label="Privacy Policy"
+          label={STRINGS.settings.about.privacyPolicy.title}
           variant="tertiary"
           iconName="newspaper-outline"
           showChevron
@@ -123,15 +123,15 @@ function DefaultAboutJeepInView({
 function DataAttributionView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
-      <ThemedText>
-        - Map and location data provided by Mapbox and OpenStreetMap contributors.{"\n"}- Stop point
-        and jeepney route information are curated by JEEP-IN and the Metro Ilocos Norte Council
-        (MINC).
-      </ThemedText>
+      <View>
+        {STRINGS.settings.about.dataAttribution.content.map((text, i) => (
+          <ThemedText key={i}>• {text}</ThemedText>
+        ))}
+      </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );
@@ -141,15 +141,15 @@ function DataAttributionView({ onBack }: { onBack: () => void }) {
 function PrivacyPolicyView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
-      <ThemedText>
-        - JEEP-IN respects your privacy. Location data is used only to provide real-time tracking
-        and commuting insights.{"\n"}- We do not share your personal information with third parties.
-        {"\n"}- For questions, contact jeepin.official@gmail.com.
-      </ThemedText>
+      <View>
+        {STRINGS.settings.about.privacyPolicy.content.map((text, i) => (
+          <ThemedText key={i}>• {text}</ThemedText>
+        ))}
+      </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

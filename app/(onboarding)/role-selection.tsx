@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { useRouter } from "expo-router";
 import { View, Image } from "react-native";
 import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
@@ -30,25 +30,23 @@ const RoleSelectionScreen = () => {
         <ThemedView variant="bg_light" className="gap-5 rounded-3xl p-5">
           <View>
             <ThemedText variant="h900" className="text-center">
-              Welcome to JEEP-IN
+              {STRINGS.onboarding.roleSelection.title}
             </ThemedText>
             <ThemedText variant="h600" color="secondary" className="text-center">
-              Select how you want to use the app. Continue as…
+              {STRINGS.onboarding.roleSelection.subtitle}
             </ThemedText>
           </View>
           <View className="gap-3">
             <ButtonText
-              label="Commuter"
-              showChevron={true}
+              label={STRINGS.onboarding.roleSelection.commuter}
               fullWidth
-              onPress={() => router.push(ROUTES.commuter.home)}
+              onPress={() => router.replace(ROUTES.commuter.home)}
             />
             <ButtonText
-              label="Operator"
-              showChevron={true}
+              label={STRINGS.onboarding.roleSelection.operator}
               fullWidth
               // TODO: change this someday to driver home not commuter home
-              onPress={() => router.push(ROUTES.commuter.home)}
+              onPress={() => router.replace(ROUTES.commuter.home)}
             />
           </View>
         </ThemedView>

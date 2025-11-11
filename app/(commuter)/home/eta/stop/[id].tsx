@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { StopCard, UserCard } from "@/components/commuter";
 import { Icon, ThemedText } from "@/components/ui";
@@ -9,11 +9,11 @@ export default function EtaStopPointInfoScreen() {
   const { id } = useLocalSearchParams();
 
   return (
-    <MapLayout title="ETA Stop Point Info">
+    <MapLayout title={STRINGS.commuter.etaStopPointScreen.title}>
       <View className="gap-3">
         {/* Header Info */}
         <View className="flex-row items-center gap-2">
-          <ThemedText variant="h600">Arriving in</ThemedText>
+          <ThemedText variant="h600">{STRINGS.commuter.etaStopPointScreen.arrivingIn}</ThemedText>
           <ThemedText variant="h600" className="text-dodger-blue-600 dark:text-dodger-blue-600">
             3 mins.
           </ThemedText>
@@ -24,7 +24,7 @@ export default function EtaStopPointInfoScreen() {
           {/* User Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              FROM
+              {STRINGS.commuter.etaStopPointScreen.from}
             </ThemedText>
             <UserCard
               onPress={() => {
@@ -41,7 +41,7 @@ export default function EtaStopPointInfoScreen() {
           {/* Stop Point Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              TO
+              {STRINGS.commuter.etaStopPointScreen.to}
             </ThemedText>
             <StopCard
               location={id.toString()}
@@ -53,7 +53,7 @@ export default function EtaStopPointInfoScreen() {
 
         {/* Footer Text */}
         <ThemedText variant="h200" color="secondary" className="text-center">
-          You can use the directions to walk to the stop point.
+          {STRINGS.commuter.etaStopPointScreen.footer}
         </ThemedText>
       </View>
     </MapLayout>

@@ -1,72 +1,235 @@
 export const STRINGS = {
-  // 🔹 General
-  appName: "JEEP-IN",
-  ok: "OK",
-  cancel: "Cancel",
-  apply: "Apply",
-  goBack: "Go Back",
+  // General
+  general: {
+    appName: "JEEP-IN",
+    goBack: "Go back",
+    apply: "Apply",
+    comingSoon: "Coming soon… Feature under development.",
+  },
 
-  // 🔹 Settings — Sections
+  // Onboarding - Section
+  onboarding: {
+    welcome: {
+      skip: "Skip",
+      next: "Next",
+      getStarted: "Get started",
+    },
+
+    roleSelection: {
+      title: "Welcome to JEEP-IN",
+      subtitle: "Select how you want to use the app. Continue as…",
+      commuter: "Commuter",
+      operator: "Operator",
+    },
+  },
+
+  // Commuter — Section
+  commuter: {
+    // Home
+    home: {
+      filterRoutes: "Filter routes",
+      searchInput: "Where are you going?",
+      nearJeeps: "Near jeeps",
+      nearStops: "Near stops",
+    },
+
+    // Jeepney Screen
+    jeepneyScreen: {
+      title: "Jeepney info",
+      lastStop: "LAST STOP",
+      nextStop: "NEXT STOP",
+      getEta: "Get ETA",
+    },
+
+    // Stop Point Screen
+    stopPointScreen: {
+      title: "Stop point info",
+      address: "Address",
+      getDirections: "Get Directions",
+    },
+
+    // ETA Jeepney Screen
+    etaJeepneyScreen: {
+      title: "ETA jeepney info",
+      arrivingIn: "Arriving in",
+      fromJeepneyLocation: "FROM JEEPNEY LOCATION",
+      toStopPoint: "TO STOP POINT",
+      footer: "You can now proceed to your nearest stop point and wait for the jeepney to arrive.",
+    },
+
+    // ETA Stop Point Screen
+    etaStopPointScreen: {
+      title: "ETA stop point info",
+      arrivingIn: "Arriving in",
+      from: "FROM",
+      to: "TO",
+      footer: "You can now proceed to your nearest stop point and wait for the jeepney to arrive.",
+    },
+  },
+
+  // Settings — Section
   settings: {
-    title: "Settings",
-    sinceLabel: "Since",
-    gettingAround: "Getting Around",
+    // General
+    helpInfo: "Help info",
+    jeepinEmail: "jeepin.official@gmail.com",
+    jeepinEmailSubject: "JEEP-IN Support Request",
+    developerEmail: "mangapit.bryan@gmail.com",
+    developerPhoneNumber1: "+63 918 217 8716",
+    developerPhoneNumber2: "+63 949 924 8562",
+    mincEmail: "inminc.pgin@gmail.com",
+    mincPhoneNumber1: "+63 995 856 4729",
+    mincPhoneNumber2: "+63 939 722 3025",
+
+    // Home
+    sinceLabel: "Since", // TODO: unused
+    gettingAround: "Getting around",
     preferences: "Preferences",
-    helpCenter: "Help Center",
+    helpCenter: "Help center",
+
+    stopPoints: {
+      title: "Stop points",
+
+      helpStopPoint: {
+        title: "Help | Stop points",
+
+        whatItDo: "WHAT'S IT DO?",
+        whatItDoContent:
+          "Provides a list of stop points or pickup points of commonly known PUV stops.",
+
+        concernsComplaints: "CONCERNS OR COMPLAINTS?",
+        concernsComplaintsContent: "Contact the JEEP-IN team hotline or email address.",
+      },
+    },
+
+    fareGuide: {
+      title: "Fare guide",
+      jeepneyFareMatrix: "JEEPNEY FARE MATRIX",
+      jeepneyFareMatrixContent:
+        "A detailed table showing the fare rates per landmark for regular and discounted passengers across different routes.",
+      footer:
+        "Land Transportation Franchising and Regulatory Board (LTFRB) Fare Guide Matrix effective April 21, 2025.",
+
+      helpFareGuide: {
+        title: "Help | Fare guide",
+
+        whatItDo: "WHAT'S IT DO?",
+        whatItDoContent:
+          "Provides a list of stop points or pickup points of commonly known PUV stops.",
+
+        fareCategory: "FARE CATEGORIES",
+        fareCategoryContent: [
+          "Regular Fare: Standard fare for all passengers.",
+          "Student, PWD, Senior Citizen Fare: Discounted rate (must have a present valid ID).",
+        ],
+
+        concernsComplaints: "CONCERNS OR COMPLAINTS?",
+        concernsComplaintsContent: "Contact the MINC hotline or email address.",
+      },
+    },
+
+    settingsAccessibility: {
+      title: "Settings & accessibility",
+
+      // TODO: revalidate these if feasible
+      // language: "App Language",
+      // notifications: "Notifications",
+      // dataSaver: "Data Saver Mode",
+      // textSize: "Text Size",
+      // contrast: "High Contrast Mode",
+      // voiceAssist: "Voice Assistance",
+    },
+
+    themesAvatar: {
+      title: "Themes & avatar",
+
+      nickname: {
+        title: "Nickname",
+        appNickname: "APP NICKNAME",
+      },
+
+      appearance: {
+        title: "Appearance",
+        themeOptions: "THEME OPTIONS",
+      },
+    },
+
+    getSupport: {
+      title: "Get support",
+
+      help: {
+        title: "JEEP-IN help",
+
+        helpYouWith: "WHAT CAN WE HELP YOU WITH?",
+        helpYouWithContent: "Provides answers and support information for JEEP-IN users.",
+
+        commonQuestions: "COMMON QUESTIONS",
+        commonQuestionsContent: [
+          "How can I track a modern jeepney? - You can view live jeepney locations and routes from the home screen map.",
+          "What if a jeepney location seems outdated? - The driver's device might have lost signal. Try refreshing or checking again later.",
+          "Why do some stops not appear? - They may belong to another route filter. Use the filter button to show other routes. ",
+        ],
+
+        reportsTechnicalIssues: "REPORTS & TECHNICAL ISSUES",
+        reportsTechnicalIssuesContent:
+          "If you experience bugs or incorrect location data, please contact the JEEP-IN support under the Contact Us setting.",
+      },
+
+      contactUs: {
+        title: "Contact us",
+
+        getInTouch: "GET IN TOUCH WITH US",
+        getInTouchContent:
+          "We're here to help you with feedback, suggestions, or partnership inquiries.",
+
+        support: "SUPPORT",
+        supportContent: "For technical issues or commuter feedback:",
+
+        operations: "Operations",
+        operationsContent: "For concerns about jeepney schedules or stop points:",
+      },
+    },
+
+    about: {
+      title: "About JEEP-IN",
+
+      loveSection: "LOVE JEEP-IN?",
+      likeFb: {
+        title: "Like on facebook",
+        content: "https://facebook.com/jeepin.ilocos",
+      },
+      share: {
+        title: "Share with friends",
+        content:
+          "🚐 Check out JEEP-IN — the modern jeepney tracking app for Ilocos Norte! Track routes, stops, and more. Download or visit: https://jeepin.ilocos.app",
+      },
+      visit: {
+        title: "Visit our page",
+        content: "https://jeepin.ilocos.app",
+      },
+
+      legalSection: "LEGAL",
+      dataAttribution: {
+        title: "Data attribution",
+        content: [
+          "Map and location data provided by Mapbox and OpenStreetMap contributors.",
+          "Stop point and jeepney route information are curated by JEEP-IN and the Metro Ilocos Norte Council (MINC).",
+        ],
+      },
+      privacyPolicy: {
+        title: "Privacy policy",
+        content: [
+          "JEEP-IN respects your privacy.",
+          "We do not share your personal information with third parties.",
+          "For questions, contact jeepin.official@gmail.com.",
+        ],
+      },
+    },
   },
 
-  // 🔹 Settings — Cards & Modals
-  stopPoints: {
-    title: "Stop Points",
-    helpTitle: "Help | Stop Points",
-    description: "Provides a list of known PUV stop points.",
-    contactTitle: "Concerns or complaints?",
-  },
-
-  fareGuide: {
-    title: "Fare Guide",
-    helpTitle: "Help | Fare Guide",
-    description: "Provides updated jeepney fares per route and distance.",
-    footerNote: "Based on LTFRB Circular No. 2023-001",
-  },
-
-  accessibility: {
-    title: "Settings & Accessibility",
-    language: "App Language",
-    notifications: "Notifications",
-    dataSaver: "Data Saver Mode",
-    textSize: "Text Size",
-    contrast: "High Contrast Mode",
-    voiceAssist: "Voice Assistance",
-  },
-
-  themesAvatar: {
-    title: "Themes & Avatar",
-    nickname: "App Nickname",
-    appearance: "Appearance",
-  },
-
-  support: {
-    title: "Get Support",
-    help: "Help",
-    contactUs: "Contact Us",
-    faqs: "Frequently Asked Questions",
-  },
-
-  about: {
-    title: "About JEEP-IN",
-    loveSection: "Love JEEP-IN?",
-    likeFb: "Like on Facebook",
-    share: "Share with Friends",
-    visit: "Visit Our Page",
-    legal: "LEGAL",
-    dataAttribution: "Data Attribution",
-    privacyPolicy: "Privacy Policy",
-  },
-
-  // 🔹 Errors / Feedback
+  // Errors / Feedback
   errors: {
     notFound: "404 — Page Not Found",
+    notFoundDescription: "Oops! The screen you're looking for doesn't exist or has been moved.",
     generic: "Something went wrong. Please try again.",
   },
 };

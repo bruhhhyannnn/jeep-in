@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
@@ -18,7 +18,11 @@ const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
 
   return (
     <BottomSheetModalBase
-      title={view === "default" ? "Stop Points" : "Help | Stop Point"}
+      title={
+        view === "default"
+          ? STRINGS.settings.stopPoints.title
+          : STRINGS.settings.stopPoints.helpStopPoint.title
+      }
       ref={baseRef}
     >
       {view === "default" ? (
@@ -42,7 +46,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
       {/* TODO: render actual stop points here, all of it */}
       <View className="gap-1">
         <ThemedText variant="h500" className="uppercase">
-          Going laoag route
+          GOING PAOAY ROUTE
         </ThemedText>
         <View className="gap-2">
           <StopCard
@@ -64,7 +68,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
       {/* TODO: render actual stop points here, all of it */}
       <View className="gap-1">
         <ThemedText variant="h500" className="uppercase">
-          Going paoay route
+          GOING PAOAY ROUTE
         </ThemedText>
         <View className="gap-2">
           <StopCard
@@ -85,7 +89,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
       {/* Button help information */}
       <View className="self-start">
         <ButtonText
-          label="Help Info"
+          label={STRINGS.settings.helpInfo}
           variant="secondary"
           iconName="information-circle-outline"
           onPress={onHelp}
@@ -102,63 +106,66 @@ function HelpStopPointsView({ onBack }: { onBack: () => void }) {
       {/* What's It Do Section */}
       <View>
         <ThemedText variant="h500" className="uppercase">
-          WHAT'S IT DO?
+          {STRINGS.settings.stopPoints.helpStopPoint.whatItDo}
         </ThemedText>
         <ThemedText color="secondary">
-          Provides a list of stop points or pickup points of commonly known PUV stops.
+          {STRINGS.settings.stopPoints.helpStopPoint.whatItDoContent}
         </ThemedText>
       </View>
 
       {/* Concern or Complaints Section */}
       <View>
         <ThemedText variant="h500" className="uppercase">
-          CONCERNS OR COMPLAINTS?
+          {STRINGS.settings.stopPoints.helpStopPoint.concernsComplaints}
         </ThemedText>
         <ThemedText color="secondary">
-          Contact the JEEP-IN team hotline or email address.
+          {STRINGS.settings.stopPoints.helpStopPoint.concernsComplaintsContent}
         </ThemedText>
 
         {/* Contact Cards */}
         <View className="mt-1 gap-2">
-          {/* TODO: all this information here should be in another data file */}
           <ButtonText
-            label="+63 918 217 8716"
+            label={STRINGS.settings.developerPhoneNumber1}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639182178716")}
+            onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
           <ButtonText
-            label="+63 949 924 8562"
+            label={STRINGS.settings.developerPhoneNumber2}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639499248562")}
+            onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
           />
           <ButtonText
-            label="jeepin.official@gmail.com"
+            label={STRINGS.settings.jeepinEmail}
             variant="tertiary"
             iconName="mail-outline"
             showChevron
             fullWidth
-            onPress={() => sendEmail("jeepin.official@gmail.com", "JEEP-IN Support Request")}
+            onPress={() =>
+              sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
+            }
           />
           <ButtonText
-            label="mangapit.bryan@gmail.com"
+            label={STRINGS.settings.developerEmail}
             variant="tertiary"
             iconName="mail-outline"
             showChevron
             fullWidth
-            onPress={() => sendEmail("mangapit.bryan@gmail.com", "JEEP-IN Support Request")}
+            onPress={() =>
+              sendEmail(STRINGS.settings.developerEmail, STRINGS.settings.jeepinEmailSubject)
+            }
           />
         </View>
       </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

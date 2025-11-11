@@ -1,3 +1,4 @@
+import { STRINGS } from "@/constants";
 import { useThemeStore } from "@/context/useThemeStore";
 import { colorScheme } from "nativewind";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
@@ -18,7 +19,11 @@ const ThemesAvatarModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   return (
     <BottomSheetModalBase
       title={
-        view === "default" ? "Themes & Avatar" : view === "nickname" ? "Nickname" : "Appearance"
+        view === "default"
+          ? STRINGS.settings.themesAvatar.title
+          : view === "nickname"
+            ? STRINGS.settings.themesAvatar.nickname.title
+            : STRINGS.settings.themesAvatar.appearance.title
       }
       ref={baseRef}
     >
@@ -49,7 +54,7 @@ function DefaultThemesAvatarView({
   return (
     <View className="gap-4">
       <ButtonText
-        label="Nickname"
+        label={STRINGS.settings.themesAvatar.nickname.title}
         variant="tertiary"
         iconName="person-outline"
         showChevron
@@ -57,7 +62,7 @@ function DefaultThemesAvatarView({
         onPress={onNickname}
       />
       <ButtonText
-        label="Appearance"
+        label={STRINGS.settings.themesAvatar.appearance.title}
         variant="tertiary"
         iconName="bulb-outline"
         showChevron
@@ -72,16 +77,14 @@ function DefaultThemesAvatarView({
 function NicknameView({ onBack }: { onBack: () => void }) {
   return (
     <View className="gap-4">
-      <ThemedText variant="h400" className="text-center">
-        Customize avatar (coming soon)
-      </ThemedText>
+      <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
 
       {/* Cancel & Apply button */}
       <View className="flex-row items-center gap-2">
-        <ButtonText label="Cancel" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
         <View className="flex-1">
           <ButtonText
-            label="Apply"
+            label={STRINGS.general.apply}
             fullWidth
             onPress={() => console.log("Apply filters")}
             disabled
@@ -110,11 +113,11 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
 
   return (
     <View className="gap-4">
-      <ThemedText variant="h400" className="uppercase">
-        Choose a theme
-      </ThemedText>
-
       <View className="gap-2">
+        <ThemedText variant="h400" className="uppercase">
+          {STRINGS.settings.themesAvatar.appearance.themeOptions}
+        </ThemedText>
+
         {options.map((opt) => (
           <ButtonRadio
             key={opt.value}
@@ -127,7 +130,7 @@ function AppearanceView({ onBack }: { onBack: () => void }) {
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

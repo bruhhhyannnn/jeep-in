@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
@@ -9,7 +9,7 @@ export default function JeepneyInfoScreen() {
   const { id } = useLocalSearchParams();
 
   return (
-    <MapLayout title="Jeepney Info">
+    <MapLayout title={STRINGS.commuter.jeepneyScreen.title}>
       <View className="gap-3">
         {/* Header Info */}
         <View>
@@ -25,7 +25,7 @@ export default function JeepneyInfoScreen() {
           {/* Last Stop */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              Last Stop
+              {STRINGS.commuter.jeepneyScreen.lastStop}
             </ThemedText>
             <StopCard
               location="Pik a Bun"
@@ -37,7 +37,7 @@ export default function JeepneyInfoScreen() {
           {/* Next Stop */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              Next Stop
+              {STRINGS.commuter.jeepneyScreen.nextStop}
             </ThemedText>
             <StopCard
               location="Bingao Elementary & National High School"
@@ -52,7 +52,7 @@ export default function JeepneyInfoScreen() {
         {/* Get ETA Button */}
         <View className="self-center">
           <ButtonText
-            label="Get ETA"
+            label={STRINGS.commuter.jeepneyScreen.getEta}
             iconName="timer-outline"
             onPress={() => router.push(ROUTES.commuter.etaJeepney(id.toString()))}
           />

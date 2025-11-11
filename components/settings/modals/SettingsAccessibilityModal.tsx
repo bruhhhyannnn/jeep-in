@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View, Switch } from "react-native";
 import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
+import { STRINGS } from "@/constants";
 
 const SettingsAccessibilityModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -14,9 +15,9 @@ const SettingsAccessibilityModal = forwardRef<BottomSheetModalBaseRef>((_, ref) 
   }));
 
   return (
-    <BottomSheetModalBase title="Accessibility Settings" ref={baseRef}>
+    <BottomSheetModalBase title={STRINGS.settings.settingsAccessibility.title} ref={baseRef}>
       <View className="gap-4">
-        <ThemedText className="text-center">Coming soon… Feature under development.</ThemedText>
+        <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
 
         {/* TODO: make this as a button someday, ButtonSwitch.tsx */}
         {/* TODO: think about the functionalities of these someday of what to do */}

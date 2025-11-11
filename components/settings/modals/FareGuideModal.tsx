@@ -1,3 +1,4 @@
+import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
@@ -15,7 +16,11 @@ const FareGuideModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
 
   return (
     <BottomSheetModalBase
-      title={view === "default" ? "Fare Guide" : "Help | Fare Guide"}
+      title={
+        view === "default"
+          ? STRINGS.settings.fareGuide.title
+          : STRINGS.settings.fareGuide.helpFareGuide.title
+      }
       ref={baseRef}
     >
       {view === "default" ? (
@@ -68,17 +73,17 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
       <View className="gap-2">
         <View>
           <ThemedText variant="h500" className="uppercase">
-            JEEPNEY FARE MATRIX
+            {STRINGS.settings.fareGuide.jeepneyFareMatrix}
           </ThemedText>
           <ThemedText color="secondary">
-            A detailed table showing the fare rates per landmark for regular and discounted
-            passengers across different routes.
+            {STRINGS.settings.fareGuide.jeepneyFareMatrixContent}
           </ThemedText>
         </View>
 
         {/* Fare Matrix Table */}
         <View className="overflow-hidden rounded-lg">
           {/* Table Header */}
+          {/* TODO: make a dark mode version of this */}
           <View className="flex-row items-center justify-center bg-dodger-blue-600 px-2 py-4">
             <ThemedText color="primary" className="flex-1 text-center">
               Landmark
@@ -119,15 +124,14 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
 
         {/* Footer Text */}
         <ThemedText color="secondary" className="text-center">
-          Land Transportation Franchising and Regulatory Board (LTFRB) Fare Guide Matrix effective
-          April 21, 2025.
+          {STRINGS.settings.fareGuide.footer}
         </ThemedText>
       </View>
 
       {/* Button help information */}
       <View className="self-start">
         <ButtonText
-          label="Help Info"
+          label={STRINGS.settings.helpInfo}
           variant="secondary"
           iconName="information-circle-outline"
           onPress={onHelp}
@@ -144,72 +148,66 @@ function HelpFareGuideView({ onBack }: { onBack: () => void }) {
       {/* What's It Do Section */}
       <View>
         <ThemedText variant="h500" className="uppercase">
-          WHAT'S IT DO?
+          {STRINGS.settings.fareGuide.helpFareGuide.whatItDo}
         </ThemedText>
         <ThemedText color="secondary">
-          Provides updated jeepney fares for different routes and categories of passengers.
+          {STRINGS.settings.fareGuide.helpFareGuide.whatItDoContent}
         </ThemedText>
       </View>
 
       {/* Fare Categories Section */}
       <View>
         <ThemedText variant="h500" className="uppercase">
-          FARE CATEGORIES
+          {STRINGS.settings.fareGuide.helpFareGuide.fareCategory}
         </ThemedText>
-        <ThemedText color="secondary">
-          - Regular Fare: Standard fare for all passengers.{"\n"}- Student, PWD, Senior Citizen
-          Fare: Discounted rate (must have a present valid ID).
-        </ThemedText>
+        {STRINGS.settings.fareGuide.helpFareGuide.fareCategoryContent.map((text, i) => (
+          <ThemedText key={i} color="secondary">
+            • {text}
+          </ThemedText>
+        ))}
       </View>
 
       {/* Concern or Complaints Section */}
       <View>
         <ThemedText variant="h500" className="uppercase">
-          CONCERNS OR COMPLAINTS?
+          {STRINGS.settings.fareGuide.helpFareGuide.concernsComplaints}
         </ThemedText>
-        <ThemedText color="secondary">Contact the MINC hotline or email address.</ThemedText>
+        <ThemedText color="secondary">
+          {STRINGS.settings.fareGuide.helpFareGuide.concernsComplaintsContent}
+        </ThemedText>
 
         {/* Contact Cards */}
         <View className="mt-1 gap-2">
-          {/* TODO: all this information here should be in another data file */}
           <ButtonText
-            label="+63 995 856 4729"
+            label={STRINGS.settings.mincPhoneNumber1}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639958564729")}
+            onPress={() => callNumber(STRINGS.settings.mincPhoneNumber1.trim())}
           />
           <ButtonText
-            label="+63 939 722 3025"
+            label={STRINGS.settings.mincPhoneNumber2}
             variant="tertiary"
             iconName="call-outline"
             showChevron
             fullWidth
-            onPress={() => callNumber("+639397223025")}
+            onPress={() => callNumber(STRINGS.settings.mincPhoneNumber2.trim())}
           />
           <ButtonText
-            label="inminc.pgin@gmail.com"
+            label={STRINGS.settings.mincEmail}
             variant="tertiary"
             iconName="mail-outline"
             showChevron
             fullWidth
-            onPress={() => sendEmail("inminc.pgin@gmail.com")}
-          />
-          <ButtonText
-            label="attynikkilar.minc@gmail.com"
-            variant="tertiary"
-            iconName="mail-outline"
-            showChevron
-            fullWidth
-            onPress={() => sendEmail("attynikkilar.minc@gmail.com")}
+            onPress={() => sendEmail(STRINGS.settings.mincEmail)}
           />
         </View>
       </View>
 
       {/* Go Back Button */}
       <View className="self-start">
-        <ButtonText label="Go Back" variant="secondary" onPress={onBack} />
+        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

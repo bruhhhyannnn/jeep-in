@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { ThemedText, CustomTextInput } from "@/components/ui/";
@@ -10,11 +10,11 @@ export default function DefaultContent() {
   return (
     <View className="gap-6">
       {/* Search Bar */}
-      <CustomTextInput placeholder="Where are you going?" />
+      <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} />
 
       {/* Near Jeeps */}
       <View className="gap-2">
-        <ThemedText variant="h400">Nearby Jeepneys</ThemedText>
+        <ThemedText variant="h400">{STRINGS.commuter.home.nearJeeps}</ThemedText>
         <View className="gap-2">
           {/* TODO: load actual jeeps here */}
           <JeepCard
@@ -34,7 +34,7 @@ export default function DefaultContent() {
 
       {/* Near Stops */}
       <View className="gap-2">
-        <ThemedText variant="h400">Nearby Stops</ThemedText>
+        <ThemedText variant="h400">{STRINGS.commuter.home.nearStops}</ThemedText>
         <View className="gap-2">
           {/* TODO: load actual jeeps here */}
           <StopCard

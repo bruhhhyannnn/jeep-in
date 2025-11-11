@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, Icon } from "@/components/ui";
@@ -9,11 +9,11 @@ export default function EtaJeepneyInfoScreen() {
   const { id } = useLocalSearchParams();
 
   return (
-    <MapLayout title="ETA Jeepney Info">
+    <MapLayout title={STRINGS.commuter.etaJeepneyScreen.title}>
       <View className="gap-3">
         {/* Header Info */}
         <View className="flex-row items-center gap-2">
-          <ThemedText variant="h600">Arriving in</ThemedText>
+          <ThemedText variant="h600">{STRINGS.commuter.etaJeepneyScreen.arrivingIn}</ThemedText>
           <ThemedText variant="h600" className="text-dodger-blue-600 dark:text-dodger-blue-600">
             3 mins.
           </ThemedText>
@@ -24,7 +24,7 @@ export default function EtaJeepneyInfoScreen() {
           {/* Jeepney Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              FROM JEEPNEY LOCATION
+              {STRINGS.commuter.etaJeepneyScreen.fromJeepneyLocation}
             </ThemedText>
             <JeepCard
               plateNo={id.toString()}
@@ -41,7 +41,7 @@ export default function EtaJeepneyInfoScreen() {
           {/* Stop Point Card */}
           <View className="flex-1 gap-1">
             <ThemedText variant="h300" className="uppercase">
-              TO STOP POINT
+              {STRINGS.commuter.etaJeepneyScreen.toStopPoint}
             </ThemedText>
             <StopCard
               location="Bingao Elementary & National High School"
@@ -55,7 +55,7 @@ export default function EtaJeepneyInfoScreen() {
 
         {/* Footer Text */}
         <ThemedText variant="h200" color="secondary" className="text-center">
-          You can now proceed to your nearest stop point and wait for the jeepney to arrive.
+          {STRINGS.commuter.etaJeepneyScreen.footer}
         </ThemedText>
       </View>
     </MapLayout>

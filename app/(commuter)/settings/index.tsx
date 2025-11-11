@@ -1,3 +1,4 @@
+import { STRINGS } from "@/constants";
 import React, { useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
@@ -29,7 +30,7 @@ const SettingsScreen = () => {
             {/* Header */}
             <View>
               <View className="self-start">
-                <ButtonBack showIcon label="Go Back" color="primary" />
+                <ButtonBack showIcon label={STRINGS.general.goBack} color="primary" />
               </View>
               <View className="items-center justify-center p-10">
                 <ThemedText variant="h900" className="uppercase">
@@ -49,17 +50,17 @@ const SettingsScreen = () => {
             {/* Getting Around Section */}
             <View className="gap-1">
               <ThemedText variant="h400" color="primary">
-                Getting around
+                {STRINGS.settings.gettingAround}
               </ThemedText>
               <View className="flex-row items-center gap-2">
                 <SettingsCard
-                  label="Stop points"
+                  label={STRINGS.settings.stopPoints.title}
                   iconName="map-outline"
                   variant="secondary"
                   onPress={() => stopPointsRef.current?.open()}
                 />
                 <SettingsCard
-                  label="Fare guide"
+                  label={STRINGS.settings.fareGuide.title}
                   iconName="cash-outline"
                   variant="secondary"
                   onPress={() => fareGuideRef.current?.open()}
@@ -70,17 +71,17 @@ const SettingsScreen = () => {
             {/* Preferences Section */}
             <View className="gap-1">
               <ThemedText variant="h400" color="primary">
-                Preferences
+                {STRINGS.settings.preferences}
               </ThemedText>
               <View className="overflow-hidden rounded-2xl">
                 <SettingsCard
-                  label="Settings and accessibility"
+                  label={STRINGS.settings.settingsAccessibility.title}
                   iconName="settings-outline"
                   onPress={() => accessibilityRef.current?.open()}
                 />
                 <Divider />
                 <SettingsCard
-                  label="Themes and avatar"
+                  label={STRINGS.settings.themesAvatar.title}
                   iconName="color-palette-outline"
                   onPress={() => themesAvatarRef.current?.open()}
                 />
@@ -90,17 +91,17 @@ const SettingsScreen = () => {
             {/* Help Center Section */}
             <View className="gap-1">
               <ThemedText variant="h400" color="primary">
-                Help center
+                {STRINGS.settings.helpCenter}
               </ThemedText>
               <View className="overflow-hidden rounded-2xl">
                 <SettingsCard
-                  label="Get support"
+                  label={STRINGS.settings.getSupport.title}
                   iconName="mail-outline"
                   onPress={() => supportRef.current?.open()}
                 />
                 <Divider />
                 <SettingsCard
-                  label="About JEEP-IN"
+                  label={STRINGS.settings.about.title}
                   iconName="information-circle-outline"
                   onPress={() => aboutRef.current?.open()}
                 />

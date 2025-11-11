@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { ThemedText, ThemedView, ButtonText } from "@/components/ui";
@@ -10,19 +10,19 @@ export default function NotFoundScreen() {
         <View className="gap-2">
           {/* 404 Header */}
           <ThemedText variant="h900" className="text-center">
-            404 — Page Not Found
+            {STRINGS.errors.notFound}
           </ThemedText>
 
           {/* Message */}
           <ThemedText color="secondary" variant="h500" className="text-center">
-            Oops! The screen you're looking for doesn't exist or has been moved.
+            {STRINGS.errors.notFoundDescription}
           </ThemedText>
         </View>
 
         {/* Back Button */}
         <View className="w-full">
           <ButtonText
-            label="Go Back Home"
+            label={STRINGS.general.goBack}
             iconName="home-outline"
             onPress={() => router.replace(ROUTES.root.index)}
           />

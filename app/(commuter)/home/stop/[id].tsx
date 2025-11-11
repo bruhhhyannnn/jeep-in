@@ -1,4 +1,4 @@
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { StopTitleBadge } from "@/components/commuter";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
@@ -9,7 +9,7 @@ export default function StopPointInfoScreen() {
   const { id } = useLocalSearchParams();
 
   return (
-    <MapLayout title="Stop Point Info">
+    <MapLayout title={STRINGS.commuter.stopPointScreen.title}>
       <View className="gap-3">
         {/* Header Info */}
         <View>
@@ -22,7 +22,7 @@ export default function StopPointInfoScreen() {
 
         <View className="flex-1 gap-1">
           <ThemedText variant="h300" className="uppercase">
-            Address
+            {STRINGS.commuter.stopPointScreen.address}
           </ThemedText>
           <ThemedView variant="bg_light" className="flex-row gap-2 rounded-full px-6 py-4">
             <Icon name="location-outline" />
@@ -33,7 +33,7 @@ export default function StopPointInfoScreen() {
         {/* Get Directions Button */}
         <View className="self-center">
           <ButtonText
-            label="Get Directions"
+            label={STRINGS.commuter.stopPointScreen.getDirections}
             onPress={() => router.push(ROUTES.commuter.etaStop(id.toString()))}
             iconName="timer-outline"
           />

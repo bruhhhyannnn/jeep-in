@@ -1,3 +1,4 @@
+import { STRINGS } from "@/constants";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/ui/";
@@ -23,7 +24,7 @@ const FilterModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const ROUTES = ["Going Paoay Route", "Going Laoag Route"];
 
   return (
-    <BottomSheetModalBase title="Filter Routes" ref={baseRef}>
+    <BottomSheetModalBase title={STRINGS.commuter.filterRoutes} ref={baseRef}>
       <View className="gap-5">
         <View className="gap-2">
           {/* Content */}
@@ -44,10 +45,14 @@ const FilterModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
 
         {/* Cancel & Apply button */}
         <View className="flex-row items-center gap-2">
-          <ButtonText label="Cancel" variant="secondary" onPress={() => baseRef.current?.close()} />
+          <ButtonText
+            label={STRINGS.general.goBack}
+            variant="secondary"
+            onPress={() => baseRef.current?.close()}
+          />
           <View className="flex-1">
             <ButtonText
-              label="Apply"
+              label={STRINGS.general.apply}
               fullWidth
               onPress={() => {
                 console.log("Apply filters", selectedRoutes);
