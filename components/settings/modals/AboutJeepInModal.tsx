@@ -52,6 +52,7 @@ function DefaultAboutJeepInView({
   onPrivacyPolicy: () => void;
 }) {
   const handleFacebook = () => openWebsite(STRINGS.settings.about.likeFb.content);
+  // TODO: maybe make this as to the linkAction file someday
   const handleShare = async () => {
     const message = STRINGS.settings.about.share.content;
 
