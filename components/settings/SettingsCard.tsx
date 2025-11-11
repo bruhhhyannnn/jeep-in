@@ -6,7 +6,6 @@ type SettingsCardProp = {
   label: string;
   onPress: () => void;
   variant?: "default" | "secondary"; // secondary = getting around section
-  // TODO: maybe add also here family name for the icons
   iconName: string;
 };
 
