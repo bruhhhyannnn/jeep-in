@@ -13,3 +13,4 @@ export { default as ThemedTextInput } from "@/components/ui/ThemedTextInput";
 export { default as CustomTextInput } from "@/components/ui/CustomTextInput";
 export { default as ButtonCheckbox } from "@/components/ui/ButtonCheckbox";
 export { default as ButtonRadio } from "@/components/ui/ButtonRadio";
+export { default as MapboxMap } from "@/components/ui/MapboxMap";

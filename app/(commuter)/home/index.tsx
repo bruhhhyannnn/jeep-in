@@ -1,15 +1,15 @@
+import React, { useRef } from "react";
 import { ROUTES } from "@/constants";
 import { Keyboard, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import React, { useRef } from "react";
 import { useRouter } from "expo-router";
-import { ThemedText, ButtonIcon, BottomSheetContainer, MapContainer } from "@/components/ui";
 import { FilterModal } from "@/components/commuter/modals/";
 import { DefaultContent } from "@/components/commuter/sections/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { useFocusEffect } from "expo-router";
+import { ButtonIcon, BottomSheetContainer, MapContainer, MapboxMap } from "@/components/ui";
 
 const HomeScreen = () => {
   const router = useRouter();
@@ -40,10 +40,7 @@ const HomeScreen = () => {
         <View className="relative flex-1 bg-neutral-300 dark:bg-black">
           {/* Map Area */}
           <MapContainer fullScreen>
-            {/* TODO: just a placeholder, remove it once MapboxMap is now available */}
-            <View className="flex-1 items-center justify-center">
-              <ThemedText variant="h600">Mapbox Map will go here</ThemedText>
-            </View>
+            <MapboxMap center={[120.5936, 18.1984]} zoom={14}></MapboxMap>
           </MapContainer>
 
           {/* Floating Buttons */}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621978226204",
+    "project_id": "jeepin-f5e6b",
+    "storage_bucket": "jeepin-f5e6b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621978226204:android:773a78f1ae9bd7174499d9",
+        "android_client_info": {
+          "package_name": "com.anonymous.JEEPIN"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMNtBIanCPIjOk0HH5ziMyL9z0F3L-cqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
