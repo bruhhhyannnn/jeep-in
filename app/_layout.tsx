@@ -5,7 +5,6 @@ import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { auth, db, storage, functions } from "@/services/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
 
 export default function RootLayout() {
@@ -16,21 +15,6 @@ export default function RootLayout() {
     "Puffin-Bold": require("../assets/fonts/Puffin-Bold.otf"),
     "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const snap = await getDocs(collection(db, "super_admin"));
-        snap.forEach((doc) => console.log(doc.id, doc.data()));
-      } catch (error) {
-        console.error("Data pipeline failed gracefully:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  console.log("🔥 Firebase ready:", !!auth, !!db, !!storage, !!functions);
 
   // Load fonts
   useEffect(() => {

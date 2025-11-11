@@ -1,5 +1,4 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import Mapbox, { MapView, Camera } from "@rnmapbox/maps";
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_PUBLIC_KEY!);
@@ -7,7 +6,7 @@ Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_PUBLIC_KEY!);
 type MapboxMapProps = {
   center?: [number, number];
   zoom?: number;
-  children?: React.ReactNode; // markers go here
+  children?: React.ReactNode; // markers will maybe go here?
   styleURL?: string;
 };
 
@@ -18,16 +17,11 @@ export default function MapboxMap({
   styleURL = Mapbox.StyleURL.Street,
 }: MapboxMapProps) {
   return (
-    <View style={styles.container}>
-      <MapView style={styles.map} styleURL={styleURL}>
+    <View className="flex-1">
+      <MapView className="flex-1" styleURL={styleURL}>
         <Camera centerCoordinate={center} zoomLevel={zoom} />
         {children}
       </MapView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  map: { flex: 1 },
-});
