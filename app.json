@@ -59,6 +59,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "06a1b8bb-b069-4360-98a7-7879c2668da7"
+      }
+    },
+    "owner": "jeep-in"
   }
 }
