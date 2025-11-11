@@ -81,7 +81,8 @@ export const STRINGS = {
     mincPhoneNumber2: "+63 939 722 3025",
 
     // Home
-    sinceLabel: "Since", // TODO: unused
+    hello: "Hello",
+    since: "Since",
     gettingAround: "Getting around",
     preferences: "Preferences",
     helpCenter: "Help center",

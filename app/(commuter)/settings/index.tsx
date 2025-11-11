@@ -1,5 +1,6 @@
 import { STRINGS } from "@/constants";
-import React, { useRef } from "react";
+import { useNicknameStore } from "@/context/useNicknameStore";
+import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
 import { SettingsCard, Divider } from "@/components/settings";
@@ -22,6 +23,11 @@ const SettingsScreen = () => {
   const supportRef = useRef<BottomSheetModalBaseRef>(null);
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
 
+  const { nickname, loadNickname } = useNicknameStore();
+  useEffect(() => {
+    loadNickname();
+  }, []);
+
   return (
     <SafeAreaContainer className="flex-1 bg-dodger-blue-700 dark:bg-dodger-blue-950">
       <BottomSheetModalProvider>
@@ -36,13 +42,12 @@ const SettingsScreen = () => {
                 <ThemedText variant="h900" className="uppercase">
                   🥳
                 </ThemedText>
-                {/* TODO: make this as to be dynamic on what user changes someday */}
                 <ThemedText variant="hero10" color="primary" className="uppercase">
-                  Hello User!
+                  {STRINGS.settings.hello} {nickname}!
                 </ThemedText>
                 {/* TODO: make this as to react when this app is installed to this device, someday */}
                 <ThemedText variant="h200" color="primary">
-                  Since Jan. 1 2025
+                  {STRINGS.settings.since} Jan. 1 2025
                 </ThemedText>
               </View>
             </View>

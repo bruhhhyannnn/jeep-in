@@ -1,9 +1,16 @@
 import { STRINGS } from "@/constants";
+import { useNicknameStore } from "@/context/useNicknameStore";
 import { useThemeStore } from "@/context/useThemeStore";
 import { colorScheme } from "nativewind";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import { BottomSheetModalBase, ButtonRadio, ButtonText, ThemedText } from "@/components/ui";
+import {
+  BottomSheetModalBase,
+  ButtonRadio,
+  ButtonText,
+  CustomTextInput,
+  ThemedText,
+} from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
 import type { ThemeMode } from "@/types";
 
@@ -75,9 +82,23 @@ function DefaultThemesAvatarView({
 
 // Nickname View
 function NicknameView({ onBack }: { onBack: () => void }) {
+  const { nickname, loadNickname } = useNicknameStore();
+  useEffect(() => {
+    loadNickname();
+  }, []);
+
   return (
     <View className="gap-4">
-      <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
+      <View className="gap-2">
+        {/* TODO: */}
+        <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
+
+        <ThemedText variant="h400" className="uppercase" color="secondary">
+          {STRINGS.settings.themesAvatar.nickname.appNickname}
+        </ThemedText>
+        {/* TODO: fix the keyboard not doing properly here */}
+        <CustomTextInput placeholder={nickname} iconName="person-outline" />
+      </View>
 
       {/* Cancel & Apply button */}
       <View className="flex-row items-center gap-2">
