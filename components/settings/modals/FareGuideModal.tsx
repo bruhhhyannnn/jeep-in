@@ -81,10 +81,9 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
         </View>
 
         {/* Fare Matrix Table */}
-        <View className="overflow-hidden rounded-lg">
+        <View className="overflow-hidden rounded-2xl">
           {/* Table Header */}
-          {/* TODO: make a dark mode version of this */}
-          <View className="flex-row items-center justify-center bg-dodger-blue-600 px-2 py-4">
+          <View className="flex-row items-center justify-center bg-dodger-blue-600 px-2 py-4 dark:bg-dodger-blue-800">
             <ThemedText color="primary" className="flex-1 text-center">
               Landmark
             </ThemedText>
@@ -103,7 +102,9 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
             <View
               key={item.id}
               className={`flex-row px-2 py-2 ${
-                index % 2 === 0 ? "bg-dodger-blue-500" : "bg-dodger-blue-500/90"
+                index % 2 === 0
+                  ? "bg-dodger-blue-500 dark:dark:bg-dodger-blue-700"
+                  : "bg-dodger-blue-500/80 dark:dark:bg-dodger-blue-700/80"
               }`}
             >
               <ThemedText color="primary" className="flex-1 text-center">
