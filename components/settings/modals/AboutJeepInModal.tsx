@@ -5,6 +5,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { openWebsite } from "@/lib/linkActions";
 import { Share, ToastAndroid, View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
+import { ButtonSettings } from "@/components/settings";
 
 const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -19,10 +20,10 @@ const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
     <BottomSheetModalBase
       title={
         view === "default"
-          ? "About JEEP-IN"
+          ? STRINGS.settings.about.title
           : view === "dataAttribution"
-            ? "Data attribution"
-            : "Privacy policy"
+            ? STRINGS.settings.about.dataAttribution.title
+            : STRINGS.settings.about.privacyPolicy.title
       }
       ref={baseRef}
     >
@@ -67,28 +68,19 @@ function DefaultAboutJeepInView({
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.about.loveSection}
         </ThemedText>
-        <ButtonText
+        <ButtonSettings
           label={STRINGS.settings.about.likeFb.title}
-          variant="tertiary"
           iconName="thumbs-up-outline"
-          showChevron
-          fullWidth
           onPress={handleFacebook}
         />
-        <ButtonText
+        <ButtonSettings
           label={STRINGS.settings.about.share.title}
-          variant="tertiary"
           iconName="megaphone-outline"
-          showChevron
-          fullWidth
           onPress={handleShare}
         />
-        <ButtonText
+        <ButtonSettings
           label={STRINGS.settings.about.visit.title}
-          variant="tertiary"
           iconName="document-text-outline"
-          showChevron
-          fullWidth
           onPress={handleVisitPage}
         />
       </View>
@@ -98,20 +90,14 @@ function DefaultAboutJeepInView({
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.about.legalSection}
         </ThemedText>
-        <ButtonText
+        <ButtonSettings
           label={STRINGS.settings.about.dataAttribution.title}
-          variant="tertiary"
           iconName="file-tray-full-outline"
-          showChevron
-          fullWidth
           onPress={onDataAttribution}
         />
-        <ButtonText
+        <ButtonSettings
           label={STRINGS.settings.about.privacyPolicy.title}
-          variant="tertiary"
           iconName="newspaper-outline"
-          showChevron
-          fullWidth
           onPress={onPrivacyPolicy}
         />
       </View>

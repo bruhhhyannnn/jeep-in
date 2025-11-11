@@ -4,6 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
+import { ButtonSettings } from "@/components/settings";
 
 const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -51,20 +52,14 @@ function DefaultGetSupportView({
 }) {
   return (
     <View className="gap-4">
-      <ButtonText
+      <ButtonSettings
         label={STRINGS.settings.getSupport.help.title}
-        variant="tertiary"
         iconName="information-circle-outline"
-        showChevron
-        fullWidth
         onPress={onHelp}
       />
-      <ButtonText
+      <ButtonSettings
         label={STRINGS.settings.getSupport.contactUs.title}
-        variant="tertiary"
         iconName="call-outline"
-        showChevron
-        fullWidth
         onPress={onContactUs}
       />
     </View>
@@ -138,30 +133,21 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
           {STRINGS.settings.getSupport.contactUs.supportContent}
         </ThemedText>
         <View className="mt-1 gap-2">
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.jeepinEmail}
-            variant="tertiary"
             iconName="mail-outline"
-            showChevron
-            fullWidth
             onPress={() =>
               sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
             }
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.developerPhoneNumber1}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.developerPhoneNumber2}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
           />
         </View>
@@ -175,28 +161,19 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
           {STRINGS.settings.getSupport.contactUs.operationsContent}
         </ThemedText>
         <View className="mt-1 gap-2">
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.mincEmail}
-            variant="tertiary"
             iconName="mail-outline"
-            showChevron
-            fullWidth
             onPress={() => sendEmail(STRINGS.settings.mincEmail)}
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.mincPhoneNumber1}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber1.trim())}
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.mincPhoneNumber2}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber2.trim())}
           />
         </View>

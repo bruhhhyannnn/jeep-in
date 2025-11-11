@@ -3,6 +3,7 @@ import { useNicknameStore } from "@/context/useNicknameStore";
 import { useThemeStore } from "@/context/useThemeStore";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
+import { ButtonSettings } from "@/components/settings";
 import {
   BottomSheetModalBase,
   ButtonRadio,
@@ -59,20 +60,14 @@ function DefaultThemesAvatarView({
 }) {
   return (
     <View className="gap-4">
-      <ButtonText
+      <ButtonSettings
         label={STRINGS.settings.themesAvatar.nickname.title}
-        variant="tertiary"
         iconName="person-outline"
-        showChevron
-        fullWidth
         onPress={onNickname}
       />
-      <ButtonText
+      <ButtonSettings
         label={STRINGS.settings.themesAvatar.appearance.title}
-        variant="tertiary"
         iconName="bulb-outline"
-        showChevron
-        fullWidth
         onPress={onAppearance}
       />
     </View>

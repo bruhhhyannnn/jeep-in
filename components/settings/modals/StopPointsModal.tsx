@@ -6,6 +6,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/commuter";
 import { useRouter } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
+import { ButtonSettings } from "@/components/settings";
 
 const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -124,38 +125,26 @@ function HelpStopPointsView({ onBack }: { onBack: () => void }) {
 
         {/* Contact Cards */}
         <View className="mt-1 gap-2">
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.developerPhoneNumber1}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.developerPhoneNumber2}
-            variant="tertiary"
             iconName="call-outline"
-            showChevron
-            fullWidth
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.jeepinEmail}
-            variant="tertiary"
             iconName="mail-outline"
-            showChevron
-            fullWidth
             onPress={() =>
               sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
             }
           />
-          <ButtonText
+          <ButtonSettings
             label={STRINGS.settings.developerEmail}
-            variant="tertiary"
             iconName="mail-outline"
-            showChevron
-            fullWidth
             onPress={() =>
               sendEmail(STRINGS.settings.developerEmail, STRINGS.settings.jeepinEmailSubject)
             }
