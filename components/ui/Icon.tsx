@@ -1,7 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
 
-// TODO: maybe add to global types for this one
 type IconProps = {
   name: string;
   family?: "Ionicons" | "MaterialCommunityIcons";
