@@ -3,3 +3,4 @@ export * from "@/types/commuter";
 export * from "@/types/settings";
 export * from "@/types/driver";
 export * from "@/types/entities";
+export * from "@/types/map";

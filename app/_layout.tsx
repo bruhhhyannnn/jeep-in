@@ -1,11 +1,11 @@
 import "./global.css";
+import "@/services/mapbox/config";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { collection, getDocs } from "firebase/firestore";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
