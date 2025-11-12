@@ -6,12 +6,12 @@ import type { MapRef } from "@/types";
  * Uses the recenter() function defined inside your MapboxMapRef.
  */
 export const useRecenterCamera = (mapRef: MapRef) => {
-  const recenterCamera = useCallback(
-    (coords: [number, number]) => {
-      mapRef.current?.recenter(coords);
-    },
-    [mapRef],
-  );
+const recenterCamera = useCallback(
+  (coords: [number, number], zoomLevel?: number) => {
+    mapRef.current?.recenter(coords, zoomLevel);
+  },
+  [mapRef],
+);
 
   return { recenterCamera };
 };
