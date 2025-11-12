@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-export default function MapContainer({
+export default function MapboxContainer({
   fullScreen = false,
   children,
 }: {

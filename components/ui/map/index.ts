@@ -1,3 +1,4 @@
-export { default as MapContainer } from "@/components/ui/map/MapContainer";
+export { default as MapboxContainer } from "@/components/ui/map/MapboxContainer";
 export { default as MapboxMap } from "@/components/ui/map/MapboxMap";
-export { default as JeepneyMarker } from "@/components/ui/map/JeepneyMarker";
+
+export * from "@/components/ui/map/layers";
