@@ -1,7 +1,6 @@
-import * as Location from "expo-location";
 import React, { useEffect, useRef } from "react";
 import { ROUTES } from "@/constants";
-import { Keyboard, View } from "react-native";
+import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
@@ -9,78 +8,41 @@ import { FilterModal } from "@/components/commuter/modals/";
 import { DefaultContent } from "@/components/commuter/sections/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef, MapboxMapRef } from "@/types";
-import { useFocusEffect } from "expo-router";
-import {
-  ButtonIcon,
-  BottomSheetContainer,
-  MapContainer,
-  MapboxMap,
-  JeepneyMarker,
-} from "@/components/ui";
+import { ButtonIcon, BottomSheetContainer, MapboxContainer, MapboxMap } from "@/components/ui";
+import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
 
 const HomeScreen = () => {
+  // Route navigation for settings
   const router = useRouter();
-  const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
+
+  // Gets device top safe area for spacing floating buttons
   const { top } = useSafeAreaInsets();
+
+  // Ref for the filter modal
+  const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
+
+  // Ref for commuter bottom sheet container
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
 
-  // React to keyboard show and hide for the bottom sheet to expand
-  useFocusEffect(
-    React.useCallback(() => {
-      const showSub = Keyboard.addListener("keyboardDidShow", () => {
-        bottomSheetRef.current?.expand();
-      });
-      const hideSub = Keyboard.addListener("keyboardDidHide", () => {
-        bottomSheetRef.current?.collapse();
-      });
+  useKeyboardSheet(bottomSheetRef);
 
-      return () => {
-        showSub.remove();
-        hideSub.remove();
-      };
-    }, []),
-  );
-
-  // Recenter
+  // Mapbox setup + camera control
   const mapRef = useRef<MapboxMapRef>(null);
-  const recenterToUser = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") return;
+  const { recenterToUser } = useRecenterToUser(mapRef);
 
-    const loc = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High,
-    });
-
-    const coords: [number, number] = [loc.coords.longitude, loc.coords.latitude];
-    mapRef.current?.recenter(coords);
-  };
-
-  // Mock jeepney data
-  const jeepneys = [
-    { id: "jeep-1", coords: [120.543994, 18.059955] },
-    { id: "jeep-2", coords: [120.545116, 18.059409] },
-    { id: "jeep-3", coords: [120.546111, 18.059246] },
-  ];
-
-  // Center to user location once mounted
+  // Center to user location when component mounts
   useEffect(() => {
-    (async () => {
-      await recenterToUser();
-    })();
-  }, []);
+    recenterToUser();
+  }, [recenterToUser]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <View className="relative flex-1 bg-neutral-300 dark:bg-black">
           {/* Map Area */}
-          <MapContainer fullScreen>
-            <MapboxMap ref={mapRef}>
-              {jeepneys.map((j) => (
-                <JeepneyMarker key={j.id} id={j.id} coords={j.coords} />
-              ))}
-            </MapboxMap>
-          </MapContainer>
+          <MapboxContainer fullScreen>
+            <MapboxMap ref={mapRef} />
+          </MapboxContainer>
 
           {/* Floating Buttons */}
           <View style={{ top: top + 28 }} className="absolute right-6 gap-4">
