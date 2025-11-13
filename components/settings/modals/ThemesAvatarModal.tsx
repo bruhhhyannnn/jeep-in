@@ -1,6 +1,6 @@
 import { STRINGS } from "@/constants";
-import { useNicknameStore } from "@/context/useNicknameStore";
-import { useThemeStore } from "@/context/useThemeStore";
+import { useNicknameStore } from "@/store";
+import { useThemeStore } from "@/store";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { ButtonSettings } from "@/components/settings";

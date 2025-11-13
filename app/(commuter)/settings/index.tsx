@@ -1,5 +1,5 @@
 import { STRINGS } from "@/constants";
-import { useNicknameStore } from "@/context/useNicknameStore";
+import { useNicknameStore } from "@/store";
 import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
@@ -13,7 +13,7 @@ import {
   ThemesAvatarModal,
   GetSupportModal,
   AboutJeepInModal,
-} from "@/components/settings/modals";
+} from "@/components/settings";
 
 const SettingsScreen = () => {
   const stopPointsRef = useRef<BottomSheetModalBaseRef>(null);

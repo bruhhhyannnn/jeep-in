@@ -1,6 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { ThemedText, ThemedView, Icon } from "@/components/ui";
-import JeepStatusBadge from "@/components/commuter/JeepStatusBadge";
+import JeepStatusBadge from "@/components/commuter/badge/JeepStatusBadge";
 import { JeepneyStatus } from "@/types";
 import { SHADOWS } from "@/style/shadow";
 
