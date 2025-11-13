@@ -5,7 +5,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { openWebsite } from "@/lib/linkActions";
 import { Share, ToastAndroid, View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
-import { ButtonSettings } from "@/components/settings";
+import ButtonSettings from "@/components/settings/ButtonSettings";
 
 const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);

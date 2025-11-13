@@ -3,7 +3,8 @@ import { useNicknameStore } from "@/store";
 import { useThemeStore } from "@/store";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
-import { ButtonSettings } from "@/components/settings";
+import { BottomSheetModalBaseRef } from "@/types";
+import type { ThemeMode } from "@/types";
 import {
   BottomSheetModalBase,
   ButtonRadio,
@@ -11,8 +12,7 @@ import {
   CustomTextInput,
   ThemedText,
 } from "@/components/ui";
-import { BottomSheetModalBaseRef } from "@/types";
-import type { ThemeMode } from "@/types";
+import ButtonSettings from "@/components/settings/ButtonSettings";
 
 const ThemesAvatarModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);

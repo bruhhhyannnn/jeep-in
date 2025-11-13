@@ -6,7 +6,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/commuter";
 import { useRouter } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
-import { ButtonSettings } from "@/components/settings";
+import ButtonSettings from "@/components/settings/ButtonSettings";
 
 const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);

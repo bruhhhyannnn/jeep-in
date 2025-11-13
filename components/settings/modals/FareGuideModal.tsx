@@ -3,7 +3,7 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/ui";
-import { ButtonSettings } from "@/components/settings";
+import ButtonSettings from "@/components/settings/ButtonSettings";
 import { BottomSheetModalBaseRef } from "@/types";
 
 const FareGuideModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {

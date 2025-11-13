@@ -4,7 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
-import { ButtonSettings } from "@/components/settings";
+import ButtonSettings from "@/components/settings/ButtonSettings";
 
 const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
