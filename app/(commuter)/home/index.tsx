@@ -5,11 +5,14 @@ import { useRouter } from "expo-router";
 import { FilterModal } from "@/components/commuter/modals/";
 import { DefaultContent } from "@/components/commuter/sections/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BottomSheetContainerRef, BottomSheetModalBaseRef, MapboxMapRef } from "@/types";
+import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { ButtonIcon, BottomSheetContainer } from "@/components/ui";
 import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
+import { useMap } from "@/context/map/MapContext";
 
 const HomeScreen = () => {
+  const map = useMap();
+
   // Route navigation for settings
   const router = useRouter();
 
@@ -23,9 +26,8 @@ const HomeScreen = () => {
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
   useKeyboardSheet(bottomSheetRef);
 
-  // Mapbox setup + camera control
-  const mapRef = useRef<MapboxMapRef>(null);
-  const { recenterToUser } = useRecenterToUser(mapRef);
+  // Camera control
+  const { recenterToUser } = useRecenterToUser();
 
   // Center to user location when component mounts
   useEffect(() => {
@@ -42,6 +44,10 @@ const HomeScreen = () => {
         />
         <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} />
         <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
+        <ButtonIcon
+          iconName="navigate-circle-outline"
+          onPress={() => map.current.flyTo([120.55, 18.06], 1200)}
+        />
       </View>
 
       {/* Bottom Sheet */}

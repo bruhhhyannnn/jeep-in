@@ -1,13 +1,12 @@
 import * as Location from "expo-location";
 import { useCallback } from "react";
-import type { MapRef } from "@/types";
-import { useRecenterCamera } from "@/hooks/userRecenterCamera";
+import { useMap } from "@/context/map/MapContext";
 
 /**
- * Gets user's current location, then calls recenterCamera().
+ * Gets user's current location then animates camera using flyTo().
  */
-export const useRecenterToUser = (mapRef: MapRef) => {
-  const { recenterCamera } = useRecenterCamera(mapRef);
+export const useRecenterToUser = () => {
+  const map = useMap();
 
   const recenterToUser = useCallback(async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -17,8 +16,11 @@ export const useRecenterToUser = (mapRef: MapRef) => {
       accuracy: Location.Accuracy.High,
     });
 
-    recenterCamera([loc.coords.longitude, loc.coords.latitude]);
-  }, [recenterCamera]);
+    map.current.flyTo(
+      [loc.coords.longitude, loc.coords.latitude],
+      1200, // smooth duration
+    );
+  }, [map]);
 
   return { recenterToUser };
 };
