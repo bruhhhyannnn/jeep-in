@@ -10,7 +10,7 @@ type BottomSheetContainerProps = {
 };
 
 const BottomSheetContainer = forwardRef<BottomSheetContainerRef, BottomSheetContainerProps>(
-  ({ children, snapPoints = ["9%", "30%", "93%"], initialIndex = 1 }, ref) => {
+  ({ children, snapPoints = ["9%", "30%", "90%"], initialIndex = 1 }, ref) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
     const memoSnapPoints = useMemo(() => snapPoints, [snapPoints]);
     const { colorScheme } = useColorScheme();

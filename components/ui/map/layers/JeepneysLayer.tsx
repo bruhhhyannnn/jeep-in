@@ -1,4 +1,4 @@
-import Mapbox, { ShapeSource, SymbolLayer } from "@rnmapbox/maps";
+import { ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import { useJeepneys } from "@/hooks/useJeepneys";
 
 export default function JeepneysLayer() {

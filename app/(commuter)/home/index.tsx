@@ -8,11 +8,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { ButtonIcon, BottomSheetContainer } from "@/components/ui";
 import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
-import { useMap } from "@/context/map/MapContext";
 
 const HomeScreen = () => {
-  const map = useMap();
-
   // Route navigation for settings
   const router = useRouter();
 
@@ -44,10 +41,6 @@ const HomeScreen = () => {
         />
         <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} />
         <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
-        <ButtonIcon
-          iconName="navigate-circle-outline"
-          onPress={() => map.current.flyTo([120.55, 18.06], 1200)}
-        />
       </View>
 
       {/* Bottom Sheet */}
