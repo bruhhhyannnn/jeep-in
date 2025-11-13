@@ -6,8 +6,12 @@ import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function RootLayout() {
+  const queryClient = new QueryClient();
+
   const [fontsLoaded] = useFonts({
     "Puffin-Regular": require("../assets/fonts/Puffin-Regular.otf"),
     "Puffin-Medium": require("../assets/fonts/Puffin-Medium.otf"),
@@ -26,13 +30,17 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: true,
-            animation: "fade_from_bottom",
-          }}
-        />
+        <QueryClientProvider client={queryClient}>
+          <BottomSheetModalProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                gestureEnabled: true,
+                animation: "fade_from_bottom",
+              }}
+            />
+          </BottomSheetModalProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
