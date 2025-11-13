@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { ButtonIcon, BottomSheetContainer } from "@/components/ui";
 import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
-import { useMapInitStore } from "@/context/useMapInitStore";
+import { useMapInitStore } from "@/context";
 
 const HomeScreen = () => {
   // Route navigation for settings
@@ -40,7 +40,8 @@ const HomeScreen = () => {
       {/* Floating Buttons */}
       <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
         <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.root.settings)} />
-        <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} />
+        {/* TODO: removed for now */}
+        {/* <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} /> */}
         <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
       </View>
 

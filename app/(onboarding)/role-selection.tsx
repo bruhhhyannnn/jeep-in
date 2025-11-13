@@ -2,8 +2,11 @@ import { ROUTES, STRINGS } from "@/constants";
 import { router } from "expo-router";
 import { View, Image } from "react-native";
 import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
+import { useRoleStore } from "@/context";
 
 const RoleSelectionScreen = () => {
+  const { setRole } = useRoleStore();
+
   return (
     <SafeAreaContainer>
       <View className="h-full gap-10 pt-36">
@@ -39,7 +42,10 @@ const RoleSelectionScreen = () => {
               label={STRINGS.onboarding.roleSelection.commuter}
               variant="primaryLarge"
               fullWidth
-              onPress={() => router.replace(ROUTES.commuter.home)}
+              onPress={async () => {
+                await setRole("commuter");
+                router.replace(ROUTES.commuter.home);
+              }}
             />
             <ButtonText
               label={STRINGS.onboarding.roleSelection.operator}

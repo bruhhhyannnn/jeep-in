@@ -24,7 +24,7 @@ export const ROUTES = {
 
   driver: {
     layout: "/(driver)",
-    auth: "/(driver)/auth/login",
+    auth: "/(driver)/auth",
     home: "/(driver)/home",
   },
 } as const;

@@ -25,7 +25,8 @@ export interface Route {
 }
 
 // Pickup Point
-export interface PickupPoint { // or Stop Point
+export interface PickupPoint {
+  // or Stop Point
   id: string;
   route_id: string; // FK → Route.id
   name: string;
@@ -46,7 +47,6 @@ export interface Jeepney {
   plate_number: string;
   latitude: number;
   longitude: number;
-  bearing?: number;
   current_direction?: string; // must match Route.route_direction
   last_pickup_point_id?: string; // FK → PickupPoint.id
   next_pickup_point_id?: string; // FK → PickupPoint.id

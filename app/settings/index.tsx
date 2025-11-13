@@ -7,6 +7,7 @@ import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
+import { useRoleStore } from "@/context";
 import {
   StopPointsModal,
   FareGuideModal,
@@ -30,6 +31,10 @@ const SettingsScreen = () => {
   useEffect(() => {
     loadNickname();
   }, []);
+
+  // Use clear role from role store
+  const { role, clearRole } = useRoleStore();
+  const canLogout = ["driver", "admin", "super_admin"].includes(role || "");
 
   return (
     <SafeAreaContainer className="flex-1 bg-dodger-blue-700 dark:bg-dodger-blue-950">
@@ -123,31 +128,44 @@ const SettingsScreen = () => {
               </ThemedText>
 
               <View className="overflow-hidden rounded-2xl">
-                <SettingsCard
-                  label="Change Role"
-                  iconName="swap-horizontal-outline"
-                  onPress={() => {
-                    router.dismissAll();
-                    router.replace(ROUTES.onboarding.roleSelection);
-                  }}
-                />
-                <Divider />
-                {/* TODO: render the logout card here someday if the user is detected as logged in if not just hide it */}
-                <SettingsCard
-                  label="Logout"
-                  iconName="log-out-outline"
-                  onPress={async () => {
-                    // OPTIONAL: if you're using Firebase Auth
-                    // await signOut(auth);
+                {!canLogout && (
+                  <SettingsCard
+                    label="Change Role"
+                    iconName="swap-horizontal-outline"
+                    onPress={async () => {
+                      // Clear user role
+                      await clearRole();
 
-                    // OPTIONAL: clear any local role, nickname, or sensitive state
-                    // useRoleStore.getState().clearRole();
-                    // await SecureStore.deleteItemAsync("uid");
+                      // Remove all stacked screens
+                      router.dismissAll();
 
-                    router.dismissAll();
-                    router.replace(ROUTES.onboarding.welcome);
-                  }}
-                />
+                      // Redirect to role selection screen
+                      router.replace(ROUTES.onboarding.roleSelection);
+                    }}
+                  />
+                )}
+                {canLogout && (
+                  <>
+                    <SettingsCard
+                      label="Logout"
+                      iconName="log-out-outline"
+                      onPress={async () => {
+                        // Clear user role
+                        await clearRole();
+
+                        // TODO:
+                        // await signOut(auth);
+                        // await SecureStore.deleteItemAsync("uid");
+
+                        // Remove all stacked screens
+                        router.dismissAll();
+
+                        // Redirect to role selection screen
+                        router.replace(ROUTES.onboarding.roleSelection);
+                      }}
+                    />
+                  </>
+                )}
               </View>
             </View>
 

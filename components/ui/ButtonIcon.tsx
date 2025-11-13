@@ -24,7 +24,7 @@ export default function ButtonIcon({ iconName, onPress, disabled = false }: Butt
         elevation: 6, // Android
       }}
     >
-      <Icon family="Ionicons" name={iconName} />
+      <Icon name={iconName} />
     </TouchableOpacity>
   );
 }

@@ -7,14 +7,6 @@ export default function DriverLayout() {
         headerShown: false,
         animation: "fade_from_bottom",
       }}
-    >
-      <Stack.Screen
-        name="settings/index"
-        options={{
-          animation: "slide_from_right",
-          gestureEnabled: true,
-        }}
-      />
-    </Stack>
+    />
   );
 }
