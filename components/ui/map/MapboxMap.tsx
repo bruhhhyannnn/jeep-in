@@ -1,6 +1,6 @@
 import { useColorScheme } from "nativewind";
 import Mapbox, { MapView, Camera, Images } from "@rnmapbox/maps";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { MapboxMapRef } from "@/types";
 import {
   JeepneysLayer,
@@ -8,6 +8,7 @@ import {
   StopPointsLayer,
   UserLocationLayer,
 } from "@/components/ui/map/layers";
+import { useMap } from "@/context/map/MapContext";
 
 type MapboxMapProps = {
   center?: [number, number];
@@ -16,6 +17,8 @@ type MapboxMapProps = {
 
 const MapboxMap = forwardRef<MapboxMapRef, MapboxMapProps>(
   ({ center = [120.548662, 18.059751], zoom = 13 }, ref) => {
+    const map = useMap();
+
     // Theme color changing Mapbox style
     const { colorScheme } = useColorScheme();
     const mapStyle =
@@ -23,17 +26,6 @@ const MapboxMap = forwardRef<MapboxMapRef, MapboxMapProps>(
 
     // Camera center reference
     const cameraRef = useRef<Camera>(null);
-
-    // Expose map camera control to parent components
-    useImperativeHandle(ref, () => ({
-      recenter: (coords, zoomLevel = 17.5) => {
-        cameraRef.current?.setCamera({
-          centerCoordinate: coords,
-          zoomLevel,
-          animationDuration: 600,
-        });
-      },
-    }));
 
     // TODO: Console log location every 5 seconds, might be using this one instead of expo location someday
     // useEffect(() => {
@@ -49,6 +41,24 @@ const MapboxMap = forwardRef<MapboxMapRef, MapboxMapProps>(
     //     Mapbox.locationManager.stop();
     //   };
     // }, []);
+
+    // store the ref globally
+    useEffect(() => {
+      map.current = {
+        flyTo: (coords, duration = 1500) => {
+          cameraRef.current?.setCamera({
+            centerCoordinate: coords,
+            animationDuration: duration,
+            animationMode: "flyTo",
+            zoomLevel: 17.5,
+          });
+        },
+
+        fitBounds: (sw, ne, padding = 40) => {
+          cameraRef.current?.fitBounds(sw, ne, padding, 500);
+        },
+      };
+    }, []);
 
     return (
       <MapView style={{ flex: 1 }} styleURL={mapStyle} projection="globe">
