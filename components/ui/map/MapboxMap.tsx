@@ -9,12 +9,7 @@ import {
   UserLocationLayer,
 } from "@/components/ui/map/layers";
 
-type MapboxMapProps = {
-  center?: [number, number];
-  zoom?: number;
-};
-
-const MapboxMap = ({ center = [120.548662, 18.059751], zoom = 13 }: MapboxMapProps) => {
+const MapboxMap = () => {
   const map = useMap();
 
   // Theme color changing Mapbox style
@@ -24,8 +19,6 @@ const MapboxMap = ({ center = [120.548662, 18.059751], zoom = 13 }: MapboxMapPro
 
   // Camera center reference
   const cameraRef = useRef<Camera>(null);
-
-
 
   // store the ref globally
   useEffect(() => {
@@ -48,7 +41,12 @@ const MapboxMap = ({ center = [120.548662, 18.059751], zoom = 13 }: MapboxMapPro
   return (
     <MapView style={{ flex: 1 }} styleURL={mapStyle} projection="globe">
       {/* Map camera */}
-      <Camera ref={cameraRef} pitch={50} zoomLevel={zoom} centerCoordinate={center} />
+      <Camera
+        ref={cameraRef}
+        pitch={50}
+        zoomLevel={13}
+        centerCoordinate={[120.548662, 18.059751]}
+      />
 
       {/* Render Route Polylines */}
       <RoutePolylineLayer />

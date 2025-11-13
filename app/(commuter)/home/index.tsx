@@ -32,8 +32,7 @@ const HomeScreen = () => {
   const setHasCentered = useMapInitStore((s) => s.setHasCentered);
   useEffect(() => {
     if (hasCentered) return; // ❌ Already centered in this session → skip
-    // Mark as done so it never runs again
-    setHasCentered();
+    setHasCentered(); // Mark as done so it never runs again
     recenterToUser();
   }, [hasCentered, recenterToUser]);
 
