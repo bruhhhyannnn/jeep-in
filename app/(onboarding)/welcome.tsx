@@ -49,10 +49,10 @@ export default function WelcomeScreen() {
             </View>
 
             <View className="drop-shadow-lg">
-              <ThemedText variant="h700" className="text-center">
+              <ThemedText variant="h800" className="text-center">
                 {item.title}
               </ThemedText>
-              <ThemedText variant="h400" color="secondary" className="text-center">
+              <ThemedText variant="h500" color="secondary" className="text-center">
                 {item.subtitle}
               </ThemedText>
             </View>
@@ -65,6 +65,7 @@ export default function WelcomeScreen() {
         label={
           isLastSlide ? STRINGS.onboarding.welcome.getStarted : STRINGS.onboarding.welcome.next
         }
+        variant="primaryLarge"
         fullWidth
         onPress={handleNext}
       />
