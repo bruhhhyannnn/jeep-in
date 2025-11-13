@@ -9,7 +9,8 @@ type ButtonTextProps = {
   onPress: () => void;
   // * primary: default blue;
   // * secondary: go back;
-  variant?: "primary" | "secondary";
+  // * primaryLarge: larger primary version;
+  variant?: "primary" | "secondary" | "primaryLarge";
   iconName?: string;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -30,6 +31,7 @@ export default function ButtonText({
     baseStyle,
     variant === "primary" && "bg-dodger-blue-600",
     variant === "secondary" && "bg-neutral-bg-light-200 dark:bg-neutral-bg-dark-200",
+    variant === "primaryLarge" && "bg-dodger-blue-600 px-6 py-4",
     disabled && "opacity-50",
     fullWidth ? "w-full" : "",
   );
@@ -42,7 +44,10 @@ export default function ButtonText({
       style={[SHADOWS.style, !fullWidth && { alignSelf: "flex-start" }]}
     >
       {iconName && <Icon name={iconName} color={variant === "primary" ? "#edf9ff" : undefined} />}
-      <ThemedText variant="h400" color={variant === "primary" ? "primary" : undefined}>
+      <ThemedText
+        variant={variant === "primaryLarge" ? "h500" : "h400"}
+        color={variant === "primary" || variant === "primaryLarge" ? "primary" : undefined}
+      >
         {label}
       </ThemedText>
     </TouchableOpacity>

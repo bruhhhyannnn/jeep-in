@@ -39,11 +39,13 @@ const RoleSelectionScreen = () => {
           <View className="gap-3">
             <ButtonText
               label={STRINGS.onboarding.roleSelection.commuter}
+              variant="primaryLarge"
               fullWidth
               onPress={() => router.replace(ROUTES.commuter.home)}
             />
             <ButtonText
               label={STRINGS.onboarding.roleSelection.operator}
+              variant="primaryLarge"
               fullWidth
               onPress={() => router.push(ROUTES.driver.auth)}
             />

@@ -18,8 +18,8 @@ export const STRINGS = {
     roleSelection: {
       title: "Welcome to JEEP-IN",
       subtitle: "Select how you want to use the app. Continue as…",
-      commuter: "Commuter",
-      operator: "Operator",
+      commuter: "😃 Commuter",
+      operator: "🤓 Operator",
     },
   },
 
