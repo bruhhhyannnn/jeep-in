@@ -8,7 +8,7 @@ export default function DefaultContent() {
   const router = useRouter();
 
   return (
-    <View className="gap-6">
+    <View className="gap-4">
       {/* Search Bar */}
       <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} iconName="search" />
 
