@@ -2,11 +2,9 @@ import { ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import type { FeatureCollection, Point } from "geojson";
 import { useStops } from "@/hooks/useStops";
 import { router } from "expo-router";
-import { useMap } from "@/context/map/MapContext";
 
 export default function StopPointsLayer() {
   const geoJson = useStops();
-  // const map = useMap(); // for camera controls
 
   if (!geoJson) return null;
 
@@ -24,10 +22,7 @@ export default function StopPointsLayer() {
 
         console.log("📍 Stop tapped:", feature);
 
-        // 1. Fly camera to the stop (Mapbox expects [lng, lat])
-        // map.current.flyTo([lng, lat], 1000);
-
-        // 2. Navigate to stop screen & pass full data
+        // Navigate to stop screen & pass full data
         router.push({
           pathname: "/(commuter)/home/stop/[id]",
           params: {

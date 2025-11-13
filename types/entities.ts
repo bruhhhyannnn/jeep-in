@@ -25,7 +25,7 @@ export interface Route {
 }
 
 // Pickup Point
-export interface PickupPoint {
+export interface PickupPoint { // or Stop Point
   id: string;
   route_id: string; // FK → Route.id
   name: string;

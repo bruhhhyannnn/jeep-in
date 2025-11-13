@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BottomSheetContainer, ThemedView, ButtonBack, ButtonIcon } from "@/components/ui";
-import { useMap } from "@/context/map/MapContext";
+import { BottomSheetContainer, ThemedView, ButtonBack } from "@/components/ui";
 
 export default function MapLayout({
   title,
@@ -13,18 +12,8 @@ export default function MapLayout({
   // Gets device top safe area for spacing floating buttons
   const { top } = useSafeAreaInsets();
 
-  // Use Map functionalities
-  const map = useMap();
-
   return (
     <View className="absolute inset-0" pointerEvents="box-none">
-      <View className="absolute right-6 top-40 gap-4">
-        <ButtonIcon
-          iconName="navigate-circle-outline"
-          onPress={() => map.current.flyTo([120.55, 18.06], 1200)}
-        />
-      </View>
-
       {/* Header */}
       <ThemedView
         style={{ paddingTop: top + 14 }}
