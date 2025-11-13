@@ -8,7 +8,7 @@ const RoleSelectionScreen = () => {
 
   return (
     <SafeAreaContainer>
-      <View className="h-full gap-10 pt-16">
+      <View className="h-full gap-10 pt-36">
         {/* Image Container */}
         <View className="flex-row items-center justify-center gap-5">
           <Image
