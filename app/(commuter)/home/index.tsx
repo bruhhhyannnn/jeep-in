@@ -40,10 +40,7 @@ const HomeScreen = () => {
     <View className="absolute inset-0">
       {/* Floating Buttons */}
       <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
-        <ButtonIcon
-          iconName="settings-outline"
-          onPress={() => router.push(ROUTES.commuter.settings)}
-        />
+        <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.root.settings)} />
         <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} />
         <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
       </View>

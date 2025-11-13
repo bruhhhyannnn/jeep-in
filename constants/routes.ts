@@ -2,6 +2,7 @@ export const ROUTES = {
   root: {
     index: "/",
     notFound: "/_not-found", //TODO: i think this is unused
+    settings: "/settings",
   },
 
   onboarding: {
@@ -13,7 +14,6 @@ export const ROUTES = {
   commuter: {
     layout: "/(commuter)",
     home: "/(commuter)/home", // TODO: this is set as default for now
-    settings: "/(commuter)/settings",
 
     // Nested commuter pages
     jeepney: (id: string) => `/(commuter)/home/jeepney/${id}` as const,
@@ -26,6 +26,5 @@ export const ROUTES = {
     layout: "/(driver)",
     auth: "/(driver)/auth/login",
     home: "/(driver)/home",
-    settings: "/(driver)/settings",
   },
 } as const;

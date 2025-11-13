@@ -1,4 +1,4 @@
-import { STRINGS } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { useNicknameStore } from "@/store";
 import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
@@ -6,6 +6,7 @@ import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
 import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
+import { useRouter } from "expo-router";
 import {
   StopPointsModal,
   FareGuideModal,
@@ -16,6 +17,9 @@ import {
 } from "@/components/settings";
 
 const SettingsScreen = () => {
+  const router = useRouter();
+
+  // Modal Refs
   const stopPointsRef = useRef<BottomSheetModalBaseRef>(null);
   const fareGuideRef = useRef<BottomSheetModalBaseRef>(null);
   const accessibilityRef = useRef<BottomSheetModalBaseRef>(null);
@@ -23,6 +27,7 @@ const SettingsScreen = () => {
   const supportRef = useRef<BottomSheetModalBaseRef>(null);
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
 
+  // Load user nickname
   const { nickname, loadNickname } = useNicknameStore();
   useEffect(() => {
     loadNickname();
@@ -109,6 +114,41 @@ const SettingsScreen = () => {
                   label={STRINGS.settings.about.title}
                   iconName="information-circle-outline"
                   onPress={() => aboutRef.current?.open()}
+                />
+              </View>
+            </View>
+
+            {/* Role Selection Section */}
+            <View className="gap-1">
+              <ThemedText variant="h400" color="primary">
+                Account
+              </ThemedText>
+
+              <View className="overflow-hidden rounded-2xl">
+                <SettingsCard
+                  label="Change Role"
+                  iconName="swap-horizontal-outline"
+                  onPress={() => {
+                    router.dismissAll();
+                    router.replace(ROUTES.onboarding.roleSelection);
+                  }}
+                />
+                <Divider />
+                {/* TODO: render the logout card here someday if the user is detected as logged in if not just hide it */}
+                <SettingsCard
+                  label="Logout"
+                  iconName="log-out-outline"
+                  onPress={async () => {
+                    // OPTIONAL: if you're using Firebase Auth
+                    // await signOut(auth);
+
+                    // OPTIONAL: clear any local role, nickname, or sensitive state
+                    // useRoleStore.getState().clearRole();
+                    // await SecureStore.deleteItemAsync("uid");
+
+                    router.dismissAll();
+                    router.replace(ROUTES.onboarding.welcome);
+                  }}
                 />
               </View>
             </View>
