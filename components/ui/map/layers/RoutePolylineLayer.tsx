@@ -1,79 +1,26 @@
-import { ShapeSource, LineLayer } from "@rnmapbox/maps";
-import type { FeatureCollection, LineString } from "geojson";
-import { useEffect, useState } from "react";
+import AnimatedRoute from "./AnimatedRoute";
 
-export default function RoutePolylineLayer() {
-  const [geoJson, setGeoJson] = useState<FeatureCollection<LineString> | null>(null);
-  const [dashOffset, setDashOffset] = useState(0);
+import route1 from "@/data/routes/chs-coe-route.json";
+import route2 from "@/data/routes/coe-chs-route.json";
 
-  useEffect(() => {
-    // Static example route
-    const route: FeatureCollection<LineString> = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: {},
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [120.987, 18.124],
-              [120.99, 18.125],
-              [120.992, 18.13],
-            ],
-          },
-        },
-      ],
-    };
-    setGeoJson(route);
-  }, []);
-
-  // ⚡ Animate dash offset using requestAnimationFrame
-  useEffect(() => {
-    let frame: number;
-
-    const animate = () => {
-      setDashOffset((prev) => {
-        // loop 0 → 4
-        const next = prev + 0.1;
-        return next > 4 ? 0 : next;
-      });
-
-      frame = requestAnimationFrame(animate);
-    };
-
-    frame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  if (!geoJson) return null;
-
+export default function RouteLayers() {
   return (
-    <ShapeSource id="routePolyline" shape={geoJson}>
-      {/* Background line */}
-      <LineLayer
-        id="routeLineBg"
-        style={{
-          lineColor: "#0a71eb",
-          lineWidth: 6,
-          lineOpacity: 0.3,
-          lineCap: "round",
-          lineJoin: "round",
-        }}
+    <>
+      {/* Route 1 → CHS to COE */}
+      <AnimatedRoute
+        id="chs-coe"
+        coordinates={route1.coordinates as [number, number][]}
+        color="#10b981"
+        translate={[2, -4]} // top
       />
 
-      {/* Animated dashed line */}
-      <LineLayer
-        id="routeLineAnimated"
-        style={{
-          lineColor: "#0a71eb",
-          lineWidth: 6,
-          lineDasharray: [dashOffset, 2], // 👈 animate offset
-          lineCap: "round",
-          lineJoin: "round",
-        }}
+      {/* Route 2 → COE to CHS */}
+      <AnimatedRoute
+        id="coe-chs"
+        coordinates={route2.coordinates as [number, number][]}
+        color="#f59e0b"
+        translate={[2, 4]} // tiny offset so they don't overlap perfectly
       />
-    </ShapeSource>
+    </>
   );
 }

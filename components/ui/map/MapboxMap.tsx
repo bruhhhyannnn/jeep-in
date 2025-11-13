@@ -25,20 +25,7 @@ const MapboxMap = ({ center = [120.548662, 18.059751], zoom = 13 }: MapboxMapPro
   // Camera center reference
   const cameraRef = useRef<Camera>(null);
 
-  // TODO: Console log location every 5 seconds, might be using this one instead of expo location someday
-  // useEffect(() => {
-  //   Mapbox.locationManager.start();
 
-  //   const interval = setInterval(async () => {
-  //     const loc = await Mapbox.locationManager.getLastKnownLocation();
-  //     if (loc) console.log("📍 Interval Loc:", loc.coords.latitude);
-  //   }, 5000);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //     Mapbox.locationManager.stop();
-  //   };
-  // }, []);
 
   // store the ref globally
   useEffect(() => {
@@ -63,17 +50,17 @@ const MapboxMap = ({ center = [120.548662, 18.059751], zoom = 13 }: MapboxMapPro
       {/* Map camera */}
       <Camera ref={cameraRef} pitch={50} zoomLevel={zoom} centerCoordinate={center} />
 
+      {/* Render Route Polylines */}
+      <RoutePolylineLayer />
+
       {/* Render User Location Puck */}
       <UserLocationLayer />
-
-      {/* Render Jeepneys */}
-      <JeepneysLayer />
 
       {/* Render Stop Points */}
       <StopPointsLayer />
 
-      {/* Render Route Polylines */}
-      <RoutePolylineLayer />
+      {/* Render Jeepneys */}
+      <JeepneysLayer />
 
       {/* Register all icons */}
       <Images
