@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { ButtonIcon, BottomSheetContainer } from "@/components/ui";
 import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
+import { useMapInitStore } from "@/context/useMapInitStore";
 
 const HomeScreen = () => {
   // Route navigation for settings
@@ -27,9 +28,14 @@ const HomeScreen = () => {
   const { recenterToUser } = useRecenterToUser();
 
   // Center to user location when component mounts
+  const hasCentered = useMapInitStore((s) => s.hasCentered);
+  const setHasCentered = useMapInitStore((s) => s.setHasCentered);
   useEffect(() => {
+    if (hasCentered) return; // ❌ Already centered in this session → skip
+    // Mark as done so it never runs again
+    setHasCentered();
     recenterToUser();
-  }, [recenterToUser]);
+  }, [hasCentered, recenterToUser]);
 
   return (
     <View className="absolute inset-0">
