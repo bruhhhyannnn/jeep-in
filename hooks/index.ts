@@ -9,3 +9,4 @@ export * from "@/hooks/useUserLocation";
 export * from "@/hooks/useRecenterCamera";
 export * from "@/hooks/useRecenterToUser";
 export * from "@/hooks/useKeyboardSheet";
+export * from "@/hooks/useDriverTracking";

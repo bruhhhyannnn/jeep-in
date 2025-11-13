@@ -6,7 +6,7 @@ import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
 import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import {
   StopPointsModal,
   FareGuideModal,
@@ -17,8 +17,6 @@ import {
 } from "@/components/settings";
 
 const SettingsScreen = () => {
-  const router = useRouter();
-
   // Modal Refs
   const stopPointsRef = useRef<BottomSheetModalBaseRef>(null);
   const fareGuideRef = useRef<BottomSheetModalBaseRef>(null);

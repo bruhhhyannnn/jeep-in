@@ -1,12 +1,10 @@
 import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { ThemedText, CustomTextInput } from "@/components/ui/";
 import { JeepCard, StopCard } from "@/components/commuter/card";
 
 export default function DefaultContent() {
-  const router = useRouter();
-
   return (
     <View className="gap-4">
       {/* Search Bar */}

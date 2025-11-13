@@ -29,6 +29,8 @@ const BottomSheetContainer = forwardRef<BottomSheetContainerRef, BottomSheetCont
     return (
       <BottomSheet
         ref={bottomSheetRef}
+        // TODO: add enable dynamic sizing here
+        enableDynamicSizing
         snapPoints={memoSnapPoints}
         index={initialIndex}
         backgroundStyle={{

@@ -1,9 +1,10 @@
 import { ThemedText, SafeAreaContainer, ButtonText } from "@/components/ui";
 import { ROUTES } from "@/constants";
-import { useRouter } from "expo-router";
+import { useDriverTracking } from "@/hooks";
+import { router } from "expo-router";
 
 const HomeScreen = () => {
-  const router = useRouter();
+  const { startTracking, stopTracking } = useDriverTracking();
 
   return (
     <SafeAreaContainer className="items-center justify-center gap-4">
@@ -12,9 +13,12 @@ const HomeScreen = () => {
       </ThemedText>
       <ButtonText
         label="Go to Driver Settings Screen"
-        fullWidth
-        onPress={() => router.push(ROUTES.driver.settings)}
+        onPress={() => router.push(ROUTES.root.settings)}
       />
+
+      <ButtonText label="Start Trip" onPress={startTracking} variant="primary" />
+
+      <ButtonText label="Stop Trip" onPress={stopTracking} variant="secondary" />
     </SafeAreaContainer>
   );
 };

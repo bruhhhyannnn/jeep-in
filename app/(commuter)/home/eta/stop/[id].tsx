@@ -4,9 +4,11 @@ import { StopCard, UserCard } from "@/components/commuter";
 import { Icon, ThemedText } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
+import { useRecenterToUser } from "@/hooks";
 
 export default function EtaStopPointInfoScreen() {
   const { id } = useLocalSearchParams();
+  const { recenterToUser } = useRecenterToUser();
 
   return (
     <MapLayout title={STRINGS.commuter.etaStopPointScreen.title}>
@@ -26,11 +28,7 @@ export default function EtaStopPointInfoScreen() {
             <ThemedText variant="h300" className="uppercase">
               {STRINGS.commuter.etaStopPointScreen.from}
             </ThemedText>
-            <UserCard
-              onPress={() => {
-                console.log("Location press functionality");
-              }}
-            />
+            <UserCard onPress={recenterToUser} />
           </View>
 
           {/* Icon Indicator */}

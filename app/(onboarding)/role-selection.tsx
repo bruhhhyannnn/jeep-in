@@ -1,11 +1,9 @@
 import { ROUTES, STRINGS } from "@/constants";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { View, Image } from "react-native";
 import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
 
 const RoleSelectionScreen = () => {
-  const router = useRouter();
-
   return (
     <SafeAreaContainer>
       <View className="h-full gap-10 pt-36">

@@ -4,7 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/commuter";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
 import ButtonSettings from "@/components/settings/ButtonSettings";
 
@@ -39,8 +39,6 @@ export default StopPointsModal;
 
 // Default View
 function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
-  const router = useRouter();
-
   return (
     <View className="gap-4">
       {/* Going laoag route */}

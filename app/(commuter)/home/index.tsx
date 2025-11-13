@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ROUTES } from "@/constants";
 import { View } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { FilterModal } from "@/components/commuter/";
 import { DefaultContent } from "@/components/commuter/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,7 +12,6 @@ import { useMapInitStore } from "@/context/useMapInitStore";
 
 const HomeScreen = () => {
   // Route navigation for settings
-  const router = useRouter();
 
   // Gets device top safe area for spacing floating buttons
   const { top } = useSafeAreaInsets();

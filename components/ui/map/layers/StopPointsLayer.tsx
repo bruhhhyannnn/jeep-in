@@ -20,10 +20,9 @@ export default function StopPointsLayer() {
         const props = feature.properties || {};
         const [lng, lat] = feature.geometry.coordinates as [number, number];
 
-        console.log("📍 Stop tapped:", feature);
-
         // Navigate to stop screen & pass full data
         router.push({
+          // TODO: replace this one someday
           pathname: "/(commuter)/home/stop/[id]",
           params: {
             id: stopId,
