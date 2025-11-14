@@ -3,6 +3,7 @@ export const ROUTES = {
     index: "/",
     notFound: "/_not-found", //TODO: i think this is unused
     settings: "/settings",
+    auth: "/auth",
   },
 
   onboarding: {
@@ -24,7 +25,6 @@ export const ROUTES = {
 
   driver: {
     layout: "/(driver)",
-    auth: "/(driver)/auth",
     home: "/(driver)/home",
   },
 } as const;

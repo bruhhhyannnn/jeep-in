@@ -3,8 +3,9 @@ import { router } from "expo-router";
 import { ThemedText, CustomTextInput, ButtonText, ThemedView } from "@/components/ui";
 import { loginWithEmailPassword } from "@/services/firebase/auth";
 import { useRoleStore } from "@/context";
+import { Image, View } from "react-native";
 
-export default function DriverAuthScreen() {
+export default function AuthScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -44,7 +45,16 @@ export default function DriverAuthScreen() {
   };
 
   return (
-    <ThemedView className="flex-1 justify-center px-6">
+    <ThemedView className="flex-1 justify-center gap-6 px-6">
+      {/* Image Container */}
+      <View className="flex-row">
+        <Image
+          source={require("@/assets/images/logo-dost.png")}
+          className="h-10 flex-1"
+          resizeMode="contain"
+        />
+      </View>
+
       <ThemedView variant="bg_light" className="gap-4 rounded-2xl p-5">
         <ThemedText variant="h700">Driver Login</ThemedText>
 
@@ -74,7 +84,7 @@ export default function DriverAuthScreen() {
         )}
 
         <ButtonText
-          label={submitting ? "Signing in..." : "Sign in as Driver"}
+          label={submitting ? "Signing in..." : "Sign in"}
           onPress={handleLogin}
           disabled={submitting}
           iconName="log-in-outline"

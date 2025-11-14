@@ -51,7 +51,7 @@ const RoleSelectionScreen = () => {
               label={STRINGS.onboarding.roleSelection.operator}
               variant="primaryLarge"
               fullWidth
-              onPress={() => router.push(ROUTES.driver.auth)}
+              onPress={() => router.push(ROUTES.root.auth)}
             />
           </View>
         </ThemedView>
