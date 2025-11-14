@@ -1,7 +1,7 @@
 import { TouchableOpacity, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { SHADOWS } from "@/style/shadow";
-import { ThemedText, Icon } from "@/components/ui/";
+import { ThemedText, Icon } from "@/components/ui";
 
 type ButtonSettingsProps = {
   label: string;

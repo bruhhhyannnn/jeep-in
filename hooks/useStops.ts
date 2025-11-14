@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCollection } from "@/services/firebase/firestore";
-import type { PickupPoint } from "@/types/entities";
+import type { PickupPoint } from "@/types";
 import type { FeatureCollection, Feature, Point } from "geojson";
 
 export const useStops = () => {

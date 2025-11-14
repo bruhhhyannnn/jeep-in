@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
-import { FilterModal } from "@/components/commuter/";
-import { DefaultContent } from "@/components/commuter/";
+import { FilterModal, JeepCard, StopCard } from "@/components/commuter/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
-import { ButtonIcon, BottomSheetContainer } from "@/components/ui";
-import { useKeyboardSheet, useRecenterToUser } from "@/hooks";
+import { ButtonIcon, BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
+import { useKeyboardSheet, useRecenterToUser, useJeepneysList, useStopsList } from "@/hooks";
 import { useMapInitStore } from "@/context";
 
 const HomeScreen = () => {
@@ -35,6 +34,12 @@ const HomeScreen = () => {
     recenterToUser();
   }, [hasCentered, recenterToUser]);
 
+  // Fetch jeepneys from firestore
+  const jeeps = useJeepneysList();
+
+  // Fetch jeepneys from zustand
+  const stops = useStopsList();
+
   return (
     <View className="absolute inset-0">
       {/* Floating Buttons */}
@@ -47,7 +52,73 @@ const HomeScreen = () => {
 
       {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef}>
-        <DefaultContent />
+        <View className="gap-4">
+          {/* Search Bar */}
+          <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} iconName="search" />
+
+          {/* Nearby Jeeps */}
+          <View className="gap-2">
+            <ThemedText variant="h400">{STRINGS.commuter.home.nearJeeps}</ThemedText>
+
+            <View className="gap-2">
+              {jeeps.length === 0 ? (
+                <ThemedText color="secondary" className="text-center">
+                  No nearby jeeps
+                </ThemedText>
+              ) : (
+                jeeps.map((j) => (
+                  <JeepCard
+                    key={j.id}
+                    plateNo={j.plate}
+                    status={j.status}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(commuter)/home/jeepney/[id]",
+                        params: {
+                          id: j.id,
+                          plate: j.plate,
+                          route_id: j.route_id,
+                          status: j.status,
+                          lat: String(j.lat),
+                          lng: String(j.lng),
+                        },
+                      })
+                    }
+                  />
+                ))
+              )}
+            </View>
+          </View>
+
+          {/* Nearby Stops */}
+          <View className="gap-2">
+            <ThemedText variant="h400">{STRINGS.commuter.home.nearStops}</ThemedText>
+
+            <View className="gap-2">
+              {stops.map((s) => (
+                <StopCard
+                  key={s.id}
+                  location={s.landmark_name}
+                  address={s.address}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(commuter)/home/stop/[id]",
+                      params: {
+                        id: s.id,
+                        name: s.name,
+                        landmark_name: s.landmark_name,
+                        address: s.address,
+                        route_id: s.route_id,
+                        lat: String(s.latitude),
+                        lng: String(s.longitude),
+                      },
+                    })
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        </View>
       </BottomSheetContainer>
 
       {/* Modal */}

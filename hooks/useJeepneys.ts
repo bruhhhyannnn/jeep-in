@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { listenToCollection } from "@/services/firebase/firestore";
-import type { Jeepney } from "@/types/entities";
+import type { Jeepney } from "@/types";
 import type { Feature, FeatureCollection, Point } from "geojson";
 
 export const useJeepneys = (): FeatureCollection<Point> | null => {
