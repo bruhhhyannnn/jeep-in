@@ -18,7 +18,8 @@ export default function StopPointInfoScreen() {
   const lat = params.lat as string | undefined;
   const lng = params.lng as string | undefined;
 
-  const map = useMap(); // for camera controls
+  // Center camera on stop
+  const map = useMap();
   useEffect(() => {
     if (!map.current || !lat || !lng) return;
     map.current.flyTo([Number(lng), Number(lat)], 1000);
@@ -49,13 +50,6 @@ export default function StopPointInfoScreen() {
             <Icon name="location-outline" />
             <ThemedText variant="h400">{address || "No address available"}</ThemedText>
           </ThemedView>
-
-          {lat && lng && (
-            <View className="mt-2">
-              <ThemedText color="secondary">Lat: {lat}</ThemedText>
-              <ThemedText color="secondary">Lng: {lng}</ThemedText>
-            </View>
-          )}
         </View>
 
         {/* Get Directions Button */}

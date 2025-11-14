@@ -15,7 +15,6 @@ export const useJeepneys = (): FeatureCollection<Point> | null => {
           plate: j.plate_number,
           route_id: j.route_id,
           status: j.status,
-          bearing: j.bearing ?? 0,
         },
         geometry: {
           type: "Point",

@@ -17,7 +17,7 @@ export default function MapLayout({
       {/* Header */}
       <ThemedView
         style={{ paddingTop: top + 14 }}
-        className="absolute left-0 right-0 flex-row items-center gap-3 rounded-b-2xl border-x border-b px-6 py-4"
+        className="absolute left-0 right-0 flex-row items-center gap-3 rounded-b-2xl border-x border-b border-neutral-300 px-6 py-4 dark:border-neutral-700"
       >
         <ButtonBack showIcon label={title} />
       </ThemedView>

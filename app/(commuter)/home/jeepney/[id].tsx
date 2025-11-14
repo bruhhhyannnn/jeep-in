@@ -4,57 +4,76 @@ import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, ButtonText } from "@/components/ui";
 import { JeepStatusBadge, StopCard } from "@/components/commuter";
+import { useMap } from "@/context/map/MapContext";
+import { useEffect } from "react";
+import { JeepneyStatus } from "@/types";
 
 export default function JeepneyInfoScreen() {
-  const { id } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+
+  const id = params.id as string;
+  const plate = params.plate as string;
+  const route_id = params.route_id as string;
+  const status = params.status as JeepneyStatus;
+  const last_stop = params.last_stop as string;
+  const next_stop = params.next_stop as string;
+  const lat = params.lat ? Number(params.lat) : undefined;
+  const lng = params.lng ? Number(params.lng) : undefined;
+
+  // Center map on jeepney
+  const map = useMap();
+  useEffect(() => {
+    if (!map.current || !lat || !lng) return;
+    map.current.flyTo([lng, lat], 1000);
+  }, [lat, lng]);
 
   return (
     <MapLayout title={STRINGS.commuter.jeepneyScreen.title}>
-      <View className="gap-3">
-        {/* Header Info */}
+      <View className="gap-5">
+        {/* Header */}
         <View>
-          <View className="flex-row items-start gap-2">
-            <ThemedText variant="h600">{id}</ThemedText>
-            <JeepStatusBadge />
+          <View className="flex-row items-center gap-2">
+            <ThemedText variant="h600">{plate}</ThemedText>
+            <JeepStatusBadge status={status} />
           </View>
-          <ThemedText color="secondary">Going Paoay route</ThemedText>
+          <ThemedText color="secondary">{route_id}</ThemedText>
         </View>
 
-        {/* Stop Cards */}
-        <View className="gap-3">
-          {/* Last Stop */}
-          <View className="flex-1 gap-1">
+        {/* Last Stop */}
+        {last_stop && (
+          <View>
             <ThemedText variant="h300" className="uppercase">
               {STRINGS.commuter.jeepneyScreen.lastStop}
             </ThemedText>
+
             <StopCard
-              location="Pik a Bun"
-              address="Batac City"
-              onPress={() => router.push(ROUTES.commuter.stop("Pik a Bun"))}
+              location={last_stop}
+              address="MMSU"
+              onPress={() => router.push(ROUTES.commuter.stop(last_stop))}
             />
           </View>
+        )}
 
-          {/* Next Stop */}
-          <View className="flex-1 gap-1">
+        {/* Next Stop */}
+        {next_stop && (
+          <View>
             <ThemedText variant="h300" className="uppercase">
               {STRINGS.commuter.jeepneyScreen.nextStop}
             </ThemedText>
             <StopCard
-              location="Bingao Elementary & National High School"
-              address="Batac City"
-              onPress={() =>
-                router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
-              }
+              location={next_stop}
+              address="MMSU"
+              onPress={() => router.push(ROUTES.commuter.stop(next_stop))}
             />
           </View>
-        </View>
+        )}
 
-        {/* Get ETA Button */}
+        {/* ETA Button */}
         <View className="self-center">
           <ButtonText
             label={STRINGS.commuter.jeepneyScreen.getEta}
             iconName="timer-outline"
-            onPress={() => router.push(ROUTES.commuter.etaJeepney(id.toString()))}
+            onPress={() => router.push(ROUTES.commuter.etaJeepney(id))}
           />
         </View>
       </View>

@@ -1,52 +1,80 @@
-import { ROUTES, STRINGS } from "@/constants";
+import { STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { ThemedText, CustomTextInput } from "@/components/ui/";
 import { JeepCard, StopCard } from "@/components/commuter/card";
+import { useJeepneysList } from "@/hooks/useJeepneysList";
+import { useStopsList } from "@/hooks/useStopsList";
 
 export default function DefaultContent() {
+  const jeeps = useJeepneysList();
+  const stops = useStopsList();
+
   return (
     <View className="gap-4">
       {/* Search Bar */}
       <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} iconName="search" />
 
-      {/* Near Jeeps */}
+      {/* Nearby Jeeps */}
       <View className="gap-2">
         <ThemedText variant="h400">{STRINGS.commuter.home.nearJeeps}</ThemedText>
+
         <View className="gap-2">
-          {/* TODO: load actual jeeps here */}
-          <JeepCard
-            plateNo="IAE 2730"
-            status="On route"
-            nextStop="MMSU Gate 3"
-            onPress={() => router.push(ROUTES.commuter.jeepney("IAE 2730"))}
-          />
-          <JeepCard
-            plateNo="IAE 5012"
-            status="Stationed"
-            nextStop="Bingao Elementary & National High School"
-            onPress={() => router.push(ROUTES.commuter.jeepney("IAE 5012"))}
-          />
+          {jeeps.length === 0 ? (
+            <ThemedText color="secondary" className="text-center">
+              No nearby jeeps
+            </ThemedText>
+          ) : (
+            jeeps.map((j) => (
+              <JeepCard
+                key={j.id}
+                plateNo={j.plate}
+                status={j.status}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(commuter)/home/jeepney/[id]",
+                    params: {
+                      id: j.id,
+                      plate: j.plate,
+                      route_id: j.route_id,
+                      status: j.status,
+                      lat: String(j.lat),
+                      lng: String(j.lng),
+                    },
+                  })
+                }
+              />
+            ))
+          )}
         </View>
       </View>
 
-      {/* Near Stops */}
+      {/* Nearby Stops */}
       <View className="gap-2">
         <ThemedText variant="h400">{STRINGS.commuter.home.nearStops}</ThemedText>
+
         <View className="gap-2">
-          {/* TODO: load actual jeeps here */}
-          <StopCard
-            location="MMSU Gate 3"
-            address="Batac City"
-            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
-          />
-          <StopCard
-            location="Bingao Elementary & National High School"
-            address="Batac City"
-            onPress={() =>
-              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
-            }
-          />
+          {stops.map((s) => (
+            <StopCard
+              key={s.id}
+              location={s.landmark_name}
+              address={s.address}
+              onPress={() =>
+                router.push({
+                  pathname: "/(commuter)/home/stop/[id]",
+                  params: {
+                    id: s.id,
+                    name: s.name,
+                    landmark_name: s.landmark_name,
+                    address: s.address,
+                    route_id: s.route_id,
+                    lat: String(s.latitude),
+                    lng: String(s.longitude),
+                  },
+                })
+              }
+            />
+          ))}
         </View>
       </View>
     </View>

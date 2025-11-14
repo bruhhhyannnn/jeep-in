@@ -1,3 +1,4 @@
+import { useStopsList } from "@/hooks";
 import { ROUTES, STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
@@ -39,56 +40,49 @@ export default StopPointsModal;
 
 // Default View
 function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
+  const stops = useStopsList();
+
   return (
     <View className="gap-4">
-      {/* Going laoag route */}
-      {/* TODO: render actual stop points here, all of it */}
-      <View className="gap-1">
+      {/* Stop Points Section */}
+      <View className="gap-2">
         <ThemedText variant="h500" className="uppercase">
-          GOING PAOAY ROUTE
+          ALL STOP POINTS
         </ThemedText>
-        <View className="gap-2">
-          <StopCard
-            location="MMSU Gate 3"
-            address="Batac City"
-            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
-          />
-          <StopCard
-            location="Bingao Elementary & National High School"
-            address="Batac City"
-            onPress={() =>
-              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
-            }
-          />
-        </View>
-      </View>
 
-      {/* Going paoay route */}
-      {/* TODO: render actual stop points here, all of it */}
-      <View className="gap-1">
-        <ThemedText variant="h500" className="uppercase">
-          GOING PAOAY ROUTE
-        </ThemedText>
         <View className="gap-2">
-          <StopCard
-            location="MMSU Gate 3"
-            address="Batac City"
-            onPress={() => router.push(ROUTES.commuter.stop("MMSU Gate 3"))}
-          />
-          <StopCard
-            location="Bingao Elementary & National High School"
-            address="Batac City"
-            onPress={() =>
-              router.push(ROUTES.commuter.stop("Bingao Elementary & National High School"))
-            }
-          />
+          {stops.length === 0 ? (
+            <ThemedText color="secondary">Loading stops...</ThemedText>
+          ) : (
+            stops.map((s) => (
+              <StopCard
+                key={s.id}
+                location={s.landmark_name}
+                address={s.address}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(commuter)/home/stop/[id]",
+                    params: {
+                      id: s.id,
+                      name: s.name,
+                      landmark_name: s.landmark_name,
+                      address: s.address,
+                      route_id: s.route_id,
+                      lat: String(s.latitude),
+                      lng: String(s.longitude),
+                    },
+                  })
+                }
+              />
+            ))
+          )}
         </View>
       </View>
 
       {/* Button help information */}
       <View className="self-start">
         <ButtonText
-          label={STRINGS.settings.helpInfo}
+          label="Help Information"
           variant="secondary"
           iconName="information-circle-outline"
           onPress={onHelp}

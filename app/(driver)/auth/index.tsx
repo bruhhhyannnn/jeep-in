@@ -15,7 +15,16 @@ const LoginScreen = () => {
         label="Login"
         fullWidth
         onPress={async () => {
+          // TODO:
+          // await signIn(auth);
+
+          // Remove all stacked screens
+          router.dismissAll();
+
+          // Set role as driver
           await setRole("driver");
+
+          // Redirect to driver screen
           router.replace(ROUTES.driver.home);
         }}
       />

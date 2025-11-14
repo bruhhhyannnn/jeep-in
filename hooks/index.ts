@@ -1,5 +1,4 @@
 export * from "@/hooks/useRoutes";
-export * from "@/hooks/usePickupPoints";
 export * from "@/hooks/useAuth";
 export * from "@/hooks/useUploadImage";
 
@@ -10,3 +9,5 @@ export * from "@/hooks/useRecenterCamera";
 export * from "@/hooks/useRecenterToUser";
 export * from "@/hooks/useKeyboardSheet";
 export * from "@/hooks/useDriverTracking";
+export * from "@/hooks/useJeepneysList";
+export * from "@/hooks/useStopsList";
