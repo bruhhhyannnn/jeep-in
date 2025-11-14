@@ -10,8 +10,6 @@ import { useKeyboardSheet, useRecenterToUser, useJeepneysList, useStopsList } fr
 import { useMapInitStore } from "@/context";
 
 const HomeScreen = () => {
-  // Route navigation for settings
-
   // Gets device top safe area for spacing floating buttons
   const { top } = useSafeAreaInsets();
 

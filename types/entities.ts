@@ -4,17 +4,6 @@ export type UserRole = "commuter" | "driver" | "admin" | "super_admin";
 export type JeepneyStatus = "On route" | "Stationed" | "Out of service";
 export type DriverStatus = "active" | "inactive";
 
-// User
-export interface User {
-  id: string; // Firebase UID
-  email: string;
-  name: string;
-  role: UserRole;
-  profile_image?: string; // optional Firebase Storage URL
-  created_at: Timestamp;
-  updated_at: Timestamp;
-}
-
 // Route
 export interface Route {
   id: string;
@@ -47,10 +36,23 @@ export interface Jeepney {
   plate_number: string;
   latitude: number;
   longitude: number;
+  speed?: number;
+  bearing?: number;
   current_direction?: string; // must match Route.route_direction
   last_pickup_point_id?: string; // FK → PickupPoint.id
   next_pickup_point_id?: string; // FK → PickupPoint.id
   status: JeepneyStatus;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+// User
+export interface User {
+  id: string; // Firebase UID
+  email: string;
+  name: string;
+  role: UserRole;
+  profile_image?: string; // optional Firebase Storage URL
   created_at: Timestamp;
   updated_at: Timestamp;
 }

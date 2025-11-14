@@ -50,6 +50,7 @@ export default function DriverAuthScreen() {
 
         <CustomTextInput
           placeholder="Email"
+          variant="bg"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -59,6 +60,7 @@ export default function DriverAuthScreen() {
 
         <CustomTextInput
           placeholder="Password"
+          variant="bg"
           value={password}
           onChangeText={setPassword}
           secureTextEntry

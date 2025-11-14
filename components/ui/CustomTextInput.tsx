@@ -6,11 +6,13 @@ import ThemedTextInput from "@/components/ui/ThemedTextInput";
 
 interface CustomTextInputProps extends TextInputProps {
   iconName: string;
+  variant?: "bg" | "bg_light";
   containerClassName?: string;
 }
 
 export default function CustomTextInput({
   iconName,
+  variant = "bg_light",
   placeholder = "Search what?",
   containerClassName,
   style,
@@ -18,7 +20,7 @@ export default function CustomTextInput({
 }: CustomTextInputProps) {
   return (
     <ThemedView
-      variant="bg_light"
+      variant={variant}
       className={`flex-row items-center gap-1 rounded-full px-4 ${containerClassName ?? ""}`}
     >
       <Icon name={iconName} color="#737373" size={18} />
