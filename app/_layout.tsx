@@ -8,9 +8,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useAuthStore } from "@/context";
+
+const queryClient = new QueryClient(); // ✅ must be outside
 
 export default function RootLayout() {
-  const queryClient = new QueryClient();
+  const initAuth = useAuthStore((s) => s.init);
 
   const [fontsLoaded] = useFonts({
     "Puffin-Regular": require("../assets/fonts/Puffin-Regular.otf"),
@@ -20,10 +23,13 @@ export default function RootLayout() {
     "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
 
-  // Load fonts
   useEffect(() => {
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    initAuth();
+  }, []);
 
   if (!fontsLoaded) return null;
 
