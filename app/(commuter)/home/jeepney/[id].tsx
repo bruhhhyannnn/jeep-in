@@ -34,7 +34,7 @@ export default function JeepneyInfoScreen() {
         <View>
           <View className="flex-row items-center gap-2">
             <ThemedText variant="h600">{plate}</ThemedText>
-            <JeepStatusBadge status={status} />
+            <JeepStatusBadge variant={status} />
           </View>
           <ThemedText color="secondary">{route_id}</ThemedText>
         </View>

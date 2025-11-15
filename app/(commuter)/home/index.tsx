@@ -61,7 +61,7 @@ const HomeScreen = () => {
             <View className="gap-2">
               {jeeps.length === 0 ? (
                 <ThemedText color="secondary" className="text-center">
-                  No nearby jeeps
+                  No jeepneys active
                 </ThemedText>
               ) : (
                 jeeps.map((j) => (
@@ -93,27 +93,33 @@ const HomeScreen = () => {
             <ThemedText variant="h400">{STRINGS.commuter.home.nearStops}</ThemedText>
 
             <View className="gap-2">
-              {stops.map((s) => (
-                <StopCard
-                  key={s.id}
-                  location={s.landmark_name}
-                  address={s.address}
-                  onPress={() =>
-                    router.push({
-                      pathname: "/(commuter)/home/stop/[id]",
-                      params: {
-                        id: s.id,
-                        name: s.name,
-                        landmark_name: s.landmark_name,
-                        address: s.address,
-                        route_id: s.route_id,
-                        lat: String(s.latitude),
-                        lng: String(s.longitude),
-                      },
-                    })
-                  }
-                />
-              ))}
+              {stops.length === 0 ? (
+                <ThemedText color="secondary" className="text-center">
+                  No stops found
+                </ThemedText>
+              ) : (
+                stops.map((s) => (
+                  <StopCard
+                    key={s.id}
+                    location={s.landmark_name}
+                    address={s.address}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(commuter)/home/stop/[id]",
+                        params: {
+                          id: s.id,
+                          name: s.name,
+                          landmark_name: s.landmark_name,
+                          address: s.address,
+                          route_id: s.route_id,
+                          lat: String(s.latitude),
+                          lng: String(s.longitude),
+                        },
+                      })
+                    }
+                  />
+                ))
+              )}
             </View>
           </View>
         </View>

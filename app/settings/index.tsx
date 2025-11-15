@@ -154,7 +154,7 @@ const SettingsScreen = () => {
                         // Clear user role
                         await clearRole();
 
-                        // TODO: revalidate this one if its really like this one
+                        // Logout user from firebase auth
                         await logout();
 
                         // Remove all stacked screens

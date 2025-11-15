@@ -1,7 +1,7 @@
 export const ROUTES = {
   root: {
     index: "/",
-    notFound: "/_not-found", //TODO: i think this is unused
+    notFound: "/_not-found",
     settings: "/settings",
     auth: "/auth",
   },
