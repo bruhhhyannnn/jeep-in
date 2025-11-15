@@ -30,25 +30,25 @@ export default function AuthScreen() {
       const userCred = await loginWithEmailPassword(email.trim(), password);
       const uid = userCred.user.uid;
 
-      // 2) Fetch profile via helper (clean!)
+      // 2) Get user profile
       const profile = await getUserProfile(uid);
-      if (!profile) throw new Error("User profile not found.");
+      if (!profile) {
+        setError("User not found.");
+        return;
+      }
 
-      // 3) Set user role
       const role = profile.role as UserRole;
-      await setRole(role);
 
-      // 4) Remove all stacked screens
+      // 3) Only allow DRIVERS to log in
+      if (role !== "driver") {
+        setError("This account is not allowed to sign in.");
+        return;
+      }
+
+      // 4) Set role and route
+      await setRole("driver");
       router.dismissAll();
-
-      // 6) Decide where to go based on role
-      let target: string = ROUTES.onboarding.roleSelection;
-
-      if (role === "commuter") target = ROUTES.commuter.home;
-      if (role === "driver") target = ROUTES.driver.home;
-
-      // 7) Navigate – replace so login screen is removed from stack
-      router.replace(target as any);
+      router.replace(ROUTES.driver.home);
     } catch (e: any) {
       console.log("Driver login error:", e);
       setError("Invalid credentials or network error.");
