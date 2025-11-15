@@ -8,6 +8,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
 import { useRoleStore } from "@/context";
+import { logout } from "@/services/firebase/auth";
 import {
   StopPointsModal,
   FareGuideModal,
@@ -34,7 +35,7 @@ const SettingsScreen = () => {
 
   // Use clear role from role store
   const { role, clearRole } = useRoleStore();
-  const canLogout = ["driver", "admin", "super_admin"].includes(role || "");
+  const canLogout = role === "driver";
 
   return (
     <SafeAreaContainer className="flex-1 bg-dodger-blue-700 dark:bg-dodger-blue-950">
@@ -153,9 +154,8 @@ const SettingsScreen = () => {
                         // Clear user role
                         await clearRole();
 
-                        // TODO:
-                        // await signOut(auth);
-                        // await SecureStore.deleteItemAsync("uid");
+                        // TODO: revalidate this one if its really like this one
+                        await logout();
 
                         // Remove all stacked screens
                         router.dismissAll();
