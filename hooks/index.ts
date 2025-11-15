@@ -8,8 +8,4 @@ export * from "@/hooks/useKeyboardSheet";
 export * from "@/hooks/useJeepneysList";
 export * from "@/hooks/useStopsList";
 
-export * from "@/hooks/useAdminDriversList";
-export * from "@/hooks/useAdminJeepneysList";
-export * from "@/hooks/useAssignmentsList";
-
 export * from "@/hooks/useSecureStore";

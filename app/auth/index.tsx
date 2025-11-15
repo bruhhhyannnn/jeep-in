@@ -46,8 +46,6 @@ export default function AuthScreen() {
 
       if (role === "commuter") target = ROUTES.commuter.home;
       if (role === "driver") target = ROUTES.driver.home;
-      if (role === "admin") target = ROUTES.admin.home;
-      // if (role === "super_admin") target = ROUTES.superAdmin.panel;
 
       // 7) Navigate – replace so login screen is removed from stack
       router.replace(target as any);

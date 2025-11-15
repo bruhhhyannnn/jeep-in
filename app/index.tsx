@@ -26,15 +26,6 @@ export default function RootScreen() {
     return <Redirect href={ROUTES.driver.home} />;
   }
 
-  // TODO: to be deleted
-  // if (role === "admin") {
-  //   return <Redirect href={ROUTES.admin.home} />;
-  // }
-
-  // if (role === "super_admin") {
-  //   return <Redirect href={ROUTES.superAdmin.panel} />; // example
-  // }
-
   // Fallback (should never happen)
   return <Redirect href={ROUTES.onboarding.roleSelection} />;
 }
