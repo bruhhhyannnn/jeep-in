@@ -25,3 +25,34 @@ export const getAssignedJeepneyId = async (): Promise<string | null> => {
     return null;
   }
 };
+
+import { onSnapshot } from "firebase/firestore";
+import type { Jeepney } from "@/types/entities";
+
+export const subscribeToAssignedJeepney = (callback: (jeepney: Jeepney | null) => void) => {
+  const user = auth.currentUser;
+  if (!user) {
+    callback(null);
+    return () => {};
+  }
+
+  const q = query(collection(db, "jeepneys"), where("driver_profile_id", "==", user.uid));
+
+  // Listen in real-time
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      callback(null);
+      return;
+    }
+
+    const d = snapshot.docs[0];
+    const jeepney = {
+      id: d.id,
+      ...(d.data() as Omit<Jeepney, "id">),
+    };
+
+    callback(jeepney);
+  });
+
+  return unsubscribe;
+};

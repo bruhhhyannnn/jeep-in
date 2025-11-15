@@ -2,7 +2,7 @@ import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { updateDocument } from "@/services/firebase/firestore";
 import type { Jeepney } from "@/types";
-import { getAssignedJeepneyId } from "@/services/assignments/getAssignedJeepneyId";
+import { fetchAssignedJeepneyId } from "@/services/assignments/fetchAssignedJeepneyId";
 import { showWarning, showError, showSuccess } from "@/services/ui/toasts";
 
 export const DRIVER_LOCATION_TASK = "driver-background-location-task";
@@ -24,7 +24,7 @@ TaskManager.defineTask(DRIVER_LOCATION_TASK, async ({ data, error }) => {
   const location = locations?.[0];
   if (!location) return;
 
-  const jeepneyId = await getAssignedJeepneyId();
+  const jeepneyId = await fetchAssignedJeepneyId();
   if (!jeepneyId) return;
 
   const { latitude, longitude, speed, heading } = location.coords;
@@ -124,7 +124,7 @@ export const startForegroundFallback = async () => {
       distanceInterval: 10,
     },
     async (location) => {
-      const jeepneyId = await getAssignedJeepneyId();
+      const jeepneyId = await fetchAssignedJeepneyId();
       if (!jeepneyId) return;
 
       const { latitude, longitude, speed, heading } = location.coords;
