@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { MapboxMap } from "@/components/ui/map";
@@ -7,8 +7,13 @@ import { BottomSheetContainer, ButtonIcon, ThemedText, ButtonText } from "@/comp
 import type { BottomSheetContainerRef } from "@/types";
 import { ROUTES } from "@/constants";
 import { useRecenterToUser } from "@/hooks";
-import { startDriverTracking, stopDriverTracking } from "@/services/location/driverTracking";
+import {
+  startBackgroundTracking,
+  stopBackgroundTracking,
+} from "@/services/location/driverTracking";
 import { useAuthStore } from "@/context";
+import { getAssignedJeepneyId } from "@/services/assignments/getAssignedJeepneyId";
+import { showWarning } from "@/services/ui/toasts";
 
 export default function DriverHomeScreen() {
   // Gets device top safe area for spacing floating buttons
@@ -26,15 +31,30 @@ export default function DriverHomeScreen() {
   // Start tracking
   const [tracking, setTracking] = useState(false);
   const handleStart = async () => {
-    await startDriverTracking();
+    if (!assignedJeepneyId) {
+      showWarning("You need to be assigned to a jeepney first.");
+      return;
+    }
+
+    await startBackgroundTracking();
     setTracking(true);
   };
 
   // Stop tracking
   const handleStop = async () => {
-    await stopDriverTracking();
+    await stopBackgroundTracking();
     setTracking(false);
   };
+
+  // Detect assigned Jeepney
+  const [assignedJeepneyId, setAssignedJeepneyId] = useState<string | null>(null);
+  useEffect(() => {
+    const load = async () => {
+      const id = await getAssignedJeepneyId();
+      setAssignedJeepneyId(id);
+    };
+    load();
+  }, []);
 
   return (
     <View className="absolute inset-0">
@@ -74,15 +94,21 @@ export default function DriverHomeScreen() {
             <ThemedText variant="h300" className="uppercase">
               Tracking status
             </ThemedText>
-            <ThemedText
-              className={
-                tracking
-                  ? "text-success-600 dark:text-success-600"
-                  : "text-warning-600 dark:text-warning-600"
-              }
-            >
-              {tracking ? "Live tracking is ON" : "Tracking is OFF"}
-            </ThemedText>
+            {!assignedJeepneyId ? (
+              <ThemedText className="text-warning-600 dark:text-warning-600">
+                You are not assigned to a jeepney yet.
+              </ThemedText>
+            ) : (
+              <ThemedText
+                className={
+                  tracking
+                    ? "text-success-600 dark:text-success-600"
+                    : "text-warning-600 dark:text-warning-600"
+                }
+              >
+                {tracking ? "Live tracking is ON" : "Tracking is OFF"}
+              </ThemedText>
+            )}
           </View>
 
           <View className="flex-row gap-3">
@@ -90,7 +116,7 @@ export default function DriverHomeScreen() {
               label="Start tracking"
               iconName="play-circle-outline"
               onPress={handleStart}
-              disabled={tracking}
+              disabled={tracking || !assignedJeepneyId}
             />
             <ButtonText
               label="Stop tracking"

@@ -1,70 +1,146 @@
 import * as Location from "expo-location";
-import { auth } from "@/services/firebase/config";
+import * as TaskManager from "expo-task-manager";
 import { updateDocument } from "@/services/firebase/firestore";
 import type { Jeepney } from "@/types";
+import { getAssignedJeepneyId } from "@/services/assignments/getAssignedJeepneyId";
+import { showWarning, showError, showSuccess } from "@/services/ui/toasts";
 
+export const DRIVER_LOCATION_TASK = "driver-background-location-task";
+
+// Singleton for foreground tracking
 let foregroundWatcher: Location.LocationSubscription | null = null;
+let isForegroundActive = false;
 
-const getCurrentDriverJeepneyId = async (): Promise<string | null> => {
-  const user = auth.currentUser;
-  if (!user) return null;
+// -----------------------------
+//  BACKGROUND TASK DEFINITION
+// -----------------------------
+TaskManager.defineTask(DRIVER_LOCATION_TASK, async ({ data, error }) => {
+  if (error) {
+    console.error("Background location task error:", error);
+    return;
+  }
 
-  // TODO: replace this with real mapping (driver_profile -> jeepney)
-  // For now, assume jeepney doc id == user.uid
-  console.log(user);
-  return user.uid;
+  const { locations } = data as any;
+  const location = locations?.[0];
+  if (!location) return;
+
+  const jeepneyId = await getAssignedJeepneyId();
+  if (!jeepneyId) return;
+
+  const { latitude, longitude, speed, heading } = location.coords;
+
+  await updateDocument<Jeepney>("jeepneys", jeepneyId, {
+    latitude,
+    longitude,
+    speed: speed ?? null,
+    bearing: heading ?? null,
+    updated_at: new Date().toISOString(),
+  });
+
+  console.log("📡 Background update sent:", latitude, longitude);
+});
+
+// -----------------------------
+//  START BACKGROUND TRACKING
+// -----------------------------
+export const startBackgroundTracking = async () => {
+  const { status: fg } = await Location.requestForegroundPermissionsAsync();
+  if (fg !== "granted") {
+    showError("Foreground location permission denied.");
+    return "none";
+  }
+
+  const { status: bg } = await Location.requestBackgroundPermissionsAsync();
+  const hasBg = bg === "granted";
+
+  // If user didn't allow "Always"
+  if (!hasBg) {
+    showWarning("Background permission not granted. Using fallback mode.");
+    await startForegroundFallback();
+    return "foreground";
+  }
+
+  const alreadyRunning = await Location.hasStartedLocationUpdatesAsync(DRIVER_LOCATION_TASK);
+
+  if (!alreadyRunning) {
+    await Location.startLocationUpdatesAsync(DRIVER_LOCATION_TASK, {
+      accuracy: Location.Accuracy.High,
+      distanceInterval: 10,
+      timeInterval: 5000,
+      showsBackgroundLocationIndicator: true,
+      pausesUpdatesAutomatically: true,
+      foregroundService: {
+        notificationTitle: "JEEP'IN Driver Tracking",
+        notificationBody: "Your location is being shared live.",
+      },
+    });
+  }
+
+  showSuccess("Background tracking started.");
+  console.log("🚀 Background tracking active");
+  return "background";
 };
 
-// Start tracking logic
-export const startDriverTracking = async () => {
+// -----------------------------
+//  STOP BACKGROUND TRACKING
+// -----------------------------
+export const stopBackgroundTracking = async () => {
+  const running = await Location.hasStartedLocationUpdatesAsync(DRIVER_LOCATION_TASK);
+
+  if (running) {
+    await Location.stopLocationUpdatesAsync(DRIVER_LOCATION_TASK);
+    console.log("🛑 Background tracking stopped.");
+  }
+
+  if (foregroundWatcher && isForegroundActive) {
+    await foregroundWatcher.remove();
+    foregroundWatcher = null;
+    isForegroundActive = false;
+    console.log("🛑 Foreground fallback stopped.");
+  }
+
+  showWarning("Tracking stopped.");
+};
+
+// -----------------------------
+//  FOREGROUND FALLBACK
+// -----------------------------
+export const startForegroundFallback = async () => {
+  if (foregroundWatcher) {
+    console.log("Foreground watcher already running.");
+    return;
+  }
+
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
-    console.warn("Location permission not granted.");
-    return;
-  }
-
-  if (foregroundWatcher) {
-    console.log("Driver tracking already running.");
-    return;
-  }
-
-  const jeepneyId = await getCurrentDriverJeepneyId();
-  console.log("JEEPNEY ID!: ", jeepneyId);
-  if (!jeepneyId) {
-    console.warn("No jeepneyId for this driver.");
+    showError("Foreground permission denied.");
     return;
   }
 
   foregroundWatcher = await Location.watchPositionAsync(
     {
-      accuracy: Location.Accuracy.BestForNavigation,
-      timeInterval: 5000, // 5s
-      distanceInterval: 5, // meters
+      accuracy: Location.Accuracy.High,
+      timeInterval: 5000,
+      distanceInterval: 10,
     },
     async (location) => {
+      const jeepneyId = await getAssignedJeepneyId();
+      if (!jeepneyId) return;
+
       const { latitude, longitude, speed, heading } = location.coords;
 
       await updateDocument<Jeepney>("jeepneys", jeepneyId, {
         latitude,
         longitude,
-        // optional extras for later
+        speed: speed ?? undefined,
+        bearing: heading ?? undefined,
         updated_at: new Date().toISOString(),
-        // @ts-ignore – only if you don't have heading/speed on Jeepney yet
-        speed,
-        // @ts-ignore
-        bearing: heading,
       });
+
+      console.log("📍 Foreground update sent:", latitude, longitude);
     },
   );
 
-  console.log("🚐 Driver foreground tracking started.");
-};
-
-// Stop tracking logic
-export const stopDriverTracking = async () => {
-  if (foregroundWatcher) {
-    await foregroundWatcher.remove();
-    foregroundWatcher = null;
-    console.log("🛑 Driver foreground tracking stopped.");
-  }
+  isForegroundActive = true;
+  showSuccess("Foreground tracking active.");
 };
