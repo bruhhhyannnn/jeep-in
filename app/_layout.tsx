@@ -1,6 +1,7 @@
 import "./global.css";
 import "@/services/mapbox/config";
 import * as SplashScreen from "expo-splash-screen";
+import Toast from "react-native-toast-message";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
@@ -53,6 +54,7 @@ export default function RootLayout() {
                 }}
               />
             </Stack>
+            <Toast />
           </BottomSheetModalProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

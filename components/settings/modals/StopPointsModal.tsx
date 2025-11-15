@@ -1,5 +1,5 @@
 import { useStopsList } from "@/hooks";
-import { ROUTES, STRINGS } from "@/constants";
+import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";

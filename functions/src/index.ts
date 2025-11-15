@@ -1,11 +1,6 @@
-import { onCall } from "firebase-functions/v2/https";
-import { createUserWithRole } from "./createUserWithRole";
-import { deleteUserCascade } from "./deleteUserCascade";
+// functions/src/index.ts
+import { initializeApp } from "firebase-admin/app";
+initializeApp();
 
-// Export callable functions
-export const createUserWithRoleFn = onCall(createUserWithRole);
-export const deleteUserCascadeFn = onCall(deleteUserCascade);
-
-// Keep old functions here too (if you still have them)
-// export const createAccount = onCall(oldFunction);
-// export const deleteAccount = onCall(oldDeleteFunction);
+export { createUserWithRoleFn } from "./createUserWithRole";
+export { deleteUserCascadeFn } from "./deleteUserCascade";

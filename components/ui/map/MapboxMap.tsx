@@ -1,5 +1,5 @@
 import { useColorScheme } from "nativewind";
-import Mapbox, { MapView, Camera, Images } from "@rnmapbox/maps";
+import Mapbox, { MapView, Camera } from "@rnmapbox/maps";
 import { useEffect, useRef } from "react";
 import { useMap } from "@/context/map/MapContext";
 import {
@@ -61,12 +61,12 @@ const MapboxMap = () => {
       <JeepneysLayer />
 
       {/* Register all icons */}
-      <Images
+      {/* <Images
         images={{
           "stop-icon": require("@/assets/images/map/stop-pin.png"),
           "jeepney-icon": require("@/assets/images/map/jeepney-pin.png"),
         }}
-      />
+      /> */}
     </MapView>
   );
 };

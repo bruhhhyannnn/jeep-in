@@ -10,8 +10,7 @@ export type AuthUser = {
 };
 
 export const loginWithEmailPassword = async (email: string, password: string) => {
-  const cred = await signInWithEmailAndPassword(auth, email, password);
-  return cred.user;
+  return await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const logout = () => signOut(auth);

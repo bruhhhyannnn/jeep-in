@@ -1,25 +1,19 @@
+import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
-export const createUserWithRole = async (request: any, context: any) => {
+export const createUserWithRoleFn = onCall(async (request) => {
   const { role, email, password, name, route_id } = request.data;
 
   if (!role || !email || !password || !name) {
-    throw new Error("Missing required fields.");
+    throw new HttpsError("invalid-argument", "Missing required fields.");
   }
 
   const auth = getAuth();
   const db = getFirestore();
 
-  const validRoles = ["driver", "admin", "super_admin"];
-  if (!validRoles.includes(role)) {
-    throw new Error("Invalid role.");
-  }
-
-  // ① Create Firebase Auth user
   const user = await auth.createUser({ email, password });
 
-  // ② Save User record
   await db.collection("users").doc(user.uid).set({
     id: user.uid,
     email,
@@ -29,8 +23,10 @@ export const createUserWithRole = async (request: any, context: any) => {
     updated_at: new Date(),
   });
 
-  // ③ Create corresponding profile
   if (role === "driver") {
+    if (!route_id) {
+      throw new HttpsError("invalid-argument", "Drivers require route_id.");
+    }
     await db.collection("driver_profiles").doc(user.uid).set({
       id: user.uid,
       user_id: user.uid,
@@ -42,4 +38,4 @@ export const createUserWithRole = async (request: any, context: any) => {
   }
 
   return { success: true, uid: user.uid };
-};
+});

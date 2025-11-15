@@ -4,6 +4,9 @@ import { ThemedText, CustomTextInput, ButtonText, ThemedView } from "@/component
 import { loginWithEmailPassword } from "@/services/firebase/auth";
 import { useRoleStore } from "@/context";
 import { Image, View } from "react-native";
+import { getUserProfile } from "@/services/firebase/users";
+import { UserRole } from "@/types";
+import { ROUTES } from "@/constants";
 
 export default function AuthScreen() {
   const [email, setEmail] = useState("");
@@ -16,26 +19,38 @@ export default function AuthScreen() {
     try {
       setError(null);
 
-      // --- Simple required field validation ---
       if (!email.trim() || !password.trim()) {
         setError("Both email and password are required.");
         return;
       }
 
       setSubmitting(true);
-      setError(null);
 
-      // Login with firebase email password
-      await loginWithEmailPassword(email.trim(), password);
+      // 1) Authenticate
+      const userCred = await loginWithEmailPassword(email.trim(), password);
+      const uid = userCred.user.uid;
 
-      // Remove all stacked screens
+      // 2) Fetch profile via helper (clean!)
+      const profile = await getUserProfile(uid);
+      if (!profile) throw new Error("User profile not found.");
+
+      // 3) Set user role
+      const role = profile.role as UserRole;
+      await setRole(role);
+
+      // 4) Remove all stacked screens
       router.dismissAll();
 
-      // Set role as driver
-      await setRole("driver");
+      // 6) Decide where to go based on role
+      let target: string = ROUTES.onboarding.roleSelection;
 
-      // After login, push/replace to driver home
-      router.replace("/(driver)/home");
+      if (role === "commuter") target = ROUTES.commuter.home;
+      if (role === "driver") target = ROUTES.driver.home;
+      if (role === "admin") target = ROUTES.admin.home;
+      // if (role === "super_admin") target = ROUTES.superAdmin.panel;
+
+      // 7) Navigate – replace so login screen is removed from stack
+      router.replace(target as any);
     } catch (e: any) {
       console.log("Driver login error:", e);
       setError("Invalid credentials or network error.");
@@ -45,7 +60,7 @@ export default function AuthScreen() {
   };
 
   return (
-    <ThemedView className="flex-1 justify-center gap-6 px-6">
+    <ThemedView className="flex-1 justify-start gap-6 px-6 pt-56">
       {/* Image Container */}
       <View className="flex-row">
         <Image
@@ -56,7 +71,7 @@ export default function AuthScreen() {
       </View>
 
       <ThemedView variant="bg_light" className="gap-4 rounded-2xl p-5">
-        <ThemedText variant="h700">Driver Login</ThemedText>
+        <ThemedText variant="h700">Sign In to JEEP'IN</ThemedText>
 
         <CustomTextInput
           placeholder="Email"
