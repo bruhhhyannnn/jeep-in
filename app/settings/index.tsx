@@ -3,19 +3,20 @@ import { useNicknameStore } from "@/store";
 import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
-import { SettingsCard, Divider } from "@/components/settings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
 import { useRoleStore } from "@/context";
-import { logout } from "@/services/firebase/auth";
 import {
+  SettingsCard,
+  Divider,
   StopPointsModal,
   FareGuideModal,
   SettingsAccessibilityModal,
   ThemesAvatarModal,
   GetSupportModal,
   AboutJeepInModal,
+  LogoutConfirmModal,
 } from "@/components/settings";
 
 const SettingsScreen = () => {
@@ -26,6 +27,7 @@ const SettingsScreen = () => {
   const themesAvatarRef = useRef<BottomSheetModalBaseRef>(null);
   const supportRef = useRef<BottomSheetModalBaseRef>(null);
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
+  const logoutRef = useRef<BottomSheetModalBaseRef>(null);
 
   // Load user nickname
   const { nickname, loadNickname } = useNicknameStore();
@@ -150,19 +152,7 @@ const SettingsScreen = () => {
                     <SettingsCard
                       label="Logout"
                       iconName="log-out-outline"
-                      onPress={async () => {
-                        // Clear user role
-                        await clearRole();
-
-                        // Logout user from firebase auth
-                        await logout();
-
-                        // Remove all stacked screens
-                        router.dismissAll();
-
-                        // Redirect to role selection screen
-                        router.replace(ROUTES.onboarding.roleSelection);
-                      }}
+                      onPress={() => logoutRef.current?.open()}
                     />
                   </>
                 )}
@@ -187,6 +177,7 @@ const SettingsScreen = () => {
         <ThemesAvatarModal ref={themesAvatarRef} />
         <GetSupportModal ref={supportRef} />
         <AboutJeepInModal ref={aboutRef} />
+        <LogoutConfirmModal ref={logoutRef} />
       </BottomSheetModalProvider>
     </SafeAreaContainer>
   );
