@@ -2,7 +2,7 @@ import { ROUTES, STRINGS } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { ThemedText, ButtonText } from "@/components/ui";
+import { ThemedText, ButtonText, Icon } from "@/components/ui";
 import { JeepStatusBadge, StopCard } from "@/components/commuter";
 import { useMap } from "@/context/map/MapContext";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ export default function JeepneyInfoScreen() {
 
   const id = params.id as string;
   const plate = params.plate as string;
-  const route_id = params.route_id as string;
+  // const route_id = params.route_id as string;
   const status = params.status as JeepneyStatus;
   const last_stop = params.last_stop as string;
   const next_stop = params.next_stop as string;
@@ -33,10 +33,12 @@ export default function JeepneyInfoScreen() {
         {/* Header */}
         <View>
           <View className="flex-row items-center gap-2">
+            <Icon family="MaterialCommunityIcons" name="bus" size={28} />
             <ThemedText variant="h600">{plate}</ThemedText>
             <JeepStatusBadge variant={status} />
           </View>
-          <ThemedText color="secondary">{route_id}</ThemedText>
+          {/* TODO: add actual route name here and route_direction */}
+          {/* <ThemedText color="secondary">{route_id}</ThemedText> */}
         </View>
 
         {/* Last Stop */}

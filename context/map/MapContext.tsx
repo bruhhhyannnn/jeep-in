@@ -11,6 +11,7 @@ export function MapProvider({ children }: { children: React.ReactNode }) {
   const map = useRef<MapboxMapRef>({
     flyTo: () => {},
     fitBounds: () => {},
+    zoomInAt: () => {},
   });
 
   return <MapContext.Provider value={{ map }}>{children}</MapContext.Provider>;

@@ -2,9 +2,11 @@ import { ShapeSource, CircleLayer, SymbolLayer } from "@rnmapbox/maps";
 import { router } from "expo-router";
 import { useJeepneys } from "@/hooks/useJeepneys";
 import type { Feature, FeatureCollection, Point } from "geojson";
+import { useMap } from "@/context/map/MapContext";
 
 export default function JeepneysLayer() {
   const geoJson = useJeepneys();
+  const map = useMap();
 
   if (!geoJson) return null;
 
@@ -14,16 +16,25 @@ export default function JeepneysLayer() {
     <ShapeSource
       id="jeepneys"
       shape={featureCollection}
+      cluster
+      clusterRadius={45}
       onPress={(event) => {
-        const feature = event.features[0] as Feature<Point>;
+        const feature = event.features[0] as Feature<Point> | undefined;
         if (!feature) return;
 
-        const props = (feature.properties || {}) as any;
-        const [lng, lat] = feature.geometry.coordinates as [number, number];
+        const props: any = feature.properties;
 
-        // Navigate to jeepney screen
+        // If it's a cluster → zoom in instead of navigating
+        if (props?.cluster) {
+          const coords = feature.geometry.coordinates as [number, number];
+          map.current.zoomInAt?.(coords, 1.5);
+          return;
+        }
+
+        // --- INDIVIDUAL JEEPNEY TAPPED ---
+        const [lng, lat] = feature.geometry.coordinates;
+
         router.push({
-          // TODO: replace this one someday
           pathname: "/(commuter)/home/jeepney/[id]",
           params: {
             id: String(feature.id ?? ""),
@@ -36,11 +47,39 @@ export default function JeepneysLayer() {
         });
       }}
     >
-      {/* Circular jeepney marker */}
+      {/* 1. Cluster Circle Bubble */}
+      <CircleLayer
+        id="jeepneyClusterCircle"
+        filter={["has", "point_count"]}
+        style={{
+          circleColor: "#0a71eb",
+          circleRadius: 9,
+          circleStrokeWidth: 2,
+          circleStrokeColor: "#edf9ff",
+        }}
+      />
+
+      {/* 2. Cluster Text Label */}
+      <SymbolLayer
+        id="jeepneyClusterText"
+        filter={["has", "point_count"]}
+        style={{
+          textField: ["format", "Jeeps +", ["get", "point_count"]],
+          textSize: 12,
+          textColor: "#edf9ff",
+          textHaloColor: "#134e95",
+          textHaloWidth: 2,
+          textOffset: [0, 1.5],
+          textAllowOverlap: true,
+        }}
+      />
+
+      {/* 3. Normal Jeepney Marker */}
       <CircleLayer
         id="jeepneyCircle"
+        filter={["!", ["has", "point_count"]]}
         style={{
-          circleRadius: 7,
+          circleRadius: 8,
           circleColor: "#0a71eb",
           circleOpacity: 0.95,
           circleStrokeColor: "#edf9ff",
@@ -49,16 +88,17 @@ export default function JeepneysLayer() {
         }}
       />
 
-      {/* Plate label above marker */}
+      {/* 4. Plate Label */}
       <SymbolLayer
         id="jeepneyLabel"
+        filter={["!", ["has", "point_count"]]}
         style={{
           textField: ["get", "plate"],
-          textSize: 11,
+          textSize: 13,
           textColor: "#edf9ff",
-          textHaloColor: "#0a71eb",
+          textHaloColor: "#11305a",
           textHaloWidth: 4,
-          textOffset: [0, -1.7], // slightly above circle
+          textOffset: [0, -1.4],
           textAllowOverlap: true,
         }}
       />

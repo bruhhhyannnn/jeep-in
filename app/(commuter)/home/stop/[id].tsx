@@ -12,8 +12,8 @@ export default function StopPointInfoScreen() {
 
   const id = params.id as string;
   const name = (params.name as string) ?? id;
-  const landmark_name = (params.landmark_name as string) ?? "";
-  const address = (params.address as string) ?? "";
+  const landmark_name = params.landmark_name as string;
+  const address = params.address as string;
   const route_id = (params.route_id as string) ?? "";
   const lat = params.lat as string | undefined;
   const lng = params.lng as string | undefined;
@@ -30,10 +30,13 @@ export default function StopPointInfoScreen() {
       <View className="gap-3">
         {/* Header Info */}
         <View>
-          <ThemedText variant="h600">{name}</ThemedText>
+          <View className="flex-row gap-2">
+            <Icon family="MaterialCommunityIcons" name="bus-stop" size={28} />
+            <ThemedText variant="h600">{name}</ThemedText>
+          </View>
           <View className="flex-row items-start gap-2">
-            {!!landmark_name && <StopTitleBadge title={landmark_name} />}
-            {!!route_id && (
+            {landmark_name && <StopTitleBadge title={landmark_name} />}
+            {route_id && (
               <ThemedText color="secondary" numberOfLines={1}>
                 {route_id}
               </ThemedText>

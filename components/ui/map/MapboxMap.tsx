@@ -19,10 +19,12 @@ const MapboxMap = () => {
 
   // Camera center reference
   const cameraRef = useRef<Camera>(null);
+  const mapViewRef = useRef<MapView>(null);
 
   // store the ref globally
   useEffect(() => {
     map.current = {
+      ...map.current,
       flyTo: (coords, duration = 1500) => {
         cameraRef.current?.setCamera({
           centerCoordinate: coords,
@@ -35,11 +37,23 @@ const MapboxMap = () => {
       fitBounds: (sw, ne, padding = 40) => {
         cameraRef.current?.fitBounds(sw, ne, padding, 500);
       },
+
+      zoomInAt: async (coords, zoomIncrement = 1.5) => {
+        const currentZoom = await mapViewRef.current?.getZoom();
+        console.log(currentZoom);
+        const nextZoom = (currentZoom ?? 13) + zoomIncrement;
+
+        cameraRef.current?.setCamera({
+          centerCoordinate: coords,
+          zoomLevel: nextZoom,
+          animationDuration: 300,
+        });
+      },
     };
   }, []);
 
   return (
-    <MapView style={{ flex: 1 }} styleURL={mapStyle} projection="globe">
+    <MapView style={{ flex: 1 }} styleURL={mapStyle} projection="globe" ref={mapViewRef}>
       {/* Map camera */}
       <Camera
         ref={cameraRef}
