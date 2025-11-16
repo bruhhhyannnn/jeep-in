@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
@@ -38,6 +38,26 @@ const HomeScreen = () => {
   // Fetch jeepneys from zustand
   const stops = useStopsList();
 
+  // Search state
+  const [search, setSearch] = useState("");
+
+  // Search functionality
+  const searchLower = search.toLowerCase();
+  const filteredJeeps = jeeps.filter((j) => {
+    return (
+      j.plate.toLowerCase().includes(searchLower) ||
+      j.route_id.toLowerCase().includes(searchLower) ||
+      j.status.toLowerCase().includes(searchLower)
+    );
+  });
+  const filteredStops = stops.filter((s) => {
+    return (
+      s.landmark_name.toLowerCase().includes(searchLower) ||
+      s.address.toLowerCase().includes(searchLower) ||
+      s.name.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
     <View className="absolute inset-0">
       {/* Floating Buttons */}
@@ -52,7 +72,12 @@ const HomeScreen = () => {
       <BottomSheetContainer ref={bottomSheetRef}>
         <View className="gap-4">
           {/* Search Bar */}
-          <CustomTextInput placeholder={STRINGS.commuter.home.searchInput} iconName="search" />
+          <CustomTextInput
+            placeholder={STRINGS.commuter.home.searchInput}
+            iconName="search"
+            value={search}
+            onChangeText={setSearch}
+          />
 
           {/* Nearby Jeeps */}
           <View className="gap-2">
@@ -64,7 +89,7 @@ const HomeScreen = () => {
                   No jeepneys active
                 </ThemedText>
               ) : (
-                jeeps.map((j) => (
+                filteredJeeps.map((j) => (
                   <JeepCard
                     key={j.id}
                     plateNo={j.plate}
@@ -98,7 +123,7 @@ const HomeScreen = () => {
                   No stops found
                 </ThemedText>
               ) : (
-                stops.map((s) => (
+                filteredStops.map((s) => (
                   <StopCard
                     key={s.id}
                     location={s.landmark_name}

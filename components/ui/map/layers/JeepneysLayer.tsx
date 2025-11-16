@@ -105,7 +105,7 @@ export default function JeepneysLayer() {
         filter={["!", ["has", "point_count"]]}
         style={{
           textField: ["get", "plate"],
-          textSize: 13,
+          textSize: 12,
           textColor: "#edf9ff",
           textHaloColor: "#11305a",
           textHaloWidth: 3,

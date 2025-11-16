@@ -9,7 +9,23 @@ const RoleSelectionScreen = () => {
 
   return (
     <SafeAreaContainer>
-      <View className="h-full gap-10 pt-36">
+      <View className="flex-center h-full justify-center gap-10">
+        {/* Top Logos Container */}
+        <View className="absolute left-0 right-0 top-0 items-center">
+          <View className="flex flex-row items-center space-x-4">
+            <Image
+              source={require("@/assets/images/logo-mmsu.png")}
+              className="h-20 w-20"
+              resizeMode="contain"
+            />
+            <Image
+              source={require("@/assets/images/logo-dost.png")}
+              className="h-20 w-40"
+              resizeMode="contain"
+            />
+          </View>
+        </View>
+
         {/* Image Container */}
         <View className="flex-row items-center justify-center gap-5">
           <Image
@@ -55,15 +71,6 @@ const RoleSelectionScreen = () => {
             />
           </View>
         </ThemedView>
-
-        {/* Image bottom container */}
-        <View className="absolute bottom-0 left-0 right-0 items-center">
-          <Image
-            source={require("@/assets/images/logo-dost.png")}
-            className="h-10 flex-1"
-            resizeMode="contain"
-          />
-        </View>
       </View>
     </SafeAreaContainer>
   );

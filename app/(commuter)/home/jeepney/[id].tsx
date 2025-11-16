@@ -13,7 +13,7 @@ export default function JeepneyInfoScreen() {
 
   const id = params.id as string;
   const plate = params.plate as string;
-  // const route_id = params.route_id as string;
+  const route_id = params.route_id as string;
   const status = params.status as JeepneyStatus;
   const last_stop = params.last_stop as string;
   const next_stop = params.next_stop as string;
@@ -75,7 +75,19 @@ export default function JeepneyInfoScreen() {
           <ButtonText
             label={STRINGS.commuter.jeepneyScreen.getEta}
             iconName="timer-outline"
-            onPress={() => router.push(ROUTES.commuter.etaJeepney(id))}
+            onPress={() =>
+              router.push({
+                pathname: "/(commuter)/home/eta/jeepney/[id]",
+                params: {
+                  id,
+                  plate,
+                  status,
+                  route_id,
+                  jeep_lat: String(lat),
+                  jeep_lng: String(lng),
+                },
+              })
+            }
           />
         </View>
       </View>

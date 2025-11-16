@@ -1,4 +1,4 @@
-import { ROUTES, STRINGS } from "@/constants";
+import { STRINGS } from "@/constants";
 import { MapLayout } from "@/components/layout";
 import { StopTitleBadge } from "@/components/commuter";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
@@ -32,7 +32,9 @@ export default function StopPointInfoScreen() {
         <View>
           <View className="flex-row gap-2">
             <Icon family="MaterialCommunityIcons" name="bus-stop" size={28} />
-            <ThemedText variant="h600">{name}</ThemedText>
+            <ThemedText variant="h600" className="flex-1">
+              {name}
+            </ThemedText>
           </View>
           <View className="flex-row items-start gap-2">
             {landmark_name && <StopTitleBadge title={landmark_name} />}
@@ -59,7 +61,22 @@ export default function StopPointInfoScreen() {
         <View className="self-center">
           <ButtonText
             label={STRINGS.commuter.stopPointScreen.getDirections}
-            onPress={() => router.push(ROUTES.commuter.etaStop(id))}
+            onPress={() =>
+              router.push({
+                // pathname: ROUTES.commuter.etaStop(id),
+                // pathname: `/(commuter)/home/eta/stop/${id}`,
+                pathname: `/(commuter)/home/eta/stop/[id]`,
+                params: {
+                  id,
+                  name,
+                  landmark_name,
+                  address,
+                  route_id,
+                  lat,
+                  lng,
+                },
+              })
+            }
             iconName="timer-outline"
           />
         </View>
