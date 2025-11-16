@@ -60,10 +60,15 @@ export default function AuthScreen() {
   return (
     <ThemedView className="flex-1 justify-start gap-6 px-6 pt-56">
       {/* Image Container */}
-      <View className="flex-row">
+      <View className="flex-row items-center justify-center">
+        <Image
+          source={require("@/assets/images/logo-mmsu.png")}
+          className="h-20 w-20"
+          resizeMode="contain"
+        />
         <Image
           source={require("@/assets/images/logo-dost.png")}
-          className="h-10 flex-1"
+          className="h-20 w-40"
           resizeMode="contain"
         />
       </View>

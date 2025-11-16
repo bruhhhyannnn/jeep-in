@@ -1,3 +1,7 @@
+import {
+  startBackgroundTracking,
+  stopBackgroundTracking,
+} from "@/services/location/driverTracking";
 import "./global.css";
 import "@/services/mapbox/config";
 import * as SplashScreen from "expo-splash-screen";

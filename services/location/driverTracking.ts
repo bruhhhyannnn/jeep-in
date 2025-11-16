@@ -64,7 +64,7 @@ export const startBackgroundTracking = async () => {
 
   if (!alreadyRunning) {
     await Location.startLocationUpdatesAsync(DRIVER_LOCATION_TASK, {
-      accuracy: Location.Accuracy.High,
+      accuracy: Location.Accuracy.BestForNavigation,
       distanceInterval: 10,
       timeInterval: 5000,
       showsBackgroundLocationIndicator: true,

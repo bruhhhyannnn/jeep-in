@@ -1,6 +1,6 @@
-import { auth } from "@/services/firebase/config";
-import { db } from "@/services/firebase/config";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import type { Jeepney } from "@/types/entities";
+import { db, auth } from "@/services/firebase/config";
+import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 
 export const getAssignedJeepneyId = async (): Promise<string | null> => {
   const user = auth.currentUser;
@@ -26,33 +26,26 @@ export const getAssignedJeepneyId = async (): Promise<string | null> => {
   }
 };
 
-import { onSnapshot } from "firebase/firestore";
-import type { Jeepney } from "@/types/entities";
-
-export const subscribeToAssignedJeepney = (callback: (jeepney: Jeepney | null) => void) => {
-  const user = auth.currentUser;
-  if (!user) {
-    callback(null);
+export const subscribeToAssignedJeepney = (
+  driverId: string,
+  callback: (jeepney: Jeepney | null) => void,
+) => {
+  if (!driverId) {
     return () => {};
   }
 
-  const q = query(collection(db, "jeepneys"), where("driver_profile_id", "==", user.uid));
+  const q = query(collection(db, "jeepneys"), where("driver_profile_id", "==", driverId));
 
-  // Listen in real-time
-  const unsubscribe = onSnapshot(q, (snapshot) => {
+  return onSnapshot(q, (snapshot) => {
     if (snapshot.empty) {
       callback(null);
       return;
     }
 
     const d = snapshot.docs[0];
-    const jeepney = {
+    callback({
       id: d.id,
       ...(d.data() as Omit<Jeepney, "id">),
-    };
-
-    callback(jeepney);
+    });
   });
-
-  return unsubscribe;
 };

@@ -16,61 +16,69 @@ import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
 
 export default function DriverHomeScreen() {
-  // Gets device top safe area for spacing floating buttons
   const { top } = useSafeAreaInsets();
-
-  // Ref for commuter bottom sheet container
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
-
-  // Camera control
   const { recenterToUser } = useRecenterToUser();
 
-  // Get user account from zustand
-  const { user } = useAuthStore();
+  // Zustand Auth
+  const { user, loading } = useAuthStore();
 
-  // Start tracking
+  // Local State
   const [tracking, setTracking] = useState(false);
+  const [assignedJeepney, setAssignedJeepney] = useState<Jeepney | null>(null);
+
+  // START TRACKING
   const handleStart = async () => {
     if (!assignedJeepney) {
       showWarning("You need to be assigned to a jeepney first.");
       return;
     }
 
+    recenterToUser();
     await startBackgroundTracking();
     setTracking(true);
   };
 
-  // Stop tracking
+  // STOP TRACKING
   const handleStop = async () => {
     await stopBackgroundTracking();
     setTracking(false);
   };
 
-  // Detect assigned Jeepney
-  const [assignedJeepney, setAssignedJeepney] = useState<Jeepney | null>(null);
+  // REAL-TIME JEEPNEY ASSIGNMENT
   useEffect(() => {
-    const unsubscribe = subscribeToAssignedJeepney((jeep) => {
-      setAssignedJeepney(jeep);
-    });
+    if (loading) return;
+    if (!user?.uid) return;
 
-    return unsubscribe; // clean up listener
-  }, []);
+    const unsubscribe = subscribeToAssignedJeepney(user.uid, (jeep) => setAssignedJeepney(jeep));
+
+    return unsubscribe;
+  }, [loading, user?.uid]);
+
+  // AUTO-STOP TRACKING IF UNASSIGNED
+  useEffect(() => {
+    if (!assignedJeepney && tracking) {
+      stopBackgroundTracking();
+      setTracking(false);
+      showWarning("You have been unassigned from a jeepney.");
+    }
+  }, [assignedJeepney]);
 
   return (
     <View className="absolute inset-0">
       {/* Map */}
       <MapboxMap />
 
-      {/* Floating buttons (top right) */}
+      {/* Floating buttons */}
       <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
         <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.root.settings)} />
         <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
       </View>
 
-      {/* Bottom Sheet: Driver Control Panel */}
+      {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef} snapPoints={["14%", "30%"]}>
         <View className="gap-4">
-          {/* Tracking section */}
+          {/* Tracking Status */}
           <View>
             <ThemedText variant="h300" className="uppercase">
               Tracking Status
@@ -93,7 +101,7 @@ export default function DriverHomeScreen() {
             )}
           </View>
 
-          {/* Action buttons */}
+          {/* Action Buttons */}
           <View className="flex-row gap-3">
             <ButtonText
               label="Start tracking"
@@ -111,7 +119,7 @@ export default function DriverHomeScreen() {
             />
           </View>
 
-          {/* Information */}
+          {/* Driver Info */}
           <View className="gap-2">
             <ThemedText variant="h400" className="uppercase">
               Driver info
@@ -119,8 +127,8 @@ export default function DriverHomeScreen() {
 
             {user ? (
               <View className="flex-row flex-wrap gap-1">
+                {/* Email */}
                 <View className="w-full flex-row gap-1">
-                  {/* User email */}
                   <ThemedText color="secondary">Signed in as: </ThemedText>
                   <Icon name="person" size={16} />
                   <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
@@ -128,6 +136,7 @@ export default function DriverHomeScreen() {
                   </ThemedText>
                 </View>
 
+                {/* Assigned Jeepney */}
                 {assignedJeepney && (
                   <View className="w-full flex-row gap-1">
                     <ThemedText color="secondary">Jeepney assigned: </ThemedText>
