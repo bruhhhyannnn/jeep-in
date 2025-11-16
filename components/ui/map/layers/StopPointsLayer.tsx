@@ -47,13 +47,24 @@ export default function StopPointsLayer() {
         });
       }}
     >
-      {/* 1. Normal circles (existing) */}
+      {/* 0. Glow effect */}
+      <CircleLayer
+        id="stopCircleGlow"
+        filter={["!", ["has", "point_count"]]}
+        style={{
+          circleRadius: 15, // bigger than inner circle
+          circleColor: "rgba(16,185,129,0.4)", // soft emerald glow (20% opacity)
+          circlePitchAlignment: "map",
+        }}
+      />
+
+      {/* 1. Normal circles */}
       <CircleLayer
         id="stopCircle"
+        filter={["!", ["has", "point_count"]]}
         style={{
           circleRadius: 7,
           circleColor: "#10b981",
-          circleOpacity: 0.95,
           circleStrokeColor: "#d1fae5",
           circleStrokeWidth: 2,
           circlePitchAlignment: "map",
@@ -97,7 +108,7 @@ export default function StopPointsLayer() {
           textColor: "#ecfdf5",
           textHaloColor: "#022c22",
           textHaloWidth: 2,
-          textOffset: [0, 1.2],
+          textOffset: [0, 1.8],
           textAllowOverlap: false,
         }}
       />

@@ -52,7 +52,7 @@ export default function JeepneysLayer() {
         id="jeepneyClusterCircle"
         filter={["has", "point_count"]}
         style={{
-          circleColor: "#0a71eb",
+          circleColor: "#FFF",
           circleRadius: 9,
           circleStrokeWidth: 2,
           circleStrokeColor: "#edf9ff",
@@ -74,12 +74,23 @@ export default function JeepneysLayer() {
         }}
       />
 
+      {/* 2.5 Normal Jeepney Outer Circle */}
+      <CircleLayer
+        id="jeepneyOuterCircle"
+        filter={["!", ["has", "point_count"]]}
+        style={{
+          circleRadius: 22, // bigger than inner circle
+          circleColor: "rgba(10, 113, 235, 0.3)", // slightly transparent blue
+          circlePitchAlignment: "map",
+        }}
+      />
+
       {/* 3. Normal Jeepney Marker */}
       <CircleLayer
         id="jeepneyCircle"
         filter={["!", ["has", "point_count"]]}
         style={{
-          circleRadius: 8,
+          circleRadius: 9,
           circleColor: "#0a71eb",
           circleOpacity: 0.95,
           circleStrokeColor: "#edf9ff",
@@ -97,8 +108,8 @@ export default function JeepneysLayer() {
           textSize: 13,
           textColor: "#edf9ff",
           textHaloColor: "#11305a",
-          textHaloWidth: 4,
-          textOffset: [0, -1.4],
+          textHaloWidth: 3,
+          textOffset: [0, -1.8],
           textAllowOverlap: true,
         }}
       />

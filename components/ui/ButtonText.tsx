@@ -24,8 +24,7 @@ export default function ButtonText({
   disabled = false,
   fullWidth = false,
 }: ButtonTextProps) {
-  const baseStyle =
-    "flex-row items-center justify-center gap-2 rounded-full px-4 py-2 active:opacity-70";
+  const baseStyle = "flex-row items-center justify-center gap-2 rounded-full px-4 py-2";
 
   const styles = cn(
     baseStyle,
