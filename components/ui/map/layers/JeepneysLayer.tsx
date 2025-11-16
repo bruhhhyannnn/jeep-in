@@ -52,7 +52,7 @@ export default function JeepneysLayer() {
         id="jeepneyClusterCircle"
         filter={["has", "point_count"]}
         style={{
-          circleColor: "#FFF",
+          circleColor: "#0a71eb",
           circleRadius: 9,
           circleStrokeWidth: 2,
           circleStrokeColor: "#edf9ff",
@@ -91,7 +91,7 @@ export default function JeepneysLayer() {
         filter={["!", ["has", "point_count"]]}
         style={{
           circleRadius: 9,
-          circleColor: "#0a71eb",
+          circleColor: "#1e90ff",
           circleOpacity: 0.95,
           circleStrokeColor: "#edf9ff",
           circleStrokeWidth: 2,
@@ -108,7 +108,7 @@ export default function JeepneysLayer() {
           textSize: 12,
           textColor: "#edf9ff",
           textHaloColor: "#11305a",
-          textHaloWidth: 3,
+          textHaloWidth: 2,
           textOffset: [0, -1.8],
           textAllowOverlap: true,
         }}
