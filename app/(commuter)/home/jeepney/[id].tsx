@@ -7,6 +7,7 @@ import { JeepStatusBadge, StopCard } from "@/components/commuter";
 import { useMap } from "@/context/map/MapContext";
 import { useEffect } from "react";
 import { JeepneyStatus } from "@/types";
+import { useDriverLocation } from "@/hooks/useDriverLocation";
 
 export default function JeepneyInfoScreen() {
   const params = useLocalSearchParams();
@@ -26,6 +27,17 @@ export default function JeepneyInfoScreen() {
     if (!map.current || !lat || !lng) return;
     map.current.flyTo([lng, lat], 1000);
   }, [lat, lng]);
+
+  // Follow user functionality
+  const driver = useDriverLocation(id);
+  useEffect(() => {
+    if (!driver) return;
+
+    map.current?.flyTo(
+      [driver.longitude, driver.latitude],
+      800, // animation duration
+    );
+  }, [driver]);
 
   return (
     <MapLayout title={STRINGS.commuter.jeepneyScreen.title}>

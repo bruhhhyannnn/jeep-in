@@ -8,6 +8,7 @@ export * from "@/hooks/userLocationCurrent";
 
 export * from "@/hooks/useJeepneysList";
 export * from "@/hooks/useStopsList";
+export * from "@/hooks/useDriverLocation";
 
 // TODO: unused:
 export * from "@/hooks/useSecureStore";
