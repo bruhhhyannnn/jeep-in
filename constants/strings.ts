@@ -29,8 +29,8 @@ export const STRINGS = {
     home: {
       filterRoutes: "Filter routes",
       searchInput: "Where are you going?",
-      nearJeeps: "Running jeeps",
-      nearStops: "Accessible stops",
+      nearJeeps: "Nearby jeeps",
+      nearStops: "Nearby stops",
     },
 
     // Jeepney Screen

@@ -5,18 +5,24 @@ import { SHADOWS } from "@/style/shadow";
 type StopCardProps = {
   location: string;
   address: string;
+  distanceKm?: number | null;
   onPress?: () => void;
 };
 
-export default function StopCard({ location, address, onPress }: StopCardProps) {
+export default function StopCard({ location, address, distanceKm, onPress }: StopCardProps) {
   return (
     <TouchableOpacity onPress={onPress} style={SHADOWS.style} className="rounded-full">
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Stop Icon */}
-          <View>
+          <View className="items-center">
             {/* TODO: revalidate icon size */}
             <Icon family="MaterialCommunityIcons" name="bus-stop" size={26} />
+            {distanceKm != null && (
+              <ThemedText color="secondary" variant="h100">
+                {distanceKm.toFixed(1)} km
+              </ThemedText>
+            )}
           </View>
 
           {/* Content */}

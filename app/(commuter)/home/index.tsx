@@ -6,8 +6,15 @@ import { FilterModal, JeepCard, StopCard } from "@/components/commuter/";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { ButtonIcon, BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
-import { useKeyboardSheet, useRecenterToUser, useJeepneysList, useStopsList } from "@/hooks";
+import {
+  useKeyboardSheet,
+  useRecenterToUser,
+  useJeepneysList,
+  useStopsList,
+  useLocationCurrent,
+} from "@/hooks";
 import { useMapInitStore } from "@/context";
+import { distanceKm } from "@/utils/distance";
 
 const HomeScreen = () => {
   // Gets device top safe area for spacing floating buttons
@@ -58,6 +65,27 @@ const HomeScreen = () => {
     );
   });
 
+  // Get current location value
+  const { currentLocation } = useLocationCurrent();
+  const userLat = currentLocation?.latitude;
+  const userLng = currentLocation?.longitude;
+
+  // Filter jeeps to only close to the users location
+  const RADIUS_KM = 2;
+  const nearbyJeeps =
+    userLat && userLng
+      ? filteredJeeps
+          .filter((j) => distanceKm(userLat, userLng, j.lat, j.lng) <= RADIUS_KM)
+          .slice(0, 10)
+      : filteredJeeps.slice(0, 5);
+  // Filter stops to only close to the users location
+  const nearbyStops =
+    userLat && userLng
+      ? filteredStops
+          .filter((s) => distanceKm(userLat, userLng, s.latitude, s.longitude) <= RADIUS_KM)
+          .slice(0, 10)
+      : filteredStops.slice(0, 5);
+
   return (
     <View className="absolute inset-0">
       {/* Floating Buttons */}
@@ -89,26 +117,32 @@ const HomeScreen = () => {
                   No jeepneys active
                 </ThemedText>
               ) : (
-                filteredJeeps.map((j) => (
-                  <JeepCard
-                    key={j.id}
-                    plateNo={j.plate}
-                    status={j.status}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(commuter)/home/jeepney/[id]",
-                        params: {
-                          id: j.id,
-                          plate: j.plate,
-                          route_id: j.route_id,
-                          status: j.status,
-                          lat: String(j.lat),
-                          lng: String(j.lng),
-                        },
-                      })
-                    }
-                  />
-                ))
+                nearbyJeeps.map((j) => {
+                  const dist =
+                    userLat && userLng ? distanceKm(userLat, userLng, j.lat, j.lng) : null;
+
+                  return (
+                    <JeepCard
+                      key={j.id}
+                      plateNo={j.plate}
+                      status={j.status}
+                      distanceKm={dist}
+                      onPress={() =>
+                        router.push({
+                          pathname: "/(commuter)/home/jeepney/[id]",
+                          params: {
+                            id: j.id,
+                            plate: j.plate,
+                            route_id: j.route_id,
+                            status: j.status,
+                            lat: String(j.lat),
+                            lng: String(j.lng),
+                          },
+                        })
+                      }
+                    />
+                  );
+                })
               )}
             </View>
           </View>
@@ -123,27 +157,36 @@ const HomeScreen = () => {
                   No stops found
                 </ThemedText>
               ) : (
-                filteredStops.map((s) => (
-                  <StopCard
-                    key={s.id}
-                    location={s.landmark_name}
-                    address={s.name}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(commuter)/home/stop/[id]",
-                        params: {
-                          id: s.id,
-                          name: s.name,
-                          landmark_name: s.landmark_name,
-                          address: s.address,
-                          route_id: s.route_id,
-                          lat: String(s.latitude),
-                          lng: String(s.longitude),
-                        },
-                      })
-                    }
-                  />
-                ))
+                nearbyStops.map((s) => {
+                  const dist =
+                    userLat && userLng
+                      ? distanceKm(userLat, userLng, s.latitude, s.longitude)
+                      : null;
+
+                  return (
+                    <StopCard
+                      key={s.id}
+                      location={s.landmark_name}
+                      address={s.name}
+                      distanceKm={dist}
+                      onPress={() =>
+                        router.push({
+                          pathname: "/(commuter)/home/stop/[id]",
+                          params: {
+                            id: s.id,
+                            name: s.name,
+                            landmark_name: s.landmark_name,
+                            address: s.address,
+                            route_id: s.route_id,
+                            lat: String(s.latitude),
+                            lng: String(s.longitude),
+                            distance: dist ? dist.toFixed(1) : "0",
+                          },
+                        })
+                      }
+                    />
+                  );
+                })
               )}
             </View>
           </View>

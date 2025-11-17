@@ -8,19 +8,29 @@ type JeepCardProps = {
   plateNo: string;
   status: JeepneyStatus;
   nextStop?: string;
+  distanceKm?: number | null;
   onPress?: () => void;
 };
 
-export default function JeepCard({ plateNo, status, nextStop, onPress }: JeepCardProps) {
+export default function JeepCard({
+  plateNo,
+  status,
+  nextStop,
+  distanceKm,
+  onPress,
+}: JeepCardProps) {
   return (
     <TouchableOpacity onPress={onPress} style={SHADOWS.style} className="rounded-full">
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
         {/* Content Container */}
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Icon */}
-          <View>
+          <View className="items-center">
             {/* TODO: revalidate icon size */}
             <Icon family="MaterialCommunityIcons" name="bus" size={26} />
+            {distanceKm != null && (
+              <ThemedText color="secondary">{distanceKm.toFixed(1)} km</ThemedText>
+            )}
           </View>
 
           {/* Content */}
