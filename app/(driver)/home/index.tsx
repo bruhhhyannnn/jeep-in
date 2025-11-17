@@ -1,3 +1,4 @@
+import * as SecureStore from "expo-secure-store";
 import { View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -50,7 +51,15 @@ export default function DriverHomeScreen() {
     if (loading) return;
     if (!user?.uid) return;
 
-    const unsubscribe = subscribeToAssignedJeepney(user.uid, (jeep) => setAssignedJeepney(jeep));
+    const unsubscribe = subscribeToAssignedJeepney(user.uid, async (jeep) => {
+      setAssignedJeepney(jeep);
+
+      if (jeep?.id) {
+        await SecureStore.setItemAsync("assignedJeepneyId", jeep.id);
+      } else {
+        await SecureStore.deleteItemAsync("assignedJeepneyId");
+      }
+    });
 
     return unsubscribe;
   }, [loading, user?.uid]);

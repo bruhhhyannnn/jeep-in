@@ -127,7 +127,7 @@ const HomeScreen = () => {
                   <StopCard
                     key={s.id}
                     location={s.landmark_name}
-                    address={s.address}
+                    address={s.name}
                     onPress={() =>
                       router.push({
                         pathname: "/(commuter)/home/stop/[id]",

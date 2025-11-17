@@ -23,7 +23,9 @@ export default function StopCard({ location, address, onPress }: StopCardProps) 
           <View className="flex-1">
             {/* Location & Address */}
             <ThemedText variant="h500">{location}</ThemedText>
-            <ThemedText color="secondary">{address}</ThemedText>
+            <ThemedText color="secondary" className="flex-1">
+              {address}
+            </ThemedText>
           </View>
         </View>
 
