@@ -15,11 +15,14 @@ import {
 import { useAuthStore } from "@/context";
 import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
+import { useMap } from "@/context/map/MapContext";
 
 export default function DriverHomeScreen() {
   const { top } = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
   const { recenterToUser } = useRecenterToUser();
+
+  const map = useMap(); // you already have MapContext
 
   // Zustand Auth
   const { user, loading } = useAuthStore();
@@ -35,7 +38,6 @@ export default function DriverHomeScreen() {
       return;
     }
 
-    recenterToUser();
     await startBackgroundTracking();
     setTracking(true);
   };
@@ -53,7 +55,6 @@ export default function DriverHomeScreen() {
 
     const unsubscribe = subscribeToAssignedJeepney(user.uid, async (jeep) => {
       setAssignedJeepney(jeep);
-
       if (jeep?.id) {
         await SecureStore.setItemAsync("assignedJeepneyId", jeep.id);
       } else {
@@ -72,6 +73,19 @@ export default function DriverHomeScreen() {
       showWarning("You have been unassigned from a jeepney.");
     }
   }, [assignedJeepney]);
+
+  // Follow user/driver location camera
+  useEffect(() => {
+    if (!tracking) return;
+    if (!assignedJeepney) return;
+
+    const { latitude, longitude } = assignedJeepney;
+
+    if (typeof latitude !== "number" || typeof longitude !== "number") return;
+    if (latitude === 0 || longitude === 0) return;
+
+    map.current?.flyTo([longitude, latitude], 800);
+  }, [tracking, assignedJeepney]);
 
   return (
     <View className="absolute inset-0">
