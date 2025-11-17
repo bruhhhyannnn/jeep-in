@@ -61,7 +61,9 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "staticBatchRendering": false,
+      "webBundling": false
     },
     "extra": {
       "router": {},
@@ -69,6 +71,9 @@
         "projectId": "06a1b8bb-b069-4360-98a7-7879c2668da7"
       }
     },
-    "owner": "jeep-in"
+    "owner": "jeep-in",
+    "updates": {
+      "url": "https://u.expo.dev/06a1b8bb-b069-4360-98a7-7879c2668da7"
+    }
   }
 }
