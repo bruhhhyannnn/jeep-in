@@ -2,7 +2,7 @@ import { ROUTES, STRINGS } from "@/constants";
 import { useNicknameStore } from "@/store";
 import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { ThemedText, SafeAreaContainer, ButtonBack } from "@/components/ui";
+import { ThemedText, SafeAreaContainer, ButtonBack, ButtonIcon } from "@/components/ui";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
@@ -47,17 +47,18 @@ const SettingsScreen = () => {
             {/* Header */}
             <View>
               <View className="self-start">
-                <ButtonBack showIcon label={STRINGS.general.goBack} color="primary" />
+                {/* <ButtonBack showIcon label={STRINGS.general.goBack} color="default_blue" /> */}
+                <ButtonIcon iconName="arrow-back" />
               </View>
               <View className="items-center justify-center p-10">
                 <ThemedText variant="h900" className="uppercase">
                   🥳
                 </ThemedText>
-                <ThemedText variant="hero10" color="primary" className="uppercase">
+                <ThemedText variant="hero10" color="default_blue" className="uppercase">
                   {STRINGS.settings.hello} {nickname}!
                 </ThemedText>
                 {/* TODO: make this as to react when this app is installed to this device, someday */}
-                <ThemedText variant="h200" color="primary">
+                <ThemedText variant="h200" color="default_blue">
                   {STRINGS.settings.since} Jan. 1 2025
                 </ThemedText>
               </View>
@@ -65,7 +66,7 @@ const SettingsScreen = () => {
 
             {/* Getting Around Section */}
             <View className="gap-1">
-              <ThemedText variant="h400" color="primary">
+              <ThemedText variant="h400" color="default_blue">
                 {STRINGS.settings.gettingAround}
               </ThemedText>
               <View className="flex-row items-center gap-2">
@@ -86,7 +87,7 @@ const SettingsScreen = () => {
 
             {/* Preferences Section */}
             <View className="gap-1">
-              <ThemedText variant="h400" color="primary">
+              <ThemedText variant="h400" color="default_blue">
                 {STRINGS.settings.preferences}
               </ThemedText>
               <View className="overflow-hidden rounded-2xl">
@@ -106,7 +107,7 @@ const SettingsScreen = () => {
 
             {/* Help Center Section */}
             <View className="gap-1">
-              <ThemedText variant="h400" color="primary">
+              <ThemedText variant="h400" color="default_blue">
                 {STRINGS.settings.helpCenter}
               </ThemedText>
               <View className="overflow-hidden rounded-2xl">
@@ -126,7 +127,7 @@ const SettingsScreen = () => {
 
             {/* Role Selection Section */}
             <View className="gap-1">
-              <ThemedText variant="h400" color="primary">
+              <ThemedText variant="h400" color="default_blue">
                 Account
               </ThemedText>
 

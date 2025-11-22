@@ -37,11 +37,11 @@ const BottomSheetContainer = forwardRef<BottomSheetContainerRef, BottomSheetCont
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           borderWidth: 1,
-          backgroundColor: colorScheme === "dark" ? "#171717" : "#F5F5F5",
-          borderColor: colorScheme === "dark" ? "#404040" : "#D4D4D4",
+          backgroundColor: colorScheme === "dark" ? "#0A0A0A" : "#E5E5E5",
+          borderColor: colorScheme === "dark" ? "#262626" : "#D4D4D4",
         }}
         handleIndicatorStyle={{
-          backgroundColor: colorScheme === "dark" ? "#404040" : "#D4D4D4",
+          backgroundColor: colorScheme === "dark" ? "#262626" : "#D4D4D4",
           width: 40,
         }}
       >

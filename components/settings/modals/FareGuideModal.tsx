@@ -76,7 +76,7 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
           <ThemedText variant="h500" className="uppercase">
             {STRINGS.settings.fareGuide.jeepneyFareMatrix}
           </ThemedText>
-          <ThemedText color="secondary">
+          <ThemedText color="text_muted">
             {STRINGS.settings.fareGuide.jeepneyFareMatrixContent}
           </ThemedText>
         </View>
@@ -85,16 +85,16 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
         <View className="overflow-hidden rounded-2xl">
           {/* Table Header */}
           <View className="flex-row items-center justify-center bg-dodger-blue-600 px-2 py-4 dark:bg-dodger-blue-800">
-            <ThemedText color="primary" className="flex-1 text-center">
+            <ThemedText color="default_blue" className="flex-1 text-center">
               Landmark
             </ThemedText>
-            <ThemedText color="primary" className="flex-1 text-center">
+            <ThemedText color="default_blue" className="flex-1 text-center">
               Distance (km)
             </ThemedText>
-            <ThemedText color="primary" className="flex-1 text-center">
+            <ThemedText color="default_blue" className="flex-1 text-center">
               Regular
             </ThemedText>
-            <ThemedText color="primary" className="flex-1 text-center">
+            <ThemedText color="default_blue" className="flex-1 text-center">
               Student, PWD, Senior Citizen
             </ThemedText>
           </View>
@@ -108,16 +108,16 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
                   : "bg-dodger-blue-500/80 dark:dark:bg-dodger-blue-700/80"
               }`}
             >
-              <ThemedText color="primary" className="flex-1 text-center">
+              <ThemedText color="default_blue" className="flex-1 text-center">
                 {item.landmark}
               </ThemedText>
-              <ThemedText color="primary" className="flex-1 text-center">
+              <ThemedText color="default_blue" className="flex-1 text-center">
                 {item.distance}
               </ThemedText>
-              <ThemedText color="primary" className="flex-1 text-center">
+              <ThemedText color="default_blue" className="flex-1 text-center">
                 {item.regular}
               </ThemedText>
-              <ThemedText color="primary" className="flex-1 text-center">
+              <ThemedText color="default_blue" className="flex-1 text-center">
                 {item.discounted}
               </ThemedText>
             </View>
@@ -125,7 +125,7 @@ function DefaultFareGuideView({ onHelp }: { onHelp: () => void }) {
         </View>
 
         {/* Footer Text */}
-        <ThemedText color="secondary" className="text-center">
+        <ThemedText color="text_muted" className="text-center">
           {STRINGS.settings.fareGuide.footer}
         </ThemedText>
       </View>
@@ -152,7 +152,7 @@ function HelpFareGuideView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.fareGuide.helpFareGuide.whatItDo}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.fareGuide.helpFareGuide.whatItDoContent}
         </ThemedText>
       </View>
@@ -163,7 +163,7 @@ function HelpFareGuideView({ onBack }: { onBack: () => void }) {
           {STRINGS.settings.fareGuide.helpFareGuide.fareCategory}
         </ThemedText>
         {STRINGS.settings.fareGuide.helpFareGuide.fareCategoryContent.map((text, i) => (
-          <ThemedText key={i} color="secondary">
+          <ThemedText key={i} color="text_muted">
             • {text}
           </ThemedText>
         ))}
@@ -174,7 +174,7 @@ function HelpFareGuideView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.fareGuide.helpFareGuide.concernsComplaints}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.fareGuide.helpFareGuide.concernsComplaintsContent}
         </ThemedText>
 

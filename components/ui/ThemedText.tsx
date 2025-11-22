@@ -14,14 +14,14 @@ interface ThemedTextProps extends TextProps {
     | "h200"
     | "h100"
     | "h50";
-  color?: "default" | "primary" | "secondary";
+  color?: "text" | "text_muted" | "default_blue";
   className?: string;
   children: React.ReactNode;
 }
 
 export default function ThemedText({
   variant = "h200",
-  color = "default",
+  color = "text",
   className,
   children,
   ...props
@@ -41,9 +41,9 @@ export default function ThemedText({
   };
 
   const colors = {
-    default: "text-neutral-950 dark:text-neutral-50",
-    primary: "text-dodger-blue-50",
-    secondary: "text-neutral-500",
+    text: "text-neutral-950 dark:text-neutral-50",
+    text_muted: "text-neutral-500",
+    default_blue: "text-dodger-blue-50",
   };
 
   return (

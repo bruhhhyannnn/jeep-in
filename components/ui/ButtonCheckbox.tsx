@@ -18,7 +18,7 @@ export default function ButtonCheckbox({
 }: ButtonCheckboxProps) {
   return (
     <TouchableOpacity onPress={onToggle}>
-      <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">
+      <ThemedView variant="bg" className="flex-row items-center gap-2 rounded-full px-6 py-3">
         <View className="flex-1 flex-row items-center gap-2">
           {/* Road Icon */}
           <View>

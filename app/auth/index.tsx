@@ -73,12 +73,11 @@ export default function AuthScreen() {
         />
       </View>
 
-      <ThemedView variant="bg_light" className="gap-4 rounded-2xl p-5">
+      <ThemedView variant="bg" className="gap-4 rounded-2xl p-5">
         <ThemedText variant="h700">Sign In to JEEP'IN</ThemedText>
 
         <CustomTextInput
           placeholder="Email"
-          variant="bg"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -88,7 +87,6 @@ export default function AuthScreen() {
 
         <CustomTextInput
           placeholder="Password"
-          variant="bg"
           value={password}
           onChangeText={setPassword}
           secureTextEntry

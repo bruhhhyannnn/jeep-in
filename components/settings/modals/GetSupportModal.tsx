@@ -74,7 +74,7 @@ function HelpView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.help.helpYouWith}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.getSupport.help.helpYouWithContent}
         </ThemedText>
       </View>
@@ -89,7 +89,7 @@ function HelpView({ onBack }: { onBack: () => void }) {
             return (
               <View key={i}>
                 <ThemedText className="mb-1">• {question.trim()}</ThemedText>
-                <ThemedText className="ml-2" color="secondary">{`- ${answer.trim()}`}</ThemedText>
+                <ThemedText className="ml-2" color="text_muted">{`- ${answer.trim()}`}</ThemedText>
               </View>
             );
           })}
@@ -99,7 +99,7 @@ function HelpView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.help.reportsTechnicalIssues}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.getSupport.help.reportsTechnicalIssuesContent}
         </ThemedText>
       </View>
@@ -120,7 +120,7 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.contactUs.getInTouch}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.getSupport.contactUs.getInTouchContent}
         </ThemedText>
       </View>
@@ -129,7 +129,7 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.contactUs.support}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.getSupport.contactUs.supportContent}
         </ThemedText>
         <View className="mt-1 gap-2">
@@ -157,7 +157,7 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.getSupport.contactUs.operations}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.getSupport.contactUs.operationsContent}
         </ThemedText>
         <View className="mt-1 gap-2">

@@ -103,6 +103,7 @@ const HomeScreen = () => {
           {/* Search Bar */}
           <CustomTextInput
             placeholder={STRINGS.commuter.home.searchInput}
+            variant="bg"
             iconName="search"
             value={search}
             onChangeText={setSearch}
@@ -114,7 +115,7 @@ const HomeScreen = () => {
 
             <View className="gap-2">
               {jeeps.length === 0 ? (
-                <ThemedText color="secondary" className="text-center">
+                <ThemedText color="text_muted" className="text-center">
                   No jeepneys active
                 </ThemedText>
               ) : (
@@ -154,7 +155,7 @@ const HomeScreen = () => {
 
             <View className="gap-2">
               {stops.length === 0 ? (
-                <ThemedText color="secondary" className="text-center">
+                <ThemedText color="text_muted" className="text-center">
                   No stops found
                 </ThemedText>
               ) : (

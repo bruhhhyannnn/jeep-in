@@ -51,7 +51,7 @@ export default function JeepneyInfoScreen() {
             <JeepStatusBadge variant={status} />
           </View>
           {/* TODO: add actual route name here and route_direction */}
-          {/* <ThemedText color="secondary">{route_id}</ThemedText> */}
+          {/* <ThemedText color="text_muted">{route_id}</ThemedText> */}
         </View>
 
         {/* Last Stop */}

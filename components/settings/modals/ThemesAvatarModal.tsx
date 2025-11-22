@@ -83,16 +83,16 @@ function NicknameView({ onBack }: { onBack: () => void }) {
 
   return (
     <View className="gap-4">
-      <View className="gap-2">
-        {/* TODO: */}
-        <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
+      {/* TODO: */}
+      <ThemedText className="text-center">{STRINGS.general.comingSoon}</ThemedText>
 
-        <ThemedText variant="h400" className="uppercase" color="secondary">
+      {/* TODO: fix the keyboard not doing properly here */}
+      {/* <View className="gap-2">
+        <ThemedText variant="h400" className="uppercase" color="text_muted">
           {STRINGS.settings.themesAvatar.nickname.appNickname}
         </ThemedText>
-        {/* TODO: fix the keyboard not doing properly here */}
         <CustomTextInput placeholder={nickname} iconName="person-outline" />
-      </View>
+      </View> */}
 
       {/* Cancel & Apply button */}
       <View className="flex-row items-center gap-2">

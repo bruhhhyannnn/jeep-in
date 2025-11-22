@@ -103,7 +103,7 @@ export default function EtaJeepneyInfoScreen() {
         {/* HEADER */}
         <View className="flex-row items-center gap-2">
           <ThemedText variant="h600">Jeepney arriving in —</ThemedText>
-          <ThemedText variant="h600" color="primary">
+          <ThemedText variant="h600" color="default_blue">
             {eta ? `${eta.toFixed(1)} mins` : "..."}
           </ThemedText>
         </View>
@@ -146,7 +146,7 @@ export default function EtaJeepneyInfoScreen() {
           </View>
         </View>
 
-        <ThemedText variant="h200" color="secondary" className="text-center">
+        <ThemedText variant="h200" color="text_muted" className="text-center">
           {STRINGS.commuter.etaJeepneyScreen.footer}
         </ThemedText>
       </View>

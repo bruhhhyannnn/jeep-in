@@ -39,7 +39,7 @@ export default function StopPointInfoScreen() {
           <View className="flex-row items-start gap-2">
             {landmark_name && <StopTitleBadge title={landmark_name} />}
             {route_id && (
-              <ThemedText color="secondary" numberOfLines={1}>
+              <ThemedText color="text_muted" numberOfLines={1}>
                 {route_id}
               </ThemedText>
             )}
@@ -51,7 +51,7 @@ export default function StopPointInfoScreen() {
             {STRINGS.commuter.stopPointScreen.address}
           </ThemedText>
 
-          <ThemedView variant="bg_light" className="flex-row gap-2 rounded-full px-6 py-4">
+          <ThemedView variant="bg" className="flex-row gap-2 rounded-full px-6 py-4">
             <Icon name="location-outline" />
             <ThemedText variant="h400" className="flex-1">
               {address || "No address available"}

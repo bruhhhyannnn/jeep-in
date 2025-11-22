@@ -9,16 +9,16 @@ type JeepStatusBadgeProps = {
 export default function JeepStatusBadge({ variant = "On route" }: JeepStatusBadgeProps) {
   const text = variant;
   const variantStyles = {
-    "On route": "bg-dodger-blue-500",
-    Stationed: "bg-warning-500",
-    "Out of service": "bg-danger-500",
+    "On route": "bg-dodger-blue-600",
+    Stationed: "bg-warning-600",
+    "Out of service": "bg-danger-600",
   };
 
   return (
     <ThemedText
       variant="h200"
-      color="primary"
-      className={cn("rounded-full px-2 py-0.5 text-center shadow-md", variantStyles[variant])}
+      color="default_blue"
+      className={cn("rounded-full px-2 py-0.5 text-center", variantStyles[variant])}
     >
       {text}
     </ThemedText>

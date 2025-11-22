@@ -13,8 +13,8 @@ export default function ButtonRadio({ label, selected, onPress }: ButtonRadioPro
   return (
     <TouchableOpacity onPress={onPress}>
       <ThemedView
-        variant="bg_light"
-        className="flex-row items-center justify-between rounded-full px-6 py-4 shadow-lg"
+        variant="bg"
+        className="flex-row items-center justify-between rounded-full px-6 py-4"
       >
         <ThemedText>{label}</ThemedText>
 

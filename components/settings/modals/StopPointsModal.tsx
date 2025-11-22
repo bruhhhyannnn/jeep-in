@@ -52,7 +52,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
 
         <View className="gap-2">
           {stops.length === 0 ? (
-            <ThemedText color="secondary">Loading stops...</ThemedText>
+            <ThemedText color="text_muted">Loading stops...</ThemedText>
           ) : (
             stops.map((s) => (
               <StopCard
@@ -101,7 +101,7 @@ function HelpStopPointsView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.stopPoints.helpStopPoint.whatItDo}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.stopPoints.helpStopPoint.whatItDoContent}
         </ThemedText>
       </View>
@@ -111,7 +111,7 @@ function HelpStopPointsView({ onBack }: { onBack: () => void }) {
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.stopPoints.helpStopPoint.concernsComplaints}
         </ThemedText>
-        <ThemedText color="secondary">
+        <ThemedText color="text_muted">
           {STRINGS.settings.stopPoints.helpStopPoint.concernsComplaintsContent}
         </ThemedText>
 

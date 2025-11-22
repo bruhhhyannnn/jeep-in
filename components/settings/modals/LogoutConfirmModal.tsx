@@ -36,7 +36,7 @@ const LogoutConfirmModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   return (
     <BottomSheetModalBase title="Confirm Logout" ref={baseRef}>
       <View className="gap-5">
-        <ThemedText color="secondary">Are you sure you want to logout?</ThemedText>
+        <ThemedText color="text_muted">Are you sure you want to logout?</ThemedText>
 
         <View className="flex-row items-center gap-2">
           <ButtonText label="Cancel" variant="secondary" onPress={() => baseRef.current?.close()} />

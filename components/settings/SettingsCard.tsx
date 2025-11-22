@@ -37,7 +37,7 @@ export default function SettingsCard({
       }}
     >
       <View className="flex-1 flex-row items-center gap-2">
-        <ThemedText variant="h500" color="primary" className="flex-1">
+        <ThemedText variant="h500" color="default_blue" className="flex-1">
           {label}
         </ThemedText>
         <Icon name={iconName} color={"#edf9ff"} />

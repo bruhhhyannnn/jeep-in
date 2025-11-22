@@ -156,7 +156,7 @@ export default function DriverHomeScreen() {
               <View className="flex-row flex-wrap gap-1">
                 {/* Email */}
                 <View className="w-full flex-row gap-1">
-                  <ThemedText color="secondary">Signed in as: </ThemedText>
+                  <ThemedText color="text_muted">Signed in as: </ThemedText>
                   <Icon name="person" size={16} />
                   <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
                     {user.email}
@@ -166,7 +166,7 @@ export default function DriverHomeScreen() {
                 {/* Assigned Jeepney */}
                 {assignedJeepney && (
                   <View className="w-full flex-row gap-1">
-                    <ThemedText color="secondary">Jeepney assigned: </ThemedText>
+                    <ThemedText color="text_muted">Jeepney assigned: </ThemedText>
                     <Icon family="MaterialCommunityIcons" name="bus" size={18} />
                     <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
                       {assignedJeepney?.plate_number}
@@ -175,7 +175,7 @@ export default function DriverHomeScreen() {
                 )}
               </View>
             ) : (
-              <ThemedText color="secondary">Loading user...</ThemedText>
+              <ThemedText color="text_muted">Loading user...</ThemedText>
             )}
           </View>
         </View>

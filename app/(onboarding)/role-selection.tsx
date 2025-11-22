@@ -25,12 +25,12 @@ const RoleSelectionScreen = () => {
         </View>
 
         {/* Welcome card */}
-        <ThemedView variant="bg_light" className="gap-5 rounded-3xl p-5">
+        <ThemedView variant="bg" className="gap-5 rounded-3xl p-5">
           <View>
             <ThemedText variant="h900" className="text-center">
               {STRINGS.onboarding.roleSelection.title}
             </ThemedText>
-            <ThemedText variant="h600" color="secondary" className="text-center">
+            <ThemedText variant="h600" color="text_muted" className="text-center">
               {STRINGS.onboarding.roleSelection.subtitle}
             </ThemedText>
           </View>

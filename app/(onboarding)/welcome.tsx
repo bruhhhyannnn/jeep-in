@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
         {onboardingData.map((item) => (
           <ThemedView
             key={item.id}
-            variant="bg_light"
+            variant="bg"
             className="mx-1 mt-16 items-center justify-center gap-5 rounded-3xl p-5"
           >
             <View className="overflow-hidden rounded-2xl">
@@ -52,7 +52,7 @@ export default function WelcomeScreen() {
               <ThemedText variant="h800" className="text-center">
                 {item.title}
               </ThemedText>
-              <ThemedText variant="h500" color="secondary" className="text-center">
+              <ThemedText variant="h500" color="text_muted" className="text-center">
                 {item.subtitle}
               </ThemedText>
             </View>

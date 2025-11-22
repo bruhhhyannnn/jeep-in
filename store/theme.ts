@@ -1,20 +1,31 @@
 import { create } from "zustand";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Appearance } from "react-native";
+import { colorScheme } from "nativewind";
+import type { ThemeMode } from "@/types";
 
-interface NicknameState {
-  nickname: string;
-  setNickname: (value: string) => Promise<void>;
-  loadNickname: () => Promise<void>;
+interface ThemeState {
+  theme: ThemeMode;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
 }
 
-export const useNicknameStore = create<NicknameState>((set) => ({
-  nickname: "User", // default value
-  setNickname: async (value: string) => {
-    set({ nickname: value });
-    await AsyncStorage.setItem("nickname", value);
+export const useThemeStore = create<ThemeState>((set) => ({
+  theme: "system",
+
+  setTheme: (theme) => {
+    if (theme === "system") {
+      const sysTheme = Appearance.getColorScheme() as ThemeMode;
+      colorScheme.set(sysTheme);
+    } else {
+      colorScheme.set(theme);
+    }
+    set({ theme });
   },
-  loadNickname: async () => {
-    const stored = await AsyncStorage.getItem("nickname");
-    if (stored) set({ nickname: stored });
-  },
+
+  toggleTheme: () =>
+    set((state) => {
+      const next = state.theme === "light" ? "dark" : "light";
+      colorScheme.set(next);
+      return { theme: next };
+    }),
 }));

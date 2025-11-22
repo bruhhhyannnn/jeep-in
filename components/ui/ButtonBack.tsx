@@ -6,7 +6,7 @@ import Icon from "@/components/ui/Icon";
 type ButtonBackProps = {
   label?: string;
   showIcon?: boolean;
-  color?: "primary";
+  color?: "default_blue";
   onPress?: () => void;
 };
 
@@ -21,8 +21,10 @@ export default function ButtonBack({
       onPress={onPress ? onPress : () => router.back()}
       className="flex-row items-center gap-2"
     >
-      {showIcon && <Icon name="arrow-back" color={color === "primary" ? "#edf9ff" : undefined} />}
-      <ThemedText variant="h300" color={color ?? "default"}>
+      {showIcon && (
+        <Icon name="arrow-back" color={color === "default_blue" ? "#edf9ff" : undefined} />
+      )}
+      <ThemedText variant="h300" color={color ?? "text"}>
         {label}
       </ThemedText>
     </TouchableOpacity>

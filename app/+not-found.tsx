@@ -5,7 +5,7 @@ import { ThemedText, ThemedView, ButtonText } from "@/components/ui";
 
 export default function NotFoundScreen() {
   return (
-    <ThemedView variant="bg_light" className="flex-1 items-center justify-center px-6">
+    <ThemedView variant="bg" className="flex-1 items-center justify-center px-6">
       <View className="items-center gap-4">
         <View className="gap-2">
           {/* 404 Header */}
@@ -14,7 +14,7 @@ export default function NotFoundScreen() {
           </ThemedText>
 
           {/* Message */}
-          <ThemedText color="secondary" variant="h500" className="text-center">
+          <ThemedText color="text_muted" variant="h500" className="text-center">
             {STRINGS.errors.notFoundDescription}
           </ThemedText>
         </View>
