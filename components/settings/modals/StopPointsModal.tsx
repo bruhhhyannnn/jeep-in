@@ -4,7 +4,7 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
-import { StopCard } from "@/components/commuter";
+import { StopCard } from "@/components/card";
 import { router } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
 import ButtonSettings from "@/components/settings/ButtonSettings";

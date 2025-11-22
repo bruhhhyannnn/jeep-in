@@ -1,4 +1,4 @@
-import { MapboxMap } from "@/components/ui";
+import { MapboxMap } from "@/components/map";
 import { Slot } from "expo-router";
 import { View } from "react-native";
 import { MapProvider } from "@/context/map/MapContext";

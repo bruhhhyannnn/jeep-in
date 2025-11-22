@@ -11,7 +11,7 @@ export default function RootScreen() {
     hydrate();
   }, []);
 
-  if (!hydrated) return null; // 👈 avoids flashing the wrong screen
+  if (!hydrated) return null;
 
   // Reroute logic
   if (!role) {
@@ -27,5 +27,5 @@ export default function RootScreen() {
   }
 
   // Fallback (should never happen)
-  return <Redirect href={ROUTES.onboarding.roleSelection} />;
+  return <Redirect href={ROUTES.onboarding.welcome} />;
 }

@@ -1,4 +1,4 @@
-import AnimatedRoute from "@/components/ui/map/layers/AnimatedRoute";
+import AnimatedRoute from "@/components/map/layers/AnimatedRoute";
 
 // import route1 from "@/data/routes/chs-coe-route.json";
 // import route2 from "@/data/routes/coe-chs-route.json";

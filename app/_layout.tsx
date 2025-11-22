@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useAuthStore } from "@/context";
 
-const queryClient = new QueryClient(); // ✅ must be outside
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const initAuth = useAuthStore((s) => s.init);
@@ -47,6 +47,13 @@ export default function RootLayout() {
                 animation: "fade_from_bottom",
               }}
             >
+              <Stack.Screen
+                name="auth/index"
+                options={{
+                  animation: "fade_from_bottom",
+                  gestureEnabled: true,
+                }}
+              />
               <Stack.Screen
                 name="settings/index"
                 options={{

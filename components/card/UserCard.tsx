@@ -2,11 +2,11 @@ import { TouchableOpacity, View } from "react-native";
 import { ThemedText, ThemedView, Icon } from "@/components/ui";
 import { SHADOWS } from "@/style/shadow";
 
-type JeepCardProps = {
+type UserCardProps = {
   onPress?: () => void;
 };
 
-export default function UserCard({ onPress }: JeepCardProps) {
+export default function UserCard({ onPress }: UserCardProps) {
   return (
     <TouchableOpacity onPress={onPress} style={SHADOWS.style} className="rounded-full">
       <ThemedView variant="bg_light" className="flex-row items-center gap-2 rounded-full px-6 py-3">

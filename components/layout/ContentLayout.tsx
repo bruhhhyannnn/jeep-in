@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainer, ThemedView, ButtonBack } from "@/components/ui";
 
-export default function MapLayout({
+export default function ContentLayout({
   title,
   children,
 }: {

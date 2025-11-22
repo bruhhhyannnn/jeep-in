@@ -1,9 +1,10 @@
 import { ROUTES, STRINGS } from "@/constants";
-import { MapLayout } from "@/components/layout";
+import { ContentLayout } from "@/components/layout";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, ButtonText, Icon } from "@/components/ui";
-import { JeepStatusBadge, StopCard } from "@/components/commuter";
+import { StopCard } from "@/components/card";
+import { JeepStatusBadge } from "@/components/badge";
 import { useMap } from "@/context/map/MapContext";
 import { useEffect } from "react";
 import { JeepneyStatus } from "@/types";
@@ -40,7 +41,7 @@ export default function JeepneyInfoScreen() {
   }, [driver]);
 
   return (
-    <MapLayout title={STRINGS.commuter.jeepneyScreen.title}>
+    <ContentLayout title={STRINGS.commuter.jeepneyScreen.title}>
       <View className="gap-5">
         {/* Header */}
         <View>
@@ -103,6 +104,6 @@ export default function JeepneyInfoScreen() {
           />
         </View>
       </View>
-    </MapLayout>
+    </ContentLayout>
   );
 }

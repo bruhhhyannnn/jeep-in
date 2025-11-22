@@ -1,6 +1,6 @@
 import { STRINGS } from "@/constants";
-import { MapLayout } from "@/components/layout";
-import { StopCard, UserCard } from "@/components/commuter";
+import { ContentLayout } from "@/components/layout";
+import { StopCard, UserCard } from "@/components/card";
 import { Icon, ThemedText } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
@@ -81,26 +81,26 @@ export default function EtaStopPointInfoScreen() {
 
   if (!permissionGranted) {
     return (
-      <MapLayout title={STRINGS.commuter.etaStopPointScreen.title}>
+      <ContentLayout title={STRINGS.commuter.etaStopPointScreen.title}>
         <View className="flex-1 items-center justify-center">
           <ThemedText>Location permission is required.</ThemedText>
         </View>
-      </MapLayout>
+      </ContentLayout>
     );
   }
 
   if (loading || !currentLocation) {
     return (
-      <MapLayout title={STRINGS.commuter.etaStopPointScreen.title}>
+      <ContentLayout title={STRINGS.commuter.etaStopPointScreen.title}>
         <View className="flex-1 items-center justify-center">
           <ThemedText>Getting your location…</ThemedText>
         </View>
-      </MapLayout>
+      </ContentLayout>
     );
   }
 
   return (
-    <MapLayout title={STRINGS.commuter.etaStopPointScreen.title}>
+    <ContentLayout title={STRINGS.commuter.etaStopPointScreen.title}>
       <View className="gap-3">
         <View className="flex-row items-center gap-2">
           <ThemedText variant="h600">Driving to this stop —</ThemedText>
@@ -156,7 +156,7 @@ export default function EtaStopPointInfoScreen() {
           {STRINGS.commuter.etaStopPointScreen.footer}
         </ThemedText>
       </View>
-    </MapLayout>
+    </ContentLayout>
   );
 }
 

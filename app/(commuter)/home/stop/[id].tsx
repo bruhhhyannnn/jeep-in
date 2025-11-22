@@ -1,6 +1,6 @@
 import { STRINGS } from "@/constants";
-import { MapLayout } from "@/components/layout";
-import { StopTitleBadge } from "@/components/commuter";
+import { ContentLayout } from "@/components/layout";
+import { StopTitleBadge } from "@/components/badge";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
@@ -26,7 +26,7 @@ export default function StopPointInfoScreen() {
   }, [lat, lng]);
 
   return (
-    <MapLayout title={STRINGS.commuter.stopPointScreen.title}>
+    <ContentLayout title={STRINGS.commuter.stopPointScreen.title}>
       <View className="gap-3">
         {/* Header Info */}
         <View>
@@ -83,6 +83,6 @@ export default function StopPointInfoScreen() {
           />
         </View>
       </View>
-    </MapLayout>
+    </ContentLayout>
   );
 }

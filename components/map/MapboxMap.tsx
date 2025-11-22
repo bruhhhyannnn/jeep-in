@@ -7,7 +7,7 @@ import {
   RoutePolylineLayer,
   StopPointsLayer,
   UserLocationLayer,
-} from "@/components/ui/map/layers";
+} from "@/components/map/layers";
 
 const MapboxMap = () => {
   const map = useMap();

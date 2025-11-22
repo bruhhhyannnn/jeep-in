@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { MapboxMap } from "@/components/ui/map";
+import { MapboxMap } from "@/components/map";
 import { BottomSheetContainer, ButtonIcon, ThemedText, ButtonText, Icon } from "@/components/ui";
 import type { BottomSheetContainerRef, Jeepney } from "@/types";
 import { ROUTES } from "@/constants";
@@ -18,11 +18,16 @@ import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAs
 import { useMap } from "@/context/map/MapContext";
 
 export default function DriverHomeScreen() {
+  //
   const { top } = useSafeAreaInsets();
+
+  //
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
+
+  //
   const { recenterToUser } = useRecenterToUser();
 
-  const map = useMap(); // you already have MapContext
+  const map = useMap();
 
   // Zustand Auth
   const { user, loading } = useAuthStore();
@@ -37,7 +42,6 @@ export default function DriverHomeScreen() {
       showWarning("You need to be assigned to a jeepney first.");
       return;
     }
-
     await startBackgroundTracking();
     setTracking(true);
   };
@@ -74,7 +78,7 @@ export default function DriverHomeScreen() {
     }
   }, [assignedJeepney]);
 
-  // Follow user/driver location camera
+  // FOLLOW DRIVER LOCATION USING MAP CAMERA
   useEffect(() => {
     if (!tracking) return;
     if (!assignedJeepney) return;

@@ -2,11 +2,11 @@ import { ThemedText } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { JeepneyStatus } from "@/types";
 
-type JeepCardProps = {
+type JeepStatusBadgeProps = {
   variant?: JeepneyStatus;
 };
 
-export default function JeepStatusBadge({ variant = "On route" }: JeepCardProps) {
+export default function JeepStatusBadge({ variant = "On route" }: JeepStatusBadgeProps) {
   const text = variant;
   const variantStyles = {
     "On route": "bg-dodger-blue-500",
