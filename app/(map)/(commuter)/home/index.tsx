@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { STRINGS } from "@/constants";
+import { STRINGS, ROUTES } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { JeepCard, StopCard } from "@/components/card";
 import { FilterModal } from "@/components/commuter";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
-import { BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
+import { BottomSheetContainer, ThemedText, CustomTextInput, ButtonIcon } from "@/components/ui";
 import { useMapInitStore } from "@/context";
 import { distanceKm } from "@/utils/distance";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   useKeyboardSheet,
   useRecenterToUser,
@@ -17,6 +18,9 @@ import {
 } from "@/hooks";
 
 const HomeScreen = () => {
+  // Gets device top safe area for spacing floating buttons
+  const { top } = useSafeAreaInsets();
+
   // Ref for the filter modal
   const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
 
@@ -85,6 +89,14 @@ const HomeScreen = () => {
 
   return (
     <View className="absolute inset-0">
+      {/* Floating action buttons */}
+      <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
+        <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.settings.home)} />
+        {/* TODO: removed for now */}
+        {/* <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} /> */}
+        <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
+      </View>
+
       {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef}>
         <View className="gap-4">
