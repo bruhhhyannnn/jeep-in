@@ -2,8 +2,6 @@ export const ROUTES = {
   root: {
     index: "/",
     notFound: "/_not-found",
-    settings: "/settings",
-    auth: "/auth",
   },
 
   onboarding: {
@@ -12,19 +10,26 @@ export const ROUTES = {
     roleSelection: "/(onboarding)/role-selection",
   },
 
-  commuter: {
-    layout: "/(commuter)",
-    home: "/(commuter)/home", // TODO: this is set as default for now
+  auth: {
+    login: "/(auth)/login",
+  },
 
-    // Nested commuter pages
-    jeepney: (id: string) => `/(commuter)/home/jeepney/${id}` as const,
-    stop: (id: string) => `/(commuter)/home/stop/${id}` as const,
-    etaJeepney: (id: string) => `/(commuter)/home/eta/jeepney/${id}` as const,
-    etaStop: (id: string) => `/(commuter)/home/eta/stop/${id}` as const,
+  commuter: {
+    layout: "/(map)/(commuter)",
+    home: "/(map)/(commuter)/home", // TODO: this is set as default for now
+
+    jeepney: (id: string) => `/(map)/jeepney/${id}` as const,
+    stop: (id: string) => `/(map)/stop/${id}` as const,
+    etaJeepney: (id: string) => `/(map)/eta-jeepney/${id}` as const,
+    etaStop: (id: string) => `/(map)/eta-stop/${id}` as const,
   },
 
   driver: {
-    layout: "/(driver)",
-    home: "/(driver)/home",
+    layout: "/(map)/(driver)",
+    home: "/(map)/(driver)/home",
+  },
+
+  settings: {
+    home: "/(settings)",
   },
 } as const;

@@ -135,8 +135,7 @@ export default function EtaStopPointInfoScreen() {
               address={address}
               onPress={() =>
                 router.push({
-                  // pathname: ROUTES.commuter.stop(id.toString()),
-                  pathname: "/(commuter)/home/stop/[id]",
+                  pathname: "/(map)/stop/[id]",
                   params: {
                     id,
                     name,

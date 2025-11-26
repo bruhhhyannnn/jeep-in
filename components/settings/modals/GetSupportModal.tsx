@@ -4,7 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";
-import ButtonSettings from "@/components/settings/ButtonSettings";
+import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
 
 const GetSupportModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -52,12 +52,12 @@ function DefaultGetSupportView({
 }) {
   return (
     <View className="gap-4">
-      <ButtonSettings
+      <SettingsModalCard
         label={STRINGS.settings.getSupport.help.title}
         iconName="information-circle-outline"
         onPress={onHelp}
       />
-      <ButtonSettings
+      <SettingsModalCard
         label={STRINGS.settings.getSupport.contactUs.title}
         iconName="call-outline"
         onPress={onContactUs}
@@ -133,19 +133,19 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
           {STRINGS.settings.getSupport.contactUs.supportContent}
         </ThemedText>
         <View className="mt-1 gap-2">
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.jeepinEmail}
             iconName="mail-outline"
             onPress={() =>
               sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
             }
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.developerPhoneNumber1}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.developerPhoneNumber2}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
@@ -161,17 +161,17 @@ function ContactUsView({ onBack }: { onBack: () => void }) {
           {STRINGS.settings.getSupport.contactUs.operationsContent}
         </ThemedText>
         <View className="mt-1 gap-2">
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincEmail}
             iconName="mail-outline"
             onPress={() => sendEmail(STRINGS.settings.mincEmail)}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincPhoneNumber1}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber1.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincPhoneNumber2}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber2.trim())}

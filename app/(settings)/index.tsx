@@ -2,14 +2,14 @@ import { ROUTES, STRINGS } from "@/constants";
 import { useNicknameStore } from "@/store";
 import React, { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { ThemedText, SafeAreaContainer, ButtonBack, ButtonIcon } from "@/components/ui";
+import { ThemedText, SafeAreaContainer, ButtonIcon } from "@/components/ui";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
 import { useRoleStore } from "@/context";
 import {
   SettingsCard,
-  Divider,
+  CustomDivider,
   StopPointsModal,
   FareGuideModal,
   SettingsAccessibilityModal,
@@ -47,8 +47,7 @@ const SettingsScreen = () => {
             {/* Header */}
             <View>
               <View className="self-start">
-                {/* <ButtonBack showIcon label={STRINGS.general.goBack} color="default_blue" /> */}
-                <ButtonIcon iconName="arrow-back" />
+                <ButtonIcon iconName="arrow-back" onPress={() => router.back()} />
               </View>
               <View className="items-center justify-center p-10">
                 <ThemedText variant="h900" className="uppercase">
@@ -96,7 +95,7 @@ const SettingsScreen = () => {
                   iconName="settings-outline"
                   onPress={() => accessibilityRef.current?.open()}
                 />
-                <Divider />
+                <CustomDivider />
                 <SettingsCard
                   label={STRINGS.settings.themesAvatar.title}
                   iconName="color-palette-outline"
@@ -116,7 +115,7 @@ const SettingsScreen = () => {
                   iconName="mail-outline"
                   onPress={() => supportRef.current?.open()}
                 />
-                <Divider />
+                <CustomDivider />
                 <SettingsCard
                   label={STRINGS.settings.about.title}
                   iconName="information-circle-outline"

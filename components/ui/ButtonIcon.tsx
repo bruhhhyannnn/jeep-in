@@ -5,7 +5,7 @@ import { useShadows } from "@/style/shadow";
 type ButtonTextProps = {
   // also add family icon later here
   iconName: string;
-  onPress?: () => void;
+  onPress: () => void;
   disabled?: boolean;
 };
 

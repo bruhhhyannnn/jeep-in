@@ -90,7 +90,7 @@ export default function JeepneyInfoScreen() {
             iconName="timer-outline"
             onPress={() =>
               router.push({
-                pathname: "/(commuter)/home/eta/jeepney/[id]",
+                pathname: "/(map)/eta-jeepney/[id]",
                 params: {
                   id,
                   plate,

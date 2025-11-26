@@ -1,32 +1,22 @@
 import * as SecureStore from "expo-secure-store";
 import { View } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import { MapboxMap } from "@/components/map";
-import { BottomSheetContainer, ButtonIcon, ThemedText, ButtonText, Icon } from "@/components/ui";
-import type { BottomSheetContainerRef, Jeepney } from "@/types";
-import { ROUTES } from "@/constants";
-import { useRecenterToUser } from "@/hooks";
-import {
-  startBackgroundTracking,
-  stopBackgroundTracking,
-} from "@/services/location/driverTracking";
+import { BottomSheetContainer, ThemedText, ButtonText, Icon } from "@/components/ui";
 import { useAuthStore } from "@/context";
 import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
 import { useMap } from "@/context/map/MapContext";
+import type { BottomSheetContainerRef, Jeepney } from "@/types";
+import {
+  startBackgroundTracking,
+  stopBackgroundTracking,
+} from "@/services/location/driverTracking";
 
 export default function DriverHomeScreen() {
-  //
-  const { top } = useSafeAreaInsets();
-
   //
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
 
   //
-  const { recenterToUser } = useRecenterToUser();
-
   const map = useMap();
 
   // Zustand Auth
@@ -93,15 +83,6 @@ export default function DriverHomeScreen() {
 
   return (
     <View className="absolute inset-0">
-      {/* Map */}
-      <MapboxMap />
-
-      {/* Floating buttons */}
-      <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
-        <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.root.settings)} />
-        <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
-      </View>
-
       {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef} snapPoints={["14%", "30%"]}>
         <View className="gap-4">

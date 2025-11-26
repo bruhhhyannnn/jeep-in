@@ -46,6 +46,7 @@ export default function ButtonText({
       {iconName && <Icon name={iconName} color={variant === "primary" ? "#edf9ff" : undefined} />}
       <ThemedText
         variant={variant === "primaryLarge" ? "h500" : "h400"}
+        className={variant === "primaryLarge" ? "font-puffin-semibold" : undefined}
         color={variant === "primary" || variant === "primaryLarge" ? "default_blue" : undefined}
       >
         {label}

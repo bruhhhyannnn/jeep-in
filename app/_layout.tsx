@@ -48,14 +48,14 @@ export default function RootLayout() {
               }}
             >
               <Stack.Screen
-                name="auth/index"
+                name="(auth)/login"
                 options={{
                   animation: "fade_from_bottom",
                   gestureEnabled: true,
                 }}
               />
               <Stack.Screen
-                name="settings/index"
+                name="(settings)/index"
                 options={{
                   animation: "slide_from_right",
                   gestureEnabled: true,

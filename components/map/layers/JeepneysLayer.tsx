@@ -35,7 +35,7 @@ export default function JeepneysLayer() {
         const [lng, lat] = feature.geometry.coordinates;
 
         router.push({
-          pathname: "/(commuter)/home/jeepney/[id]",
+          pathname: "/(map)/jeepney/[id]",
           params: {
             id: String(feature.id ?? ""),
             plate: String(props.plate ?? ""),

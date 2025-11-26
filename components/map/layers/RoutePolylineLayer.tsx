@@ -1,7 +1,5 @@
 import AnimatedRoute from "@/components/map/layers/AnimatedRoute";
 
-// import route1 from "@/data/routes/chs-coe-route.json";
-// import route2 from "@/data/routes/coe-chs-route.json";
 import route1 from "@/data/routes/centinal-rob.json";
 import route2 from "@/data/routes/rob-centinnal.json";
 

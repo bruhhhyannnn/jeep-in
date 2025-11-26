@@ -23,17 +23,30 @@ export const STRINGS = {
     },
   },
 
+  // Auth - Section
+  auth: {
+    title: "Sign In to JEEP'IN",
+    email: "Email",
+    password: "Password",
+    emailPasswordRequired: "Both email and password are required.",
+    userNotFound: "User not found.",
+    accountNotAllowed: "This account is not allowed to sign in.",
+    invalidCredentials: "Invalid credentials or network error.",
+    signIn: "Sign in",
+    signingIn: "Signing in...",
+  },
+
   // Commuter — Section
   commuter: {
-    // Home
     home: {
       filterRoutes: "Filter routes",
       searchInput: "Where are you going?",
       nearJeeps: "Nearby jeeps",
       nearStops: "Nearby stops",
+      noJeepsFound: "No jeeps active",
+      noStopsFound: "No stops found",
     },
 
-    // Jeepney Screen
     jeepneyScreen: {
       title: "Jeepney info",
       lastStop: "LAST STOP",
@@ -41,14 +54,12 @@ export const STRINGS = {
       getEta: "Get ETA",
     },
 
-    // Stop Point Screen
     stopPointScreen: {
       title: "Stop point info",
       address: "Address",
       getDirections: "Get Directions",
     },
 
-    // ETA Jeepney Screen
     etaJeepneyScreen: {
       title: "ETA jeepney info",
       arrivingIn: "Arriving in",
@@ -57,7 +68,6 @@ export const STRINGS = {
       footer: "You can now proceed to your nearest stop point and wait for the jeepney to arrive.",
     },
 
-    // ETA Stop Point Screen
     etaStopPointScreen: {
       title: "ETA stop point info",
       arrivingIn: "Arriving in",
@@ -69,7 +79,6 @@ export const STRINGS = {
 
   // Settings — Section
   settings: {
-    // General
     helpInfo: "Help info",
     jeepinEmail: "jeepin.official@gmail.com",
     jeepinEmailSubject: "JEEP-IN Support Request",
@@ -80,7 +89,6 @@ export const STRINGS = {
     mincPhoneNumber1: "+63 995 856 4729",
     mincPhoneNumber2: "+63 939 722 3025",
 
-    // Home
     hello: "Hello",
     since: "Since",
     gettingAround: "Getting around",

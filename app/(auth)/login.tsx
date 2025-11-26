@@ -6,9 +6,9 @@ import { useRoleStore } from "@/context";
 import { Image, View } from "react-native";
 import { getUserProfile } from "@/services/firebase/users";
 import { UserRole } from "@/types";
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 
-export default function AuthScreen() {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -20,7 +20,7 @@ export default function AuthScreen() {
       setError(null);
 
       if (!email.trim() || !password.trim()) {
-        setError("Both email and password are required.");
+        setError(STRINGS.auth.emailPasswordRequired);
         return;
       }
 
@@ -33,7 +33,7 @@ export default function AuthScreen() {
       // 2) Get user profile
       const profile = await getUserProfile(uid);
       if (!profile) {
-        setError("User not found.");
+        setError(STRINGS.auth.userNotFound);
         return;
       }
 
@@ -41,17 +41,20 @@ export default function AuthScreen() {
 
       // 3) Only allow DRIVERS to log in
       if (role !== "driver") {
-        setError("This account is not allowed to sign in.");
+        setError(STRINGS.auth.accountNotAllowed);
         return;
       }
 
       // 4) Set role and route
       await setRole("driver");
+
+      // 5) Remove all stacked screens
       router.dismissAll();
+
+      // 6) Reroute to designate driver screen
       router.replace(ROUTES.driver.home);
     } catch (e: any) {
-      console.log("Driver login error:", e);
-      setError("Invalid credentials or network error.");
+      setError(STRINGS.auth.invalidCredentials);
     } finally {
       setSubmitting(false);
     }
@@ -74,10 +77,10 @@ export default function AuthScreen() {
       </View>
 
       <ThemedView variant="bg" className="gap-4 rounded-2xl p-5">
-        <ThemedText variant="h700">Sign In to JEEP'IN</ThemedText>
+        <ThemedText variant="h700">{STRINGS.auth.title}</ThemedText>
 
         <CustomTextInput
-          placeholder="Email"
+          placeholder={STRINGS.auth.email}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -86,7 +89,7 @@ export default function AuthScreen() {
         />
 
         <CustomTextInput
-          placeholder="Password"
+          placeholder={STRINGS.auth.password}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -94,13 +97,13 @@ export default function AuthScreen() {
         />
 
         {error && (
-          <ThemedText variant="h100" className="text-warning-600 dark:text-warning-600">
+          <ThemedText className="text-center text-warning-600 dark:text-warning-600">
             {error}
           </ThemedText>
         )}
 
         <ButtonText
-          label={submitting ? "Signing in..." : "Sign in"}
+          label={submitting ? STRINGS.auth.signingIn : STRINGS.auth.signIn}
           onPress={handleLogin}
           disabled={submitting}
           iconName="log-in-outline"

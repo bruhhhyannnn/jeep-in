@@ -9,7 +9,7 @@ const RoleSelectionScreen = () => {
 
   return (
     <SafeAreaContainer>
-      <View className="flex-center h-full justify-center gap-10">
+      <View className="h-full gap-6 pt-48">
         {/* Image Container */}
         <View className="flex-row items-center justify-center gap-2">
           <Image
@@ -48,7 +48,7 @@ const RoleSelectionScreen = () => {
               label={STRINGS.onboarding.roleSelection.operator}
               variant="primaryLarge"
               fullWidth
-              onPress={() => router.push(ROUTES.root.auth)}
+              onPress={() => router.push(ROUTES.auth.login)}
             />
           </View>
         </ThemedView>

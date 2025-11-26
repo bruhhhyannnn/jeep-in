@@ -54,7 +54,7 @@ export default function StopPointInfoScreen() {
           <ThemedView variant="bg" className="flex-row gap-2 rounded-full px-6 py-4">
             <Icon name="location-outline" />
             <ThemedText variant="h400" className="flex-1">
-              {address || "No address available"}
+              {address}
             </ThemedText>
           </ThemedView>
         </View>
@@ -65,9 +65,7 @@ export default function StopPointInfoScreen() {
             label={STRINGS.commuter.stopPointScreen.getDirections}
             onPress={() =>
               router.push({
-                // pathname: ROUTES.commuter.etaStop(id),
-                // pathname: `/(commuter)/home/eta/stop/${id}`,
-                pathname: `/(commuter)/home/eta/stop/[id]`,
+                pathname: "/(map)/eta-stop/[id]",
                 params: {
                   id,
                   name,

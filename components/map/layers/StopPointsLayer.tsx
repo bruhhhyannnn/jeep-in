@@ -34,7 +34,7 @@ export default function StopPointsLayer() {
         const [lng, lat] = feature.geometry.coordinates;
 
         router.push({
-          pathname: "/(commuter)/home/stop/[id]",
+          pathname: "/(map)/stop/[id]",
           params: {
             id: String(feature.id ?? ""),
             name: String(props.name ?? ""),

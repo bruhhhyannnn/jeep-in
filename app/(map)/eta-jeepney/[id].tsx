@@ -27,7 +27,7 @@ export default function EtaJeepneyInfoScreen() {
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
   const [eta, setEta] = useState<number | null>(null);
 
-  // 📍 INITIAL FETCH OF ROUTE + ETA
+  // INITIAL FETCH OF ROUTE + ETA
   useEffect(() => {
     if (!currentLocation || !jeepLat || !jeepLng) return;
 
@@ -49,7 +49,7 @@ export default function EtaJeepneyInfoScreen() {
     fetchRoute();
   }, [currentLocation, jeepLat, jeepLng]);
 
-  // 🔁 AUTO-REFRESH ETA
+  // AUTO-REFRESH ETA
   useEffect(() => {
     if (!currentLocation || !jeepLat || !jeepLng) return;
 
@@ -69,7 +69,7 @@ export default function EtaJeepneyInfoScreen() {
     return () => clearInterval(interval);
   }, [currentLocation, jeepLat, jeepLng]);
 
-  // 🎯 AUTO-FIT CAMERA (User ↔ Jeepney)
+  // AUTO-FIT CAMERA (User ↔ Jeepney)
   useEffect(() => {
     if (!map.current || routeCoords.length < 2) return;
 
@@ -131,7 +131,7 @@ export default function EtaJeepneyInfoScreen() {
               status={status}
               onPress={() =>
                 router.push({
-                  pathname: "/(commuter)/home/jeepney/[id]",
+                  pathname: "/(map)/jeepney/[id]",
                   params: {
                     id: jeepId,
                     plate,
@@ -154,7 +154,7 @@ export default function EtaJeepneyInfoScreen() {
   );
 }
 
-// 📍 Utility for map fitBounds
+// Utility for map fitBounds
 function getRouteBounds(coords: [number, number][]) {
   let minX = coords[0][0];
   let minY = coords[0][1];

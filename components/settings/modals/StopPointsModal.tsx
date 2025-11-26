@@ -7,7 +7,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/card";
 import { router } from "expo-router";
 import { BottomSheetModalBaseRef } from "@/types";
-import ButtonSettings from "@/components/settings/ButtonSettings";
+import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
 
 const StopPointsModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -61,7 +61,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
                 address={s.address}
                 onPress={() =>
                   router.push({
-                    pathname: "/(commuter)/home/stop/[id]",
+                    pathname: "/(map)/stop/[id]",
                     params: {
                       id: s.id,
                       name: s.name,
@@ -117,24 +117,24 @@ function HelpStopPointsView({ onBack }: { onBack: () => void }) {
 
         {/* Contact Cards */}
         <View className="mt-1 gap-2">
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.developerPhoneNumber1}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber1.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.developerPhoneNumber2}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.developerPhoneNumber2.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.jeepinEmail}
             iconName="mail-outline"
             onPress={() =>
               sendEmail(STRINGS.settings.jeepinEmail, STRINGS.settings.jeepinEmailSubject)
             }
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.developerEmail}
             iconName="mail-outline"
             onPress={() =>

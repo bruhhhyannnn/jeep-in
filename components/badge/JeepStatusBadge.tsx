@@ -18,7 +18,7 @@ export default function JeepStatusBadge({ variant = "On route" }: JeepStatusBadg
     <ThemedText
       variant="h200"
       color="default_blue"
-      className={cn("rounded-full px-2 py-0.5 text-center", variantStyles[variant])}
+      className={cn("rounded-full px-1.5 text-center", variantStyles[variant])}
     >
       {text}
     </ThemedText>

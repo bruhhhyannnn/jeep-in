@@ -12,7 +12,7 @@ import {
   CustomTextInput,
   ThemedText,
 } from "@/components/ui";
-import ButtonSettings from "@/components/settings/ButtonSettings";
+import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
 
 const ThemesAvatarModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -60,12 +60,12 @@ function DefaultThemesAvatarView({
 }) {
   return (
     <View className="gap-4">
-      <ButtonSettings
+      <SettingsModalCard
         label={STRINGS.settings.themesAvatar.nickname.title}
         iconName="person-outline"
         onPress={onNickname}
       />
-      <ButtonSettings
+      <SettingsModalCard
         label={STRINGS.settings.themesAvatar.appearance.title}
         iconName="bulb-outline"
         onPress={onAppearance}

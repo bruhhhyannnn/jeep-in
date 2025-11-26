@@ -3,7 +3,7 @@ import { callNumber, sendEmail } from "@/lib/linkActions";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/ui";
-import ButtonSettings from "@/components/settings/ButtonSettings";
+import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
 import { BottomSheetModalBaseRef } from "@/types";
 
 const FareGuideModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
@@ -180,17 +180,17 @@ function HelpFareGuideView({ onBack }: { onBack: () => void }) {
 
         {/* Contact Cards */}
         <View className="mt-1 gap-2">
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincPhoneNumber1}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber1.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincPhoneNumber2}
             iconName="call-outline"
             onPress={() => callNumber(STRINGS.settings.mincPhoneNumber2.trim())}
           />
-          <ButtonSettings
+          <SettingsModalCard
             label={STRINGS.settings.mincEmail}
             iconName="mail-outline"
             onPress={() => sendEmail(STRINGS.settings.mincEmail)}

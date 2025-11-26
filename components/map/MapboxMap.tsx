@@ -40,7 +40,6 @@ const MapboxMap = () => {
 
       zoomInAt: async (coords, zoomIncrement = 1.5) => {
         const currentZoom = await mapViewRef.current?.getZoom();
-        console.log(currentZoom);
         const nextZoom = (currentZoom ?? 13) + zoomIncrement;
 
         cameraRef.current?.setCamera({
@@ -74,7 +73,7 @@ const MapboxMap = () => {
       {/* Render Jeepneys */}
       <JeepneysLayer />
 
-      {/* Register all icons */}
+      {/* Register all custom icons */}
       {/* <Images
         images={{
           "stop-icon": require("@/assets/images/map/stop-pin.png"),

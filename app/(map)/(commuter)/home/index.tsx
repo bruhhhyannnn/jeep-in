@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ROUTES, STRINGS } from "@/constants";
+import { STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { JeepCard, StopCard } from "@/components/card";
 import { FilterModal } from "@/components/commuter";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
-import { ButtonIcon, BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
+import { BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
+import { useMapInitStore } from "@/context";
+import { distanceKm } from "@/utils/distance";
 import {
   useKeyboardSheet,
   useRecenterToUser,
@@ -14,13 +15,8 @@ import {
   useStopsList,
   useLocationCurrent,
 } from "@/hooks";
-import { useMapInitStore } from "@/context";
-import { distanceKm } from "@/utils/distance";
 
 const HomeScreen = () => {
-  // Gets device top safe area for spacing floating buttons
-  const { top } = useSafeAreaInsets();
-
   // Ref for the filter modal
   const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
 
@@ -35,7 +31,7 @@ const HomeScreen = () => {
   const hasCentered = useMapInitStore((s) => s.hasCentered);
   const setHasCentered = useMapInitStore((s) => s.setHasCentered);
   useEffect(() => {
-    if (hasCentered) return; // ❌ Already centered in this session → skip
+    if (hasCentered) return;
     setHasCentered(); // Mark as done so it never runs again
     recenterToUser();
   }, [hasCentered, recenterToUser]);
@@ -72,7 +68,7 @@ const HomeScreen = () => {
   const userLng = currentLocation?.longitude;
 
   // Filter jeeps to only close to the users location
-  const RADIUS_KM = 2;
+  const RADIUS_KM = 1.5;
   const nearbyJeeps =
     userLat && userLng
       ? filteredJeeps
@@ -89,14 +85,6 @@ const HomeScreen = () => {
 
   return (
     <View className="absolute inset-0">
-      {/* Floating Buttons */}
-      <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
-        <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.root.settings)} />
-        {/* TODO: removed for now */}
-        {/* <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} /> */}
-        <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
-      </View>
-
       {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef}>
         <View className="gap-4">
@@ -116,7 +104,7 @@ const HomeScreen = () => {
             <View className="gap-2">
               {jeeps.length === 0 ? (
                 <ThemedText color="text_muted" className="text-center">
-                  No jeepneys active
+                  {STRINGS.commuter.home.noJeepsFound}
                 </ThemedText>
               ) : (
                 nearbyJeeps.map((j) => {
@@ -131,7 +119,7 @@ const HomeScreen = () => {
                       distanceKm={dist}
                       onPress={() =>
                         router.push({
-                          pathname: "/(commuter)/home/jeepney/[id]",
+                          pathname: "/(map)/jeepney/[id]",
                           params: {
                             id: j.id,
                             plate: j.plate,
@@ -156,7 +144,7 @@ const HomeScreen = () => {
             <View className="gap-2">
               {stops.length === 0 ? (
                 <ThemedText color="text_muted" className="text-center">
-                  No stops found
+                  {STRINGS.commuter.home.noStopsFound}
                 </ThemedText>
               ) : (
                 nearbyStops.map((s) => {
@@ -173,7 +161,7 @@ const HomeScreen = () => {
                       distanceKm={dist}
                       onPress={() =>
                         router.push({
-                          pathname: "/(commuter)/home/stop/[id]",
+                          pathname: "/(map)/stop/[id]",
                           params: {
                             id: s.id,
                             name: s.name,

@@ -5,7 +5,7 @@ import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { openWebsite } from "@/lib/linkActions";
 import { Share, ToastAndroid, View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
-import ButtonSettings from "@/components/settings/ButtonSettings";
+import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
 
 const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -69,17 +69,17 @@ function DefaultAboutJeepInView({
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.about.loveSection}
         </ThemedText>
-        <ButtonSettings
+        <SettingsModalCard
           label={STRINGS.settings.about.likeFb.title}
           iconName="thumbs-up-outline"
           onPress={handleFacebook}
         />
-        <ButtonSettings
+        <SettingsModalCard
           label={STRINGS.settings.about.share.title}
           iconName="megaphone-outline"
           onPress={handleShare}
         />
-        <ButtonSettings
+        <SettingsModalCard
           label={STRINGS.settings.about.visit.title}
           iconName="document-text-outline"
           onPress={handleVisitPage}
@@ -91,12 +91,12 @@ function DefaultAboutJeepInView({
         <ThemedText variant="h500" className="uppercase">
           {STRINGS.settings.about.legalSection}
         </ThemedText>
-        <ButtonSettings
+        <SettingsModalCard
           label={STRINGS.settings.about.dataAttribution.title}
           iconName="file-tray-full-outline"
           onPress={onDataAttribution}
         />
-        <ButtonSettings
+        <SettingsModalCard
           label={STRINGS.settings.about.privacyPolicy.title}
           iconName="newspaper-outline"
           onPress={onPrivacyPolicy}
