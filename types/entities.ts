@@ -1,6 +1,6 @@
 // Shared Types & Enums
 export type Timestamp = string | Date; // Firestore timestamp or JS date
-export type UserRole = "commuter" | "driver" | "admin" | "super_admin";
+export type UserRole = "commuter" | "driver";
 export type JeepneyStatus = "On route" | "Stationed" | "Out of service";
 export type DriverStatus = "active" | "inactive";
 
@@ -15,7 +15,6 @@ export interface Route {
 
 // Pickup Point
 export interface PickupPoint {
-  // or Stop Point
   id: string;
   route_id: string; // FK → Route.id
   name: string;
@@ -52,7 +51,7 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
-  profile_image?: string; // optional Firebase Storage URL
+  profile_image_url?: string; // optional Firebase Storage URL
   created_at: Timestamp;
   updated_at: Timestamp;
 }
@@ -65,36 +64,4 @@ export interface DriverProfile {
   status: DriverStatus; // "active" | "inactive"
   created_at: Timestamp;
   updated_at: Timestamp;
-}
-
-// Admin Profile
-export interface AdminProfile {
-  id: string;
-  user_id: string; // FK → User.id
-  route_id: string; // FK → Route.id
-  working_hours_start: number; // 0–23
-  working_hours_end: number; // 0–23
-  created_at: Timestamp;
-  updated_at: Timestamp;
-}
-
-// Super Admin Profile
-export interface SuperAdminProfile {
-  id: string;
-  user_id: string; // FK → User.id
-  created_at: Timestamp;
-  updated_at: Timestamp;
-}
-
-// Relationships & Utility Types
-export interface JeepneyWithDriver extends Jeepney {
-  driver?: DriverProfile;
-}
-export interface RouteWithPoints extends Route {
-  pickup_points?: PickupPoint[];
-}
-export interface UserWithProfile extends User {
-  driver_profile?: DriverProfile;
-  admin_profile?: AdminProfile;
-  super_admin_profile?: SuperAdminProfile;
 }

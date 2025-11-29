@@ -24,7 +24,7 @@ const HomeScreen = () => {
   // Ref for the filter modal
   const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
 
-  // Ref for commuter bottom sheet container
+  // Ref for bottom sheet container
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
   useKeyboardSheet(bottomSheetRef);
 

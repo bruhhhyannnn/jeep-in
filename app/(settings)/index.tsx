@@ -133,7 +133,7 @@ const SettingsScreen = () => {
               <View className="overflow-hidden rounded-2xl">
                 {!canLogout && (
                   <SettingsCard
-                    label="Change Role"
+                    label={STRINGS.settings.logout.changeRole}
                     iconName="swap-horizontal-outline"
                     onPress={async () => {
                       // Clear user role
@@ -150,7 +150,7 @@ const SettingsScreen = () => {
                 {canLogout && (
                   <>
                     <SettingsCard
-                      label="Logout"
+                      label={STRINGS.settings.logout.logout}
                       iconName="log-out-outline"
                       onPress={() => logoutRef.current?.open()}
                     />

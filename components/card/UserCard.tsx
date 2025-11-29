@@ -1,6 +1,7 @@
 import { TouchableOpacity, View } from "react-native";
 import { ThemedText, ThemedView, Icon } from "@/components/ui";
 import { useShadows } from "@/style/shadow";
+import { STRINGS } from "@/constants";
 
 type UserCardProps = {
   onPress?: () => void;
@@ -22,7 +23,7 @@ export default function UserCard({ onPress }: UserCardProps) {
           {/* Content */}
           <View className="flex-1">
             {/* Plate Number and Status Badge */}
-            <ThemedText variant="h500">Your Location</ThemedText>
+            <ThemedText variant="h500">{STRINGS.components.card.yourLocation}</ThemedText>
           </View>
         </View>
 

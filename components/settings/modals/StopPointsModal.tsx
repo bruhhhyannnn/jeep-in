@@ -47,12 +47,14 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
       {/* Stop Points Section */}
       <View className="gap-2">
         <ThemedText variant="h500" className="uppercase">
-          ALL STOP POINTS
+          {STRINGS.settings.stopPoints.allStopPoints}
         </ThemedText>
 
         <View className="gap-2">
           {stops.length === 0 ? (
-            <ThemedText color="text_muted">Loading stops...</ThemedText>
+            <ThemedText color="text_muted">
+              {STRINGS.settings.stopPoints.loadingStopPoints}
+            </ThemedText>
           ) : (
             stops.map((s) => (
               <StopCard
@@ -82,7 +84,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
       {/* Button help information */}
       <View className="self-start">
         <ButtonText
-          label="Help Information"
+          label={STRINGS.settings.helpInfo}
           variant="secondary"
           iconName="information-circle-outline"
           onPress={onHelp}

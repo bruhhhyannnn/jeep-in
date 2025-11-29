@@ -38,6 +38,9 @@ export const STRINGS = {
 
   // Commuter — Section
   commuter: {
+    locationPermissionRequired: "Location permission is required.",
+    gettingYourLocation: "Getting your location…",
+
     home: {
       filterRoutes: "Filter routes",
       searchInput: "Where are you going?",
@@ -62,24 +65,24 @@ export const STRINGS = {
 
     etaJeepneyScreen: {
       title: "ETA jeepney info",
-      arrivingIn: "Arriving in",
-      fromJeepneyLocation: "FROM JEEPNEY LOCATION",
-      toStopPoint: "TO STOP POINT",
+      arrivingIn: "Arriving in —",
+      from: "FROM",
+      to: "JEEPNEY LOCATION",
       footer: "You can now proceed to your nearest stop point and wait for the jeepney to arrive.",
     },
 
     etaStopPointScreen: {
       title: "ETA stop point info",
-      arrivingIn: "Arriving in",
+      arrivingIn: "Arriving in —",
       from: "FROM",
       to: "TO",
-      footer: "You can now proceed to your nearest stop point and wait for the jeepney to arrive.",
+      footer: "You can use the directions to walk to the stop point.",
     },
   },
 
   // Settings — Section
   settings: {
-    helpInfo: "Help info",
+    helpInfo: "Help information",
     jeepinEmail: "jeepin.official@gmail.com",
     jeepinEmailSubject: "JEEP-IN Support Request",
     developerEmail: "mangapit.bryan@gmail.com",
@@ -97,6 +100,9 @@ export const STRINGS = {
 
     stopPoints: {
       title: "Stop points",
+
+      allStopPoints: "ALL STOP POINTS",
+      loadingStopPoints: "Loading stop points...",
 
       helpStopPoint: {
         title: "Help | Stop points",
@@ -204,16 +210,16 @@ export const STRINGS = {
       loveSection: "LOVE JEEP-IN?",
       likeFb: {
         title: "Like on facebook",
-        content: "https://facebook.com/jeepin.ilocos",
+        content: "https://www.facebook.com/profile.php?id=61584186487730",
       },
       share: {
         title: "Share with friends",
         content:
-          "🚐 Check out JEEP-IN — the modern jeepney tracking app for Ilocos Norte! Track routes, stops, and more. Download or visit: https://jeepin.ilocos.app",
+          "🚐 Check out JEEP-IN — the modern jeepney tracking app for Ilocos Norte! Track jeeps, stops, routes, and more. \n\nDownload or visit: https://jeep-in.framer.website",
       },
       visit: {
         title: "Visit our page",
-        content: "https://jeepin.ilocos.app",
+        content: "https://jeep-in.framer.website",
       },
 
       legalSection: "LEGAL",
@@ -232,6 +238,39 @@ export const STRINGS = {
           "For questions, contact jeepin.official@gmail.com.",
         ],
       },
+    },
+
+    logout: {
+      changeRole: "Change role",
+
+      title: "Are you sure you want to logout?",
+      cancel: "Cancel",
+      logout: "Logout",
+    },
+  },
+
+  // Driver - Section
+  driver: {
+    home: {
+      trackingStatus: "TRACKING STATUS",
+      waitingForJeepneyAssignment: "Waiting for jeepney assignment.",
+      trackingIsOn: "Tracking is ON",
+      trackingIsOff: "Tracking is OFF",
+
+      startTracking: "Start tracking",
+      stopTracking: "Stop tracking",
+
+      drivingInfo: "Driving info",
+      signedInAs: "Signed in as: ",
+      jeepneyAssigned: "Jeepney assigned: ",
+      loadingUser: "Loading user...",
+    },
+  },
+
+  // Components
+  components: {
+    card: {
+      yourLocation: "Your Location",
     },
   },
 

@@ -7,7 +7,7 @@ import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
 import { useMap } from "@/context/map/MapContext";
 import { router } from "expo-router";
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecenterToUser } from "@/hooks";
 import type { BottomSheetContainerRef, Jeepney } from "@/types";
@@ -23,7 +23,7 @@ export default function DriverHomeScreen() {
   // Camera control
   const { recenterToUser } = useRecenterToUser();
 
-  //
+  // Ref for bottom sheet container
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
 
   //
@@ -102,17 +102,17 @@ export default function DriverHomeScreen() {
       </View>
 
       {/* Bottom Sheet */}
-      <BottomSheetContainer ref={bottomSheetRef} snapPoints={["14%", "30%"]}>
+      <BottomSheetContainer ref={bottomSheetRef} snapPoints={["8%", "20%"]}>
         <View className="gap-4">
           {/* Tracking Status */}
           <View>
             <ThemedText variant="h300" className="uppercase">
-              Tracking Status
+              {STRINGS.driver.home.trackingStatus}
             </ThemedText>
 
             {!assignedJeepney ? (
               <ThemedText className="text-warning-600 dark:text-warning-600">
-                Waiting for jeepney assignment.
+                {STRINGS.driver.home.waitingForJeepneyAssignment}
               </ThemedText>
             ) : (
               <ThemedText
@@ -122,7 +122,7 @@ export default function DriverHomeScreen() {
                     : "text-warning-600 dark:text-warning-600"
                 }
               >
-                {tracking ? "Live tracking is ON" : "Tracking is OFF"}
+                {tracking ? STRINGS.driver.home.trackingIsOn : STRINGS.driver.home.trackingIsOff}
               </ThemedText>
             )}
           </View>
@@ -130,14 +130,14 @@ export default function DriverHomeScreen() {
           {/* Action Buttons */}
           <View className="flex-row gap-3">
             <ButtonText
-              label="Start tracking"
+              label={STRINGS.driver.home.startTracking}
               iconName="play-circle-outline"
               onPress={handleStart}
               disabled={tracking || !assignedJeepney}
             />
 
             <ButtonText
-              label="Stop tracking"
+              label={STRINGS.driver.home.stopTracking}
               iconName="stop-circle-outline"
               onPress={handleStop}
               variant="secondary"
@@ -148,14 +148,14 @@ export default function DriverHomeScreen() {
           {/* Driver Info */}
           <View className="gap-2">
             <ThemedText variant="h400" className="uppercase">
-              Driver info
+              {STRINGS.driver.home.drivingInfo}
             </ThemedText>
 
             {user ? (
-              <View className="flex-row flex-wrap gap-1">
+              <View className="flex-row flex-wrap items-center gap-1">
                 {/* Email */}
                 <View className="w-full flex-row gap-1">
-                  <ThemedText color="text_muted">Signed in as: </ThemedText>
+                  <ThemedText color="text_muted">{STRINGS.driver.home.signedInAs}</ThemedText>
                   <Icon name="person" size={16} />
                   <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
                     {user.email}
@@ -164,8 +164,10 @@ export default function DriverHomeScreen() {
 
                 {/* Assigned Jeepney */}
                 {assignedJeepney && (
-                  <View className="w-full flex-row gap-1">
-                    <ThemedText color="text_muted">Jeepney assigned: </ThemedText>
+                  <View className="w-full flex-row items-center gap-1">
+                    <ThemedText color="text_muted">
+                      {STRINGS.driver.home.jeepneyAssigned}
+                    </ThemedText>
                     <Icon family="MaterialCommunityIcons" name="bus" size={18} />
                     <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
                       {assignedJeepney?.plate_number}
@@ -174,7 +176,7 @@ export default function DriverHomeScreen() {
                 )}
               </View>
             ) : (
-              <ThemedText color="text_muted">Loading user...</ThemedText>
+              <ThemedText color="text_muted">{STRINGS.driver.home.loadingUser}</ThemedText>
             )}
           </View>
         </View>

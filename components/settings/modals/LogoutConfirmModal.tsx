@@ -5,7 +5,7 @@ import { BottomSheetModalBaseRef } from "@/types";
 import { logout } from "@/services/firebase/auth";
 import { router } from "expo-router";
 import { useRoleStore } from "@/context";
-import { ROUTES } from "@/constants";
+import { ROUTES, STRINGS } from "@/constants";
 
 const LogoutConfirmModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -36,13 +36,17 @@ const LogoutConfirmModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   return (
     <BottomSheetModalBase title="Confirm Logout" ref={baseRef}>
       <View className="gap-5">
-        <ThemedText color="text_muted">Are you sure you want to logout?</ThemedText>
+        <ThemedText color="text_muted">{STRINGS.settings.logout.title}</ThemedText>
 
         <View className="flex-row items-center gap-2">
-          <ButtonText label="Cancel" variant="secondary" onPress={() => baseRef.current?.close()} />
+          <ButtonText
+            label={STRINGS.settings.logout.cancel}
+            variant="secondary"
+            onPress={() => baseRef.current?.close()}
+          />
 
           <View className="flex-1">
-            <ButtonText label="Logout" fullWidth onPress={handleLogout} />
+            <ButtonText label={STRINGS.settings.logout.logout} fullWidth onPress={handleLogout} />
           </View>
         </View>
       </View>

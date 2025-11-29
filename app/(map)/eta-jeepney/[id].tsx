@@ -81,7 +81,7 @@ export default function EtaJeepneyInfoScreen() {
     return (
       <ContentLayout title={STRINGS.commuter.etaJeepneyScreen.title}>
         <View className="flex-1 items-center justify-center">
-          <ThemedText>Location permission is required.</ThemedText>
+          <ThemedText>{STRINGS.commuter.locationPermissionRequired}</ThemedText>
         </View>
       </ContentLayout>
     );
@@ -91,7 +91,7 @@ export default function EtaJeepneyInfoScreen() {
     return (
       <ContentLayout title={STRINGS.commuter.etaJeepneyScreen.title}>
         <View className="flex-1 items-center justify-center">
-          <ThemedText>Getting your location…</ThemedText>
+          <ThemedText>{STRINGS.commuter.gettingYourLocation}</ThemedText>
         </View>
       </ContentLayout>
     );
@@ -102,7 +102,7 @@ export default function EtaJeepneyInfoScreen() {
       <View className="gap-3">
         {/* HEADER */}
         <View className="flex-row items-center gap-2">
-          <ThemedText variant="h600">Jeepney arriving in —</ThemedText>
+          <ThemedText variant="h600">{STRINGS.commuter.etaJeepneyScreen.arrivingIn}</ThemedText>
           <ThemedText variant="h600" color="default_blue">
             {eta ? `${eta.toFixed(1)} mins` : "..."}
           </ThemedText>
@@ -112,8 +112,9 @@ export default function EtaJeepneyInfoScreen() {
         <View className="gap-3">
           <View>
             <ThemedText variant="h300" className="uppercase">
-              From
+              {STRINGS.commuter.etaJeepneyScreen.from}
             </ThemedText>
+
             <UserCard />
           </View>
 
@@ -123,7 +124,7 @@ export default function EtaJeepneyInfoScreen() {
 
           <View>
             <ThemedText variant="h300" className="uppercase">
-              Jeepney Location
+              {STRINGS.commuter.etaJeepneyScreen.to}
             </ThemedText>
 
             <JeepCard
