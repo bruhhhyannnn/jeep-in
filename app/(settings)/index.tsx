@@ -46,10 +46,10 @@ const SettingsScreen = () => {
           <View className="gap-6">
             {/* Header */}
             <View>
-              <View className="self-start">
+              <View className="absolute self-start">
                 <ButtonIcon iconName="arrow-back" onPress={() => router.back()} />
               </View>
-              <View className="items-center justify-center p-10">
+              <View className="items-center justify-center p-12">
                 <ThemedText variant="h900" className="uppercase">
                   🥳
                 </ThemedText>
@@ -160,12 +160,19 @@ const SettingsScreen = () => {
             </View>
 
             {/* Footer Logo */}
-            <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-4 dark:bg-dodger-blue-800">
+            <View className="flex-row items-center justify-center">
               <Image
-                source={require("@/assets/images/logo-jeep-in-2.png")}
-                className="aspect-[44/13] h-16"
+                source={require("@/assets/images/logo-mmsu.png")}
+                className="h-28 w-28"
                 resizeMode="contain"
               />
+              <View className="items-center self-center rounded-2xl bg-dodger-blue-600 p-2.5 dark:bg-dodger-blue-800">
+                <Image
+                  source={require("@/assets/images/logo-jeep-in-2.png")}
+                  className="aspect-[44/13] h-16"
+                  resizeMode="contain"
+                />
+              </View>
             </View>
           </View>
         </ScrollView>

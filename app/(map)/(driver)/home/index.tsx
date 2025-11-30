@@ -1,15 +1,12 @@
 import * as SecureStore from "expo-secure-store";
 import { View } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { BottomSheetContainer, ThemedText, ButtonText, Icon, ButtonIcon } from "@/components/ui";
+import { BottomSheetContainer, ThemedText, ButtonText, Icon } from "@/components/ui";
 import { useAuthStore } from "@/context";
 import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
 import { useMap } from "@/context/map/MapContext";
-import { router } from "expo-router";
-import { ROUTES, STRINGS } from "@/constants";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRecenterToUser } from "@/hooks";
+import { STRINGS } from "@/constants";
 import type { BottomSheetContainerRef, Jeepney } from "@/types";
 import {
   startBackgroundTracking,
@@ -17,12 +14,6 @@ import {
 } from "@/services/location/driverTracking";
 
 export default function DriverHomeScreen() {
-  // Gets device top safe area for spacing floating buttons
-  const { top } = useSafeAreaInsets();
-
-  // Camera control
-  const { recenterToUser } = useRecenterToUser();
-
   // Ref for bottom sheet container
   const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
 
@@ -93,14 +84,6 @@ export default function DriverHomeScreen() {
 
   return (
     <View className="absolute inset-0">
-      {/* Floating action buttons */}
-      <View className="absolute right-6 gap-4" style={{ top: top + 28 }}>
-        <ButtonIcon iconName="settings-outline" onPress={() => router.push(ROUTES.settings.home)} />
-        {/* TODO: removed for now */}
-        {/* <ButtonIcon iconName="filter-outline" onPress={() => filterModalRef.current?.open?.()} /> */}
-        <ButtonIcon iconName="navigate-circle-outline" onPress={recenterToUser} />
-      </View>
-
       {/* Bottom Sheet */}
       <BottomSheetContainer ref={bottomSheetRef} snapPoints={["8%", "24%"]}>
         <View className="gap-4">
