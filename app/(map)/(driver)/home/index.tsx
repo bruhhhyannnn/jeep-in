@@ -102,7 +102,7 @@ export default function DriverHomeScreen() {
       </View>
 
       {/* Bottom Sheet */}
-      <BottomSheetContainer ref={bottomSheetRef} snapPoints={["8%", "20%"]}>
+      <BottomSheetContainer ref={bottomSheetRef} snapPoints={["8%", "24%"]}>
         <View className="gap-4">
           {/* Tracking Status */}
           <View>

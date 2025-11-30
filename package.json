@@ -20,6 +20,7 @@
     "@rnmapbox/maps": "^10.2.7",
     "@tanstack/react-query": "^5.90.7",
     "@turf/turf": "^7.2.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "expo": "~54.0.25",
     "expo-clipboard": "^8.0.7",
     "expo-constants": "~18.0.10",
@@ -60,8 +61,7 @@
     "eslint": "^9.39.1",
     "eslint-config-expo": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.3",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^3.4.18",
     "typescript": "~5.9.2"

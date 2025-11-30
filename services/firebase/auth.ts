@@ -1,7 +1,8 @@
-import { auth } from "@/services/firebase/config";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from "firebase/auth";
 import { getDocument } from "@/services/firebase/firestore";
 import type { User as AppUser } from "@/types";
+import { getAuthInstance } from "@/services/firebase/config";
+const auth = getAuthInstance();
 
 export type AuthUser = {
   uid: string;
