@@ -28,7 +28,6 @@ export default function JeepCard({
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Icon */}
           <View className="items-center">
-            {/* TODO: revalidate icon size */}
             <Icon family="MaterialCommunityIcons" name="bus" size={26} />
             {distanceKm != null && (
               <ThemedText color="text_muted">{distanceKm.toFixed(1)} km</ThemedText>

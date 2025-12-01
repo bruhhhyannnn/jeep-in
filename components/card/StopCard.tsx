@@ -18,7 +18,6 @@ export default function StopCard({ location, address, distanceKm, onPress }: Sto
         <View className="flex-1 flex-row items-center gap-3">
           {/* Bus Stop Icon */}
           <View className="items-center">
-            {/* TODO: revalidate icon size */}
             <Icon family="MaterialCommunityIcons" name="bus-stop" size={26} />
             {distanceKm != null && (
               <ThemedText color="text_muted" variant="h100">

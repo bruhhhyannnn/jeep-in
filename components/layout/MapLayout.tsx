@@ -1,6 +1,6 @@
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { MapboxMap } from "@/components/map";
-import { ButtonIcon, ThemedText } from "@/components/ui";
+import { ButtonIcon, Icon, ThemedText } from "@/components/ui";
 import { usePathname } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRecenterToUser } from "@/hooks";
@@ -72,7 +72,7 @@ const MapLayout = ({ children }: { children: ReactNode }) => {
                   <View className="h-1.5 w-4 rounded-full bg-[#f59e0b]" />
                   <View className="h-1.5 w-2 rounded-full bg-[#f59e0b]" />
                 </View>
-                <ThemedText variant="h100">Going laoag</ThemedText>
+                <ThemedText variant="h100">Going paoay</ThemedText>
               </View>
             </View>
           </View>
