@@ -25,7 +25,7 @@ export const STRINGS = {
 
   // Auth - Section
   auth: {
-    title: "Sign In to JEEP'IN",
+    title: "Sign In to JEEP-IN",
     email: "Email",
     password: "Password",
     emailPasswordRequired: "Both email and password are required.",

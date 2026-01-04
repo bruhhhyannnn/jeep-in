@@ -70,7 +70,7 @@ export const startBackgroundTracking = async () => {
       showsBackgroundLocationIndicator: true,
       pausesUpdatesAutomatically: true,
       foregroundService: {
-        notificationTitle: "JEEP'IN Driver Tracking",
+        notificationTitle: "JEEP-IN Driver Tracking",
         notificationBody: "Your location is being shared live.",
       },
     });
