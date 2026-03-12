@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useImperativeHandle, ReactNode } from "react";
+import { forwardRef, useRef, useImperativeHandle, ReactNode } from "react";
 import { BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useColorScheme } from "nativewind";
 import { BottomSheetModalBaseRef } from "@/types";

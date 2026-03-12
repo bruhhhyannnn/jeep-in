@@ -1,5 +1,5 @@
 import { STRINGS } from "@/constants";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { ThemedText, ButtonText, BottomSheetModalBase, ButtonCheckbox } from "@/components/ui/";
 import { BottomSheetModalBaseRef } from "@/types";
@@ -55,6 +55,7 @@ const FilterModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
               label={STRINGS.general.apply}
               fullWidth
               onPress={() => {
+                // TODO: add filter functionality
                 console.log("Apply filters", selectedRoutes);
                 baseRef.current?.close();
               }}

@@ -1,7 +1,7 @@
 import { STRINGS } from "@/constants";
 import { useNicknameStore } from "@/store";
 import { useThemeStore } from "@/store";
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
 import type { ThemeMode } from "@/types";
@@ -101,6 +101,7 @@ function NicknameView({ onBack }: { onBack: () => void }) {
           <ButtonText
             label={STRINGS.general.apply}
             fullWidth
+            // TODO: add filter functionality
             onPress={() => console.log("Apply filters")}
             disabled
           />

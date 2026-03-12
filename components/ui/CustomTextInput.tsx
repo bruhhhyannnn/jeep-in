@@ -1,4 +1,3 @@
-import React from "react";
 import { TextInputProps } from "react-native";
 import Icon from "@/components/ui/Icon";
 import ThemedView from "@/components/ui/ThemedView";

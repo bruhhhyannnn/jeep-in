@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View, Switch } from "react-native";
 import { BottomSheetModalBase, ThemedText, ThemedView } from "@/components/ui";
 import { BottomSheetModalBaseRef } from "@/types";

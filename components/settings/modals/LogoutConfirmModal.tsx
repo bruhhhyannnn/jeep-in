@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { View } from "react-native";
 import { ThemedText, ButtonText, BottomSheetModalBase } from "@/components/ui/";
 import { BottomSheetModalBaseRef } from "@/types";

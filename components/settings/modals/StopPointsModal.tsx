@@ -1,7 +1,7 @@
 import { useStopsList } from "@/hooks";
 import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import  { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { StopCard } from "@/components/card";

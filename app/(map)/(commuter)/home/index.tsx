@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";

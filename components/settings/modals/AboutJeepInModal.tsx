@@ -1,5 +1,5 @@
 import { STRINGS } from "@/constants";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import * as Clipboard from "expo-clipboard";
 import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
 import { openWebsite } from "@/lib/linkActions";

@@ -1,6 +1,6 @@
 import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/lib/linkActions";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBase, ThemedText, ButtonText } from "@/components/ui";
 import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";

@@ -19,7 +19,7 @@ export default function RootScreen() {
   }
 
   if (role === "commuter") {
-    return <Redirect href={ROUTES.commuter.home} />;
+    return <Redirect href={ROUTES.onboarding.welcome} />;
   }
 
   if (role === "driver") {

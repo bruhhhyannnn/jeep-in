@@ -1,4 +1,3 @@
-import React from "react";
 import { TextInput, TextInputProps, StyleSheet } from "react-native";
 import { useColorScheme } from "nativewind";
 

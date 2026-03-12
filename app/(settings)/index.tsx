@@ -1,6 +1,6 @@
 import { ROUTES, STRINGS } from "@/constants";
 import { useNicknameStore } from "@/store";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonIcon } from "@/components/ui";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
