@@ -89,14 +89,14 @@ export const stopBackgroundTracking = async () => {
 
   if (running) {
     await Location.stopLocationUpdatesAsync(DRIVER_LOCATION_TASK);
-    console.log("🛑 Background tracking stopped.");
+    console.log("Background tracking stopped.");
   }
 
   if (foregroundWatcher && isForegroundActive) {
     await foregroundWatcher.remove();
     foregroundWatcher = null;
     isForegroundActive = false;
-    console.log("🛑 Foreground fallback stopped.");
+    console.log("Foreground fallback stopped.");
   }
 
   showWarning("Tracking stopped.");
@@ -137,7 +137,7 @@ export const startForegroundFallback = async () => {
         updated_at: new Date().toISOString(),
       });
 
-      console.log("📍 Foreground update sent:", latitude, longitude);
+      console.log("Foreground update sent:", latitude, longitude);
     },
   );
 

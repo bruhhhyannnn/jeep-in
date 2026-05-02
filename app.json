@@ -10,7 +10,6 @@
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "jeepin2",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -20,7 +19,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/adaptive-icon.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.bruhhhyannnn.jeepin2",
       "permissions": [

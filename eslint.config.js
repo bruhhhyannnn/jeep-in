@@ -1,12 +1,15 @@
-const { defineConfig } = require("eslint/config");
+import js from "@eslint/js";
+import prettier from "eslint-plugin-prettier";
 
-module.exports = defineConfig({
-  extends: ["expo", "prettier"],
-  plugins: {
-    prettier: require("eslint-plugin-prettier"),
+export default [
+  js.configs.recommended,
+  {
+    plugins: {
+      prettier,
+    },
+    rules: {
+      "prettier/prettier": "error",
+    },
+    ignores: ["node_modules/**", "dist/**", "build/**"],
   },
-  rules: {
-    "prettier/prettier": "error",
-  },
-  ignorePatterns: ["node_modules", "dist", "build"],
-});
+];
