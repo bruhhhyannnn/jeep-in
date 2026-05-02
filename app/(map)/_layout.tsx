@@ -1,5 +1,5 @@
 import { Slot } from "expo-router";
-import { MapProvider } from "@/context";
+import { MapProvider } from "@/store";
 import { MapLayout } from "@/components/layout";
 
 export default function MapViewLayout() {

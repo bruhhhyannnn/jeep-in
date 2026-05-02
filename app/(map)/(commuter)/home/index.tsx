@@ -6,8 +6,8 @@ import { JeepCard, StopCard } from "@/components/card";
 import { FilterModal } from "@/components/commuter";
 import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
 import { BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
-import { useMapInitStore } from "@/context";
-import { distanceKm } from "@/utils/distance";
+import { useMapInitStore } from "@/store";
+import { distanceKm } from "@/utils";
 import {
   useKeyboardSheet,
   useRecenterToUser,

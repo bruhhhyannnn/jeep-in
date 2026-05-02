@@ -1,6 +1,6 @@
 import { Redirect } from "expo-router";
 import { ROUTES } from "@/constants";
-import { useRoleStore } from "@/context";
+import { useRoleStore } from "@/store";
 import { useEffect } from "react";
 
 export default function RootScreen() {

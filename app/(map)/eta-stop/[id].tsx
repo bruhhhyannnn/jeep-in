@@ -7,7 +7,7 @@ import { View } from "react-native";
 import { useRecenterToUser, useLocationCurrent } from "@/hooks";
 import { useEffect, useState } from "react";
 import { getDrivingDirections } from "@/services/mapbox/getDirections";
-import { useMap } from "@/context/map/MapContext";
+import { useMap } from "@/store";
 
 export default function EtaStopPointInfoScreen() {
   const map = useMap();

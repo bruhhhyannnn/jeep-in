@@ -6,7 +6,7 @@ import { ThemedText, SafeAreaContainer, ButtonIcon } from "@/components/ui";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
-import { useRoleStore } from "@/context";
+import { useRoleStore } from "@/store";
 import {
   SettingsCard,
   CustomDivider,

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem 'C:\\\\Users\\\\Bryan Jesus Mangapit\\\\Desktop\\\\JEEP-IN\\\\src\\\\context' -Recurse)",
+      "Bash(Select-Object FullName)"
+    ]
+  }
+}

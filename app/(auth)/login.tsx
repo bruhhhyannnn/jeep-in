@@ -2,7 +2,7 @@ import { useState } from "react";
 import { router } from "expo-router";
 import { ThemedText, CustomTextInput, ButtonText, ThemedView } from "@/components/ui";
 import { loginWithEmailPassword } from "@/services/firebase/auth";
-import { useRoleStore } from "@/context";
+import { useRoleStore } from "@/store";
 import { Image, View } from "react-native";
 import { getUserProfile } from "@/services/firebase/users";
 import { UserRole } from "@/types";

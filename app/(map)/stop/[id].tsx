@@ -4,7 +4,7 @@ import { StopTitleBadge } from "@/components/badge";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
-import { useMap } from "@/context/map/MapContext";
+import { useMap } from "@/store";
 import { useEffect } from "react";
 
 export default function StopPointInfoScreen() {

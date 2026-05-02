@@ -2,10 +2,10 @@ import * as SecureStore from "expo-secure-store";
 import { View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { BottomSheetContainer, ThemedText, ButtonText, Icon } from "@/components/ui";
-import { useAuthStore } from "@/context";
+import { useAuthStore } from "@/store";
 import { showWarning } from "@/services/ui/toasts";
 import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
-import { useMap } from "@/context/map/MapContext";
+import { useMap } from "@/store";
 import { STRINGS } from "@/constants";
 import type { BottomSheetContainerRef, Jeepney } from "@/types";
 import {

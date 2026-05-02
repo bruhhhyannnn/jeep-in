@@ -7,7 +7,7 @@ import { View } from "react-native";
 import { useEffect, useState } from "react";
 import { getDrivingDirections } from "@/services/mapbox/getDirections";
 import { useLocationCurrent } from "@/hooks";
-import { useMap } from "@/context/map/MapContext";
+import { useMap } from "@/store";
 import { JeepneyStatus } from "@/types";
 
 export default function EtaJeepneyInfoScreen() {

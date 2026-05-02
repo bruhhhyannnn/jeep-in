@@ -5,7 +5,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { ThemedText, ButtonText, Icon } from "@/components/ui";
 import { StopCard } from "@/components/card";
 import { JeepStatusBadge } from "@/components/badge";
-import { useMap } from "@/context/map/MapContext";
+import { useMap } from "@/store";
 import { useEffect } from "react";
 import { JeepneyStatus } from "@/types";
 import { useDriverLocation } from "@/hooks/useDriverLocation";
