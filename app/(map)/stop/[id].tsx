@@ -1,6 +1,5 @@
 import { STRINGS } from "@/constants";
 import { ContentLayout } from "@/components/layout";
-import { StopTitleBadge } from "@/components/badge";
 import { ButtonText, Icon, ThemedText, ThemedView } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
@@ -12,7 +11,6 @@ export default function StopPointInfoScreen() {
 
   const id = params.id as string;
   const name = (params.name as string) ?? id;
-  const landmark_name = params.landmark_name as string;
   const address = params.address as string;
   const route_id = (params.route_id as string) ?? "";
   const lat = params.lat as string | undefined;
@@ -36,14 +34,11 @@ export default function StopPointInfoScreen() {
               {name}
             </ThemedText>
           </View>
-          <View className="flex-row items-start gap-2">
-            {landmark_name && <StopTitleBadge title={landmark_name} />}
-            {route_id && (
-              <ThemedText color="text_muted" numberOfLines={1}>
-                {route_id}
-              </ThemedText>
-            )}
-          </View>
+          {route_id && (
+            <ThemedText color="text_muted" numberOfLines={1}>
+              {route_id}
+            </ThemedText>
+          )}
         </View>
 
         <View className="flex-1 gap-1">
@@ -69,7 +64,6 @@ export default function StopPointInfoScreen() {
                 params: {
                   id,
                   name,
-                  landmark_name,
                   address,
                   route_id,
                   lat,

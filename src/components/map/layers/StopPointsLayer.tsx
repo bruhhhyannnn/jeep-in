@@ -1,16 +1,31 @@
 import { ShapeSource, CircleLayer, SymbolLayer } from "@rnmapbox/maps";
 import { router } from "expo-router";
 import type { FeatureCollection, Point } from "geojson";
-import { useStops } from "@/hooks";
+import { useStopPoints } from "@/hooks";
 import { useMap } from "@/store";
 
 export default function StopPointsLayer() {
   const map = useMap();
+  const { data: stops = [] } = useStopPoints();
 
-  const geoJson = useStops();
-  if (!geoJson) return null;
+  const featureCollection: FeatureCollection<Point> = {
+    type: "FeatureCollection",
+    features: stops.map((s) => ({
+      type: "Feature",
+      id: s.id,
+      properties: {
+        name: s.name,
+        address: s.address,
+        route_id: s.routeId,
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [s.long, s.lat],
+      },
+    })),
+  };
 
-  const featureCollection = geoJson as FeatureCollection<Point>;
+  if (!featureCollection.features.length) return null;
 
   return (
     <ShapeSource
@@ -38,7 +53,6 @@ export default function StopPointsLayer() {
           params: {
             id: String(feature.id ?? ""),
             name: String(props.name ?? ""),
-            landmark_name: String(props.landmark_name ?? ""),
             address: String(props.address ?? ""),
             route_id: String(props.route_id ?? ""),
             lat: String(lat),
@@ -52,8 +66,8 @@ export default function StopPointsLayer() {
         id="stopCircleGlow"
         filter={["!", ["has", "point_count"]]}
         style={{
-          circleRadius: 15, // bigger than inner circle
-          circleColor: "rgba(16,185,129,0.4)", // soft emerald glow (20% opacity)
+          circleRadius: 15,
+          circleColor: "rgba(16,185,129,0.4)",
           circlePitchAlignment: "map",
         }}
       />
@@ -71,7 +85,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 2. Cluster bubble (NEW) */}
+      {/* 2. Cluster bubble */}
       <CircleLayer
         id="stopClusterCircle"
         filter={["has", "point_count"]}
@@ -83,7 +97,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 3. Cluster text (NEW) */}
+      {/* 3. Cluster text */}
       <SymbolLayer
         id="stopClusterText"
         filter={["has", "point_count"]}
@@ -98,12 +112,12 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 4. Landmark Name Label */}
+      {/* 4. Stop Name Label */}
       <SymbolLayer
         id="stopLabel"
         filter={["!", ["has", "point_count"]]}
         style={{
-          textField: ["get", "landmark_name"],
+          textField: ["get", "name"],
           textSize: 11,
           textColor: "#ecfdf5",
           textHaloColor: "#022c22",

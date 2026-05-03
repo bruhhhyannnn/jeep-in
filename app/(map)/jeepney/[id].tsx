@@ -34,10 +34,7 @@ export default function JeepneyInfoScreen() {
   useEffect(() => {
     if (!driver) return;
 
-    map.current?.flyTo(
-      [driver.longitude, driver.latitude],
-      800, // animation duration
-    );
+    map.current?.flyTo([driver.long, driver.lat], 800);
   }, [driver]);
 
   return (

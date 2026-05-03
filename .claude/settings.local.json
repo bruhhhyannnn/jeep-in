@@ -4,7 +4,9 @@
       "Bash(Get-ChildItem 'C:\\\\Users\\\\Bryan Jesus Mangapit\\\\Desktop\\\\JEEP-IN\\\\src\\\\context' -Recurse)",
       "Bash(Select-Object FullName)",
       "Bash(Get-Content *)",
-      "Bash(Get-ChildItem C:\\\\Users\\\\Bryan Jesus Mangapit\\\\Desktop\\\\JEEP-IN\\\\src\\\\services\\\\assignments *)"
+      "Bash(Get-ChildItem C:\\\\Users\\\\Bryan Jesus Mangapit\\\\Desktop\\\\JEEP-IN\\\\src\\\\services\\\\assignments *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Bryan Jesus Mangapit\\\\Desktop\\\\JEEP-IN\\\\app\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)"
     ]
   }
 }

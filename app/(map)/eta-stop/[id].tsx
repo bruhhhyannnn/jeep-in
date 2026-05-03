@@ -17,7 +17,6 @@ export default function EtaStopPointInfoScreen() {
 
   const id = params.id as string;
   const name = params.name as string;
-  const landmark_name = params.landmark_name as string;
   const address = params.address as string;
   const route_id = params.route_id as string;
   const lat = params.lat as string;
@@ -131,7 +130,7 @@ export default function EtaStopPointInfoScreen() {
             </ThemedText>
 
             <StopCard
-              location={landmark_name || name}
+              location={name}
               address={address}
               onPress={() =>
                 router.push({
@@ -139,7 +138,6 @@ export default function EtaStopPointInfoScreen() {
                   params: {
                     id,
                     name,
-                    landmark_name,
                     address,
                     route_id,
                     lat,

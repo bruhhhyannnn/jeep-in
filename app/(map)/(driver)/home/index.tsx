@@ -11,6 +11,8 @@ import {
   startBackgroundTracking,
   stopBackgroundTracking,
 } from "@/services/location/driverTracking";
+import { subscribeToAssignedJeepney } from "@/api";
+import { useDriverLocation } from "@/hooks";
 
 export default function DriverHomeScreen() {
   // Ref for bottom sheet container
@@ -25,6 +27,8 @@ export default function DriverHomeScreen() {
   // Local State
   const [tracking, setTracking] = useState(false);
   const [assignedJeepney, setAssignedJeepney] = useState<Jeepney | null>(null);
+
+  const driverLocation = useDriverLocation(user?.uid ?? "");
 
   // START TRACKING
   const handleStart = async () => {
@@ -70,16 +74,10 @@ export default function DriverHomeScreen() {
 
   // FOLLOW DRIVER LOCATION USING MAP CAMERA
   useEffect(() => {
-    if (!tracking) return;
-    if (!assignedJeepney) return;
-
-    const { latitude, longitude } = assignedJeepney;
-
-    if (typeof latitude !== "number" || typeof longitude !== "number") return;
-    if (latitude === 0 || longitude === 0) return;
-
-    map.current?.flyTo([longitude, latitude], 800);
-  }, [tracking, assignedJeepney]);
+    if (!tracking || !driverLocation) return;
+    if (driverLocation.lat === 0 || driverLocation.long === 0) return;
+    map.current?.flyTo([driverLocation.long, driverLocation.lat], 800);
+  }, [tracking, driverLocation]);
 
   return (
     <View className="absolute inset-0">
@@ -152,7 +150,7 @@ export default function DriverHomeScreen() {
                     </ThemedText>
                     <Icon family="MaterialCommunityIcons" name="bus" size={18} />
                     <ThemedText className="text-dodger-blue-600 dark:text-dodger-blue-600">
-                      {assignedJeepney?.plate_number}
+                      {assignedJeepney?.plateNumber}
                     </ThemedText>
                   </View>
                 )}
