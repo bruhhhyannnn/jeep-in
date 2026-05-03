@@ -8,7 +8,9 @@ export { default as Icon } from "@/components/ui/Icon";
 export { default as BottomSheetContainer } from "@/components/ui/BottomSheetContainer";
 export { default as BottomSheetModalBase } from "@/components/ui/BottomSheetModalBase";
 export { default as BottomSheetModalBaseRef } from "@/components/ui/BottomSheetModalBase";
-export { default as ThemedTextInput } from "@/components/ui/ThemedTextInput";
 export { default as CustomTextInput } from "@/components/ui/CustomTextInput";
 export { default as ButtonCheckbox } from "@/components/ui/ButtonCheckbox";
 export { default as ButtonRadio } from "@/components/ui/ButtonRadio";
+
+// TODO: unused
+export { default as ThemedTextInput } from "@/components/ui/ThemedTextInput";

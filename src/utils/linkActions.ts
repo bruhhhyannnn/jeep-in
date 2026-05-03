@@ -1,6 +1,7 @@
 import * as Linking from "expo-linking";
 import { Alert, Platform } from "react-native";
 
+// TODO: unused
 // Safely opens a URL with error handling.
 export async function openURLSafe(url: string) {
   try {
@@ -32,6 +33,7 @@ export function openWebsite(url: string) {
   openURLSafe(url.startsWith("http") ? url : `https://${url}`);
 }
 
+// TODO: unused
 // Opens a map direction using Google Maps or Apple Maps.
 export function openMap(lat: number, lng: number, label?: string) {
   const query = encodeURIComponent(label ?? "Location");

@@ -2,16 +2,6 @@
 export type Timestamp = string | Date; // Firestore timestamp or JS date
 export type UserRole = "commuter" | "driver";
 export type JeepneyStatus = "On route" | "Stationed" | "Out of service";
-export type DriverStatus = "active" | "inactive";
-
-// Route
-export interface Route {
-  id: string;
-  name: string; // e.g., "Laoag Paoay (via Batac)"
-  route_direction: string[]; // ["laoag_paoay", "paoay_laoag"]
-  created_at: Timestamp;
-  updated_at: Timestamp;
-}
 
 // Pickup Point
 export interface PickupPoint {
@@ -52,16 +42,6 @@ export interface User {
   name: string;
   role: UserRole;
   profile_image_url?: string; // optional Firebase Storage URL
-  created_at: Timestamp;
-  updated_at: Timestamp;
-}
-
-// Driver Profile
-export interface DriverProfile {
-  id: string;
-  user_id: string; // FK → User.id
-  route_id: string; // FK → Route.id
-  status: DriverStatus; // "active" | "inactive"
   created_at: Timestamp;
   updated_at: Timestamp;
 }

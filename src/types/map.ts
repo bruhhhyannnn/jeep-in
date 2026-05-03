@@ -5,5 +5,3 @@ export type MapboxMapRef = {
 
   zoomInAt?: (coords: [number, number], zoomIncrement?: number) => void;
 };
-
-export type MapRef = React.RefObject<MapboxMapRef> | { current: MapboxMapRef | null };

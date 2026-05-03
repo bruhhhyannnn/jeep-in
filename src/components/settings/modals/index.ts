@@ -6,4 +6,5 @@ export { default as GetSupportModal } from "@/components/settings/modals/GetSupp
 export { default as AboutJeepInModal } from "@/components/settings/modals/AboutJeepInModal";
 export { default as LogoutConfirmModal } from "@/components/settings/modals/LogoutConfirmModal";
 
+// TODO: unused
 export { default as SettingsModalCard } from "@/components/settings/modals/SettingsModalCard";
