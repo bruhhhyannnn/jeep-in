@@ -27,8 +27,9 @@ const SettingsScreen = () => {
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
   const logoutRef = useRef<BottomSheetModalBaseRef>(null);
 
-  const { user, role, clearRole } = useAuthStore();
-  const displayName = user?.displayName ?? "User";
+  const { role, clearRole } = useAuthStore();
+  // const displayName = user?.displayName ?? "User";
+  const displayName = "User";
   const canLogout = role === "driver";
 
   return (
