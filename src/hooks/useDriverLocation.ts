@@ -1,21 +1,14 @@
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/services/firebase/config";
 import { useEffect, useState } from "react";
+import { subscribeToDriverLocation } from "@/api";
+import type { DriverLocation } from "@/types";
 
 export function useDriverLocation(driverId: string) {
-  const [driver, setDriver] = useState<any>(null);
+  const [location, setLocation] = useState<DriverLocation | null>(null);
 
   useEffect(() => {
     if (!driverId) return;
-
-    const unsub = onSnapshot(doc(db, "jeepneys", driverId), (doc) => {
-      if (doc.exists()) {
-        setDriver(doc.data());
-      }
-    });
-
-    return () => unsub();
+    return subscribeToDriverLocation(driverId, setLocation);
   }, [driverId]);
 
-  return driver;
+  return location;
 }

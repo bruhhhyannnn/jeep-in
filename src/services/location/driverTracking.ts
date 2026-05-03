@@ -1,8 +1,7 @@
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, updateDoc, doc } from "firebase/firestore";
 import { db, getAuthInstance } from "@/services/firebase/config";
-import { updateDocument } from "@/services/firebase/firestore";
 import { showWarning, showError, showSuccess } from "@/services/ui/toasts";
 
 export const DRIVER_LOCATION_TASK = "driver-background-location-task";
@@ -24,7 +23,7 @@ const pushLocation = async (coords: Location.LocationObjectCoords) => {
       { driverId, lat: latitude, long: longitude, heading: heading ?? null, isSharing: true },
       { merge: true },
     ),
-    updateDocument("drivers", driverId, {
+    updateDoc(doc(db, "drivers", driverId), {
       lastLocationUpdate: new Date().toISOString(),
     }),
   ]);

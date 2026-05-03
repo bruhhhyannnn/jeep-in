@@ -8,10 +8,9 @@ export async function getDrivingDirections(start: [number, number], end: [number
   }
 
   const route = json.routes[0];
-
   return {
     coordinates: route.geometry.coordinates as [number, number][],
-    duration: route.duration,
-    distance: route.distance,
+    duration: route.duration as number,
+    distance: route.distance as number,
   };
 }

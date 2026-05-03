@@ -1,19 +1,17 @@
 import { Redirect } from "expo-router";
 import { ROUTES } from "@/constants";
-import { useRoleStore } from "@/store";
+import { useAuthStore } from "@/store";
 import { useEffect } from "react";
 
 export default function RootScreen() {
-  const { role, hydrated, hydrate } = useRoleStore();
+  const { role, roleHydrated, hydrateRole } = useAuthStore();
 
-  // Hydrate role when app loads
   useEffect(() => {
-    hydrate();
+    hydrateRole();
   }, []);
 
-  if (!hydrated) return null;
+  if (!roleHydrated) return null;
 
-  // Reroute logic
   if (!role) {
     return <Redirect href={ROUTES.onboarding.roleSelection} />;
   }
@@ -26,6 +24,5 @@ export default function RootScreen() {
     return <Redirect href={ROUTES.driver.home} />;
   }
 
-  // Fallback (should never happen)
   return <Redirect href={ROUTES.onboarding.welcome} />;
 }

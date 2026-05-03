@@ -1,7 +1,8 @@
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from "firebase/auth";
-import { getDocument } from "@/services/firebase/firestore";
+import { db, getAuthInstance } from "@/services/firebase/config";
 import type { User as AppUser } from "@/types";
-import { getAuthInstance } from "@/services/firebase/config";
+import { doc, getDoc } from "firebase/firestore";
+
 const auth = getAuthInstance();
 
 export type AuthUser = {
@@ -16,7 +17,6 @@ export const loginWithEmailPassword = async (email: string, password: string) =>
 
 export const logout = () => signOut(auth);
 
-// Listen for auth changes + load role from /users collection
 export const listenToAuth = (callback: (user: AuthUser | null) => void) => {
   return onAuthStateChanged(auth, async (firebaseUser: User | null) => {
     if (!firebaseUser) {
@@ -24,8 +24,8 @@ export const listenToAuth = (callback: (user: AuthUser | null) => void) => {
       return;
     }
 
-    // Load role from Firestore users collection
-    const userDoc = await getDocument<AppUser>("users", firebaseUser.uid);
+    const snap = await getDoc(doc(db, "users", firebaseUser.uid));
+    const userDoc = snap.exists() ? (snap.data() as AppUser) : null;
 
     callback({
       uid: firebaseUser.uid,

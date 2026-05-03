@@ -6,7 +6,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
 import { useRecenterToUser, useLocationCurrent } from "@/hooks";
 import { useEffect, useState } from "react";
-import { getDrivingDirections } from "@/services/mapbox/getDirections";
+import { getDrivingDirections } from "@/api";
 import { useMap } from "@/store";
 
 export default function EtaStopPointInfoScreen() {

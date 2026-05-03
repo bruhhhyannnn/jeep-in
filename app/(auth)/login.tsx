@@ -2,10 +2,9 @@ import { useState } from "react";
 import { router } from "expo-router";
 import { ThemedText, CustomTextInput, ButtonText, ThemedView } from "@/components/ui";
 import { loginWithEmailPassword } from "@/services/firebase/auth";
-import { useRoleStore } from "@/store";
+import { useAuthStore } from "@/store";
 import { Image, View } from "react-native";
-import { getUserProfile } from "@/services/firebase/users";
-import { UserRole } from "@/types";
+import { getUser } from "@/api";
 import { ROUTES, STRINGS } from "@/constants";
 
 export default function LoginScreen() {
@@ -13,7 +12,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setRole } = useRoleStore();
+  const { setRole } = useAuthStore();
 
   const handleLogin = async () => {
     try {
@@ -30,30 +29,25 @@ export default function LoginScreen() {
       const userCred = await loginWithEmailPassword(email.trim(), password);
       const uid = userCred.user.uid;
 
-      // 2) Get user profile
-      const profile = await getUserProfile(uid);
+      // 2) Get user profile from Firestore
+      const profile = await getUser(uid);
       if (!profile) {
         setError(STRINGS.auth.userNotFound);
         return;
       }
 
-      const role = profile.role as UserRole;
-
-      // 3) Only allow DRIVERS to log in
-      if (role !== "driver") {
+      // 3) Only allow drivers to log in
+      if (profile.role !== "driver") {
         setError(STRINGS.auth.accountNotAllowed);
         return;
       }
 
-      // 4) Set role and route
+      // 4) Persist role and route
       await setRole("driver");
 
-      // 5) Remove all stacked screens
       router.dismissAll();
-
-      // 6) Reroute to designate driver screen
       router.replace(ROUTES.driver.home);
-    } catch (e: any) {
+    } catch {
       setError(STRINGS.auth.invalidCredentials);
     } finally {
       setSubmitting(false);

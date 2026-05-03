@@ -1,7 +1,6 @@
 import { STRINGS } from "@/constants";
-import { useNicknameStore } from "@/store";
 import { useThemeStore } from "@/store";
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
 import type { ThemeMode } from "@/types";
@@ -76,11 +75,6 @@ function DefaultThemesAvatarView({
 
 // Nickname View
 function NicknameView({ onBack }: { onBack: () => void }) {
-  const { nickname, loadNickname } = useNicknameStore();
-  useEffect(() => {
-    loadNickname();
-  }, []);
-
   return (
     <View className="gap-4">
       {/* TODO: */}

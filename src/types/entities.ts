@@ -1,47 +1,58 @@
-// Shared Types & Enums
-export type Timestamp = string | Date; // Firestore timestamp or JS date
 export type UserRole = "commuter" | "driver";
 export type JeepneyStatus = "On route" | "Stationed" | "Out of service";
 
-// Pickup Point
-export interface PickupPoint {
+export interface User {
   id: string;
-  route_id: string; // FK → Route.id
-  name: string;
-  landmark_name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  image_url?: string; // optional landmark image
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  email: string;
+  displayName: string;
+  role: UserRole;
+  isActive: boolean;
 }
 
-// Jeepney
+export interface DriverLocation {
+  id: string;
+  driverId: string;
+  lat: number;
+  long: number;
+  heading: number | null;
+  isSharing: boolean;
+}
+
 export interface Jeepney {
   id: string;
-  route_id: string; // FK → Route.id
-  driver_profile_id: string; // FK → DriverProfile.id
-  plate_number: string;
-  latitude: number;
-  longitude: number;
-  speed?: number;
-  bearing?: number;
-  current_direction?: string; // must match Route.route_direction
-  last_pickup_point_id?: string; // FK → PickupPoint.id
-  next_pickup_point_id?: string; // FK → PickupPoint.id
-  status: JeepneyStatus;
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  plateNumber: string;
+  jeepneyNumber: string;
+  organizationId: string;
+  routeId: string;
+  assignedDriverId: string | null;
+  status?: JeepneyStatus;
 }
 
-// User
-export interface User {
-  id: string; // Firebase UID
-  email: string;
+export interface StopPoint {
+  id: string;
   name: string;
-  role: UserRole;
-  profile_image_url?: string; // optional Firebase Storage URL
-  created_at: Timestamp;
-  updated_at: Timestamp;
+  address: string;
+  routeId: string;
+  routeDirection: string;
+  lat: number;
+  long: number;
+  order: number;
+  isActive: boolean;
+}
+
+export interface Route {
+  id: string;
+  name: string;
+  directions: string[];
+  isActive: boolean;
+  workingHours: { start: string; end: string };
+}
+
+export interface FareGuide {
+  id: string;
+  routeId: string;
+  stopPointName: string;
+  distanceKm: number;
+  regularFare: number;
+  discountedFare: number;
 }

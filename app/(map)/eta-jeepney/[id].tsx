@@ -5,7 +5,7 @@ import { Icon, ThemedText } from "@/components/ui";
 import { useLocalSearchParams, router } from "expo-router";
 import { View } from "react-native";
 import { useEffect, useState } from "react";
-import { getDrivingDirections } from "@/services/mapbox/getDirections";
+import { getDrivingDirections } from "@/api";
 import { useLocationCurrent } from "@/hooks";
 import { useMap } from "@/store";
 import { JeepneyStatus } from "@/types";

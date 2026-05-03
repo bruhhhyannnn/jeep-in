@@ -8,7 +8,7 @@ import { JeepStatusBadge } from "@/components/badge";
 import { useMap } from "@/store";
 import { useEffect } from "react";
 import { JeepneyStatus } from "@/types";
-import { useDriverLocation } from "@/hooks/useDriverLocation";
+import { useDriverLocation } from "@/hooks";
 
 export default function JeepneyInfoScreen() {
   const params = useLocalSearchParams();

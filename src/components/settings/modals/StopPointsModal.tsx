@@ -1,4 +1,4 @@
-import { useStopsList } from "@/hooks";
+import { useStopPoints } from "@/hooks";
 import { STRINGS } from "@/constants";
 import { callNumber, sendEmail } from "@/utils";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
@@ -40,7 +40,7 @@ export default StopPointsModal;
 
 // Default View
 function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
-  const stops = useStopsList();
+  const { data: stops = [] } = useStopPoints();
 
   return (
     <View className="gap-4">
@@ -59,7 +59,7 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
             stops.map((s) => (
               <StopCard
                 key={s.id}
-                location={s.landmark_name}
+                location={s.name}
                 address={s.address}
                 onPress={() =>
                   router.push({
@@ -67,11 +67,10 @@ function DefaultStopPointsView({ onHelp }: { onHelp: () => void }) {
                     params: {
                       id: s.id,
                       name: s.name,
-                      landmark_name: s.landmark_name,
                       address: s.address,
-                      route_id: s.route_id,
-                      lat: String(s.latitude),
-                      lng: String(s.longitude),
+                      route_id: s.routeId,
+                      lat: String(s.lat),
+                      lng: String(s.long),
                     },
                   })
                 }

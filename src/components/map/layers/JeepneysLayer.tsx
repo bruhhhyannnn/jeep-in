@@ -1,6 +1,6 @@
 import { ShapeSource, CircleLayer, SymbolLayer } from "@rnmapbox/maps";
 import { router } from "expo-router";
-import { useJeepneys } from "@/hooks/useJeepneys";
+import { useJeepneys } from "@/hooks";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { useMap } from "@/store";
 

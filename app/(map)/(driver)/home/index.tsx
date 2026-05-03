@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { BottomSheetContainer, ThemedText, ButtonText, Icon } from "@/components/ui";
 import { useAuthStore } from "@/store";
 import { showWarning } from "@/services/ui/toasts";
-import { subscribeToAssignedJeepney } from "@/services/assignments/subscribeToAssignedJeepney";
 import { useMap } from "@/store";
 import { STRINGS } from "@/constants";
 import type { BottomSheetContainerRef, Jeepney } from "@/types";

@@ -2,10 +2,10 @@ import { ROUTES, STRINGS } from "@/constants";
 import { router } from "expo-router";
 import { View, Image } from "react-native";
 import { SafeAreaContainer, ThemedView, ThemedText, ButtonText } from "@/components/ui";
-import { useRoleStore } from "@/store";
+import { useAuthStore } from "@/store";
 
 const RoleSelectionScreen = () => {
-  const { setRole } = useRoleStore();
+  const { setRole } = useAuthStore();
 
   return (
     <SafeAreaContainer>

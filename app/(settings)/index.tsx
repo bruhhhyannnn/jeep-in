@@ -1,12 +1,11 @@
 import { ROUTES, STRINGS } from "@/constants";
-import { useNicknameStore } from "@/store";
-import { useEffect, useRef } from "react";
+import { useAuthStore } from "@/store";
+import { useRef } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { ThemedText, SafeAreaContainer, ButtonIcon } from "@/components/ui";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetModalBaseRef } from "@/types";
 import { router } from "expo-router";
-import { useRoleStore } from "@/store";
 import {
   SettingsCard,
   CustomDivider,
@@ -20,7 +19,6 @@ import {
 } from "@/components/settings";
 
 const SettingsScreen = () => {
-  // Modal Refs
   const stopPointsRef = useRef<BottomSheetModalBaseRef>(null);
   const fareGuideRef = useRef<BottomSheetModalBaseRef>(null);
   const accessibilityRef = useRef<BottomSheetModalBaseRef>(null);
@@ -29,14 +27,8 @@ const SettingsScreen = () => {
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
   const logoutRef = useRef<BottomSheetModalBaseRef>(null);
 
-  // Load user nickname
-  const { nickname, loadNickname } = useNicknameStore();
-  useEffect(() => {
-    loadNickname();
-  }, []);
-
-  // Use clear role from role store
-  const { role, clearRole } = useRoleStore();
+  const { user, role, clearRole } = useAuthStore();
+  const displayName = user?.displayName ?? "User";
   const canLogout = role === "driver";
 
   return (
@@ -54,9 +46,8 @@ const SettingsScreen = () => {
                   🥳
                 </ThemedText>
                 <ThemedText variant="hero10" color="default_blue" className="uppercase">
-                  {STRINGS.settings.hello} {nickname}!
+                  {STRINGS.settings.hello} {displayName}!
                 </ThemedText>
-                {/* TODO: make this as to react when this app is installed to this device, someday */}
                 <ThemedText variant="h200" color="default_blue">
                   {STRINGS.settings.since} Jan. 1 2025
                 </ThemedText>
@@ -124,37 +115,29 @@ const SettingsScreen = () => {
               </View>
             </View>
 
-            {/* Role Selection Section */}
+            {/* Account Section */}
             <View className="gap-1">
               <ThemedText variant="h400" color="default_blue">
                 Account
               </ThemedText>
-
               <View className="overflow-hidden rounded-2xl">
                 {!canLogout && (
                   <SettingsCard
                     label={STRINGS.settings.logout.changeRole}
                     iconName="swap-horizontal-outline"
                     onPress={async () => {
-                      // Clear user role
                       await clearRole();
-
-                      // Remove all stacked screens
                       router.dismissAll();
-
-                      // Redirect to role selection screen
                       router.replace(ROUTES.onboarding.roleSelection);
                     }}
                   />
                 )}
                 {canLogout && (
-                  <>
-                    <SettingsCard
-                      label={STRINGS.settings.logout.logout}
-                      iconName="log-out-outline"
-                      onPress={() => logoutRef.current?.open()}
-                    />
-                  </>
+                  <SettingsCard
+                    label={STRINGS.settings.logout.logout}
+                    iconName="log-out-outline"
+                    onPress={() => logoutRef.current?.open()}
+                  />
                 )}
               </View>
             </View>
