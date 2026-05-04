@@ -24,11 +24,11 @@ export default function RootLayout() {
   const initAuth = useAuthStore((s) => s.init);
 
   const [fontsLoaded] = useFonts({
-    "Puffin-Regular": require("../assets/fonts/Puffin-Regular.otf"),
-    "Puffin-Medium": require("../assets/fonts/Puffin-Medium.otf"),
-    "Puffin-SemiBold": require("../assets/fonts/Puffin-SemiBold.otf"),
-    "Puffin-Bold": require("../assets/fonts/Puffin-Bold.otf"),
-    "Puffin-ExtraBold-Italic": require("../assets/fonts/Puffin-ExtraBold-Italic.otf"),
+    "Puffin-Regular": require("../src/assets/fonts/Puffin-Regular.otf"),
+    "Puffin-Medium": require("../src/assets/fonts/Puffin-Medium.otf"),
+    "Puffin-SemiBold": require("../src/assets/fonts/Puffin-SemiBold.otf"),
+    "Puffin-Bold": require("../src/assets/fonts/Puffin-Bold.otf"),
+    "Puffin-ExtraBold-Italic": require("../src/assets/fonts/Puffin-ExtraBold-Italic.otf"),
   });
 
   useEffect(() => {
