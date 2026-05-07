@@ -108,8 +108,7 @@ export const STRINGS = {
         title: "Help | Stop points",
 
         whatItDo: "WHAT'S IT DO?",
-        whatItDoContent:
-          "Provides a list of stop points or pickup points of commonly known PUV stops.",
+        whatItDoContent: "Provides a list of stop points of commonly known PUV stops.",
 
         concernsComplaints: "CONCERNS OR COMPLAINTS?",
         concernsComplaintsContent: "Contact the JEEP-IN team hotline or email address.",
@@ -128,8 +127,7 @@ export const STRINGS = {
         title: "Help | Fare guide",
 
         whatItDo: "WHAT'S IT DO?",
-        whatItDoContent:
-          "Provides a list of stop points or pickup points of commonly known PUV stops.",
+        whatItDoContent: "Provides a list of stop points of commonly known PUV stops.",
 
         fareCategory: "FARE CATEGORIES",
         fareCategoryContent: [

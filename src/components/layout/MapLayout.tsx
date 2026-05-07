@@ -49,7 +49,7 @@ const MapLayout = ({ children }: { children: ReactNode }) => {
                   {/* Inner circle */}
                   <View className="h-4 w-4 rounded-full border-2 border-white bg-[#10b981]" />
                 </View>
-                <ThemedText variant="h100">Pickup points</ThemedText>
+                <ThemedText variant="h100">Stop points</ThemedText>
               </View>
             </View>
 

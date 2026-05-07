@@ -8,7 +8,7 @@ export const onboardingData = [
   {
     id: 2,
     title: "Know Every Stop Point",
-    subtitle: "Find nearby jeepney stops and check your best pickup spot.",
+    subtitle: "Find nearby jeepney stops and check your best stop spot.",
     image: require("@/assets/images/onboarding-2.png"),
   },
   {
