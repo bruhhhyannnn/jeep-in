@@ -56,8 +56,7 @@
           "locationAlwaysAndWhenInUsePermission": "Allow JEEP-IN to use your location."
         }
       ],
-      "expo-web-browser",
-      "@sentry/react-native"
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
