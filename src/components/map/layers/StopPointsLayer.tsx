@@ -1,29 +1,37 @@
 import { ShapeSource, CircleLayer, SymbolLayer } from "@rnmapbox/maps";
 import { router } from "expo-router";
-import type { FeatureCollection, Point } from "geojson";
-import { useStopPoints } from "@/hooks";
+import { useEffect, useMemo, useState } from "react";
+import type { Feature, FeatureCollection, Point } from "geojson";
+import type { StopPoint } from "@/types";
+import { getStopPoints } from "@/api";
 import { useMap } from "@/store";
 
 export default function StopPointsLayer() {
   const map = useMap();
-  const { data: stops = [] } = useStopPoints();
+  const [stops, setStops] = useState<StopPoint[]>([]);
 
-  const featureCollection: FeatureCollection<Point> = {
-    type: "FeatureCollection",
-    features: stops.map((s) => ({
-      type: "Feature",
-      id: s.id,
-      properties: {
-        name: s.name,
-        address: s.address,
-        route_id: s.routeId,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [s.long, s.lat],
-      },
-    })),
-  };
+  useEffect(() => {
+    getStopPoints().then(setStops);
+  }, []);
+
+  const featureCollection = useMemo((): FeatureCollection<Point> => {
+    const features: Feature<Point>[] = stops
+      .filter((s) => s.isActive !== false)
+      .map((s) => ({
+        type: "Feature",
+        properties: {
+          name: s.name,
+          address: s.address,
+          route_id: s.routeId,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [Number(s.long), Number(s.lat)],
+        },
+      }));
+
+    return { type: "FeatureCollection", features };
+  }, [stops]);
 
   if (!featureCollection.features.length) return null;
 
@@ -39,7 +47,6 @@ export default function StopPointsLayer() {
 
         const props = feature.properties;
 
-        // If cluster → zoom in, don't open stop screen
         if (props.cluster) {
           const coords = feature.geometry.coordinates;
           map.current.zoomInAt?.(coords, 1.5);
@@ -61,7 +68,7 @@ export default function StopPointsLayer() {
         });
       }}
     >
-      {/* 0. Glow effect */}
+      {/* Glow effect */}
       <CircleLayer
         id="stopCircleGlow"
         filter={["!", ["has", "point_count"]]}
@@ -72,7 +79,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 1. Normal circles */}
+      {/* Normal circles */}
       <CircleLayer
         id="stopCircle"
         filter={["!", ["has", "point_count"]]}
@@ -85,7 +92,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 2. Cluster bubble */}
+      {/* Cluster bubble */}
       <CircleLayer
         id="stopClusterCircle"
         filter={["has", "point_count"]}
@@ -97,7 +104,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 3. Cluster text */}
+      {/* Cluster text */}
       <SymbolLayer
         id="stopClusterText"
         filter={["has", "point_count"]}
@@ -112,7 +119,7 @@ export default function StopPointsLayer() {
         }}
       />
 
-      {/* 4. Stop Name Label */}
+      {/* Stop Name Label */}
       <SymbolLayer
         id="stopLabel"
         filter={["!", ["has", "point_count"]]}
