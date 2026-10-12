@@ -1,175 +1,224 @@
-import { useEffect, useRef, useState } from "react";
-import { STRINGS } from "@/constants";
-import { View } from "react-native";
+import { useEffect } from "react";
+import { ActivityIndicator, Pressable, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
-import { JeepCard, StopCard } from "@/components/card";
-import { FilterModal } from "@/components/commuter";
-import { BottomSheetContainerRef, BottomSheetModalBaseRef } from "@/types";
-import { BottomSheetContainer, ThemedText, CustomTextInput } from "@/components/ui";
-import { useMapInitStore } from "@/store";
-import { distanceKm } from "@/utils";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ROUTES, STRINGS } from "@/constants";
+import { useArrivals, useRecenterToUser, useTransit, useTrip } from "@/hooks";
+import { boundsOf } from "@/lib/geo";
+import { formatAgo } from "@/lib/format";
+import { useAlerts, useLocationStore, useMap, useMapInitStore, usePreferences } from "@/store";
+import { useTheme } from "@/theme";
+import { Button, Card, Chip, Icon, IconButton, Sheet, ThemedText } from "@/components/ui";
 import {
-  useKeyboardSheet,
-  useRecenterToUser,
-  useJeepneys,
-  useStopPoints,
-  useLocationCurrent,
-} from "@/hooks";
+  JeepRow,
+  LiveChip,
+  NoJeepsCard,
+  OfflineBanner,
+  Rail,
+  RailMarker,
+  useBottomChrome,
+} from "@/components/commuter";
 
-const HomeScreen = () => {
-  const filterModalRef = useRef<BottomSheetModalBaseRef>(null);
-  const bottomSheetRef = useRef<BottomSheetContainerRef>(null);
-  useKeyboardSheet(bottomSheetRef);
+const TOP_CONTROLS = 76;
 
+export default function MapTab() {
+  const { top } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const { colors, shadows } = useTheme();
+  const map = useMap();
+  const bottomChrome = useBottomChrome();
   const { recenterToUser } = useRecenterToUser();
+
+  const transit = useTransit();
+  const trip = useTrip(transit);
+  const { direction, directions, route, paths } = transit;
+  const { arrivals, jeeps, offline, lastPositionAt } = useArrivals(
+    transit,
+    direction?.id ?? null,
+    trip.boarding,
+  );
+
+  const liveWatch = useAlerts((s) => s.liveWatch);
+  const watchLive = useAlerts((s) => s.watchLive);
+  const stopWatchingLive = useAlerts((s) => s.stopWatchingLive);
+  const setDirection = usePreferences((s) => s.setDirection);
+  const coords = useLocationStore((s) => s.coords);
   const hasCentered = useMapInitStore((s) => s.hasCentered);
   const setHasCentered = useMapInitStore((s) => s.setHasCentered);
+
+  const available = height - bottomChrome - top - TOP_CONTROLS;
+  const snapPoints = [140, Math.round(available * 0.55), available];
+
+  // First open: centre on the commuter, or show the whole route when location is off.
   useEffect(() => {
     if (hasCentered) return;
-    setHasCentered();
-    recenterToUser();
-  }, [hasCentered, recenterToUser]);
+    if (coords) {
+      map.current.flyTo(coords, { zoom: 15, bottomInset: snapPoints[1] });
+      setHasCentered();
+      return;
+    }
+    const path = direction ? paths[direction.id] : undefined;
+    const bounds = path && boundsOf(path);
+    if (bounds) {
+      map.current.fitBounds(bounds.sw, bounds.ne, {
+        top: top + TOP_CONTROLS + 24,
+        right: 32,
+        bottom: snapPoints[1] + bottomChrome,
+        left: 32,
+      });
+      setHasCentered();
+    }
+  }, [hasCentered, coords, direction, paths]);
 
-  const jeepGeoJson = useJeepneys();
-  const jeeps = jeepGeoJson.features.map((f) => ({
-    id: String(f.id),
-    plate: f.properties?.plate || "",
-    route_id: f.properties?.route_id || "",
-    status: f.properties?.status || "",
-    lat: f.geometry.coordinates[1],
-    lng: f.geometry.coordinates[0],
-  }));
-
-  const { data: stops = [] } = useStopPoints();
-
-  const [search, setSearch] = useState("");
-  const searchLower = search.toLowerCase();
-
-  const filteredJeeps = jeeps.filter(
-    (j) =>
-      j.plate.toLowerCase().includes(searchLower) ||
-      j.route_id.toLowerCase().includes(searchLower) ||
-      j.status.toLowerCase().includes(searchLower),
-  );
-
-  const filteredStops = stops.filter(
-    (s) =>
-      s.name.toLowerCase().includes(searchLower) || s.address.toLowerCase().includes(searchLower),
-  );
-
-  const { currentLocation } = useLocationCurrent();
-  const userLat = currentLocation?.latitude;
-  const userLng = currentLocation?.longitude;
-
-  const RADIUS_KM = 1.5;
-  const nearbyJeeps =
-    userLat && userLng
-      ? filteredJeeps
-          .filter((j) => distanceKm(userLat, userLng, j.lat, j.lng) <= RADIUS_KM)
-          .slice(0, 10)
-      : filteredJeeps.slice(0, 5);
-
-  const nearbyStops =
-    userLat && userLng
-      ? filteredStops
-          .filter((s) => distanceKm(userLat, userLng, s.lat, s.long) <= RADIUS_KM)
-          .slice(0, 10)
-      : filteredStops.slice(0, 5);
+  const t = STRINGS.commuter.home;
+  const other = directions.find((d) => d.id !== direction?.id) ?? null;
+  const otherLive = other ? jeeps.filter((j) => j.directionId === other.id && !j.stale).length : 0;
+  const nearestId = arrivals.find((a) => a.etaMin != null)?.jeep.id;
 
   return (
-    <View className="absolute inset-0">
-      <BottomSheetContainer ref={bottomSheetRef}>
-        <View className="gap-4">
-          <CustomTextInput
-            placeholder={STRINGS.commuter.home.searchInput}
-            variant="bg"
-            iconName="search"
-            value={search}
-            onChangeText={setSearch}
+    <View className="absolute inset-0" pointerEvents="box-none">
+      <View
+        pointerEvents="box-none"
+        style={{ top: top + 8 }}
+        className="absolute left-4 right-4 flex-row items-start gap-2.5"
+      >
+        {offline ? (
+          <View className="flex-1">
+            <OfflineBanner since={lastPositionAt} />
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => router.push(ROUTES.commuter.direction)}
+            accessibilityRole="button"
+            accessibilityLabel={`${STRINGS.commuter.map.direction}: ${direction?.label ?? STRINGS.commuter.map.chooseDirection}`}
+            style={shadows.md}
+            className="h-[52px] flex-1 flex-row items-center gap-3 rounded-full border-[1.5px] border-line bg-card px-4 active:opacity-90"
+          >
+            <Icon name="navigate" size={18} tone="action" />
+            <View className="flex-1">
+              <ThemedText variant="label" tone="muted">
+                {STRINGS.commuter.map.direction}
+              </ThemedText>
+              <ThemedText variant="strong" numberOfLines={1}>
+                {direction?.label ?? STRINGS.commuter.map.chooseDirection}
+              </ThemedText>
+            </View>
+            <Icon name="chevron-down" size={18} tone="muted" />
+          </Pressable>
+        )}
+        <View className="gap-2.5">
+          <IconButton
+            iconName="settings-outline"
+            size={52}
+            accessibilityLabel={STRINGS.commuter.map.settings}
+            onPress={() => router.push(ROUTES.settings.home)}
           />
-
-          {/* Nearby Jeeps */}
-          <View className="gap-2">
-            <ThemedText variant="h400">{STRINGS.commuter.home.nearJeeps}</ThemedText>
-            <View className="gap-2">
-              {jeeps.length === 0 ? (
-                <ThemedText color="text_muted" className="text-center">
-                  {STRINGS.commuter.home.noJeepsFound}
-                </ThemedText>
-              ) : (
-                nearbyJeeps.map((j) => {
-                  const dist =
-                    userLat && userLng ? distanceKm(userLat, userLng, j.lat, j.lng) : null;
-                  return (
-                    <JeepCard
-                      key={j.id}
-                      plateNo={j.plate}
-                      status={j.status}
-                      distanceKm={dist}
-                      onPress={() =>
-                        router.push({
-                          pathname: "/(map)/jeepney/[id]",
-                          params: {
-                            id: j.id,
-                            plate: j.plate,
-                            route_id: j.route_id,
-                            status: j.status,
-                            lat: String(j.lat),
-                            lng: String(j.lng),
-                          },
-                        })
-                      }
-                    />
-                  );
-                })
-              )}
-            </View>
-          </View>
-
-          {/* Nearby Stops */}
-          <View className="gap-2">
-            <ThemedText variant="h400">{STRINGS.commuter.home.nearStops}</ThemedText>
-            <View className="gap-2">
-              {stops.length === 0 ? (
-                <ThemedText color="text_muted" className="text-center">
-                  {STRINGS.commuter.home.noStopsFound}
-                </ThemedText>
-              ) : (
-                nearbyStops.map((s) => {
-                  const dist =
-                    userLat && userLng ? distanceKm(userLat, userLng, s.lat, s.long) : null;
-                  return (
-                    <StopCard
-                      key={s.id}
-                      location={s.name}
-                      address={s.address}
-                      distanceKm={dist}
-                      onPress={() =>
-                        router.push({
-                          pathname: "/(map)/stop/[id]",
-                          params: {
-                            id: s.id,
-                            name: s.name,
-                            address: s.address,
-                            route_id: s.routeId,
-                            lat: String(s.lat),
-                            lng: String(s.long),
-                            distance: dist ? dist.toFixed(1) : "0",
-                          },
-                        })
-                      }
-                    />
-                  );
-                })
-              )}
-            </View>
-          </View>
+          <IconButton
+            iconName="locate"
+            size={52}
+            accessibilityLabel={STRINGS.commuter.map.recenter}
+            onPress={() => recenterToUser(snapPoints[1])}
+          />
         </View>
-      </BottomSheetContainer>
+      </View>
 
-      <FilterModal ref={filterModalRef} />
+      <Sheet snapPoints={snapPoints} index={1} bottomInset={bottomChrome} surface="page">
+        {!direction ? (
+          <View className="items-center gap-3 py-8">
+            {transit.loading ? (
+              <ActivityIndicator color={colors.action} />
+            ) : (
+              <ThemedText tone="muted" className="text-center">
+                {STRINGS.commuter.direction.noDirections}
+              </ThemedText>
+            )}
+          </View>
+        ) : (
+          <View className="gap-3">
+            <View className="flex-row items-end justify-between gap-3">
+              <View className="flex-1">
+                <ThemedText variant="heading">
+                  {offline
+                    ? t.lastSeenToward(direction.label)
+                    : t.jeepsToward(arrivals.length, direction.label)}
+                </ThemedText>
+                <ThemedText variant="small" tone="muted">
+                  {offline ? t.notUpdating : trip.boarding ? t.soonestFirst : t.pickStopForTimes}
+                </ThemedText>
+              </View>
+              {offline
+                ? lastPositionAt != null && (
+                    <Chip tone="stale" data label={formatAgo(lastPositionAt)} />
+                  )
+                : arrivals.length > 0 && <LiveChip updatedAt={lastPositionAt} />}
+            </View>
+
+            {arrivals.length === 0 && !offline ? (
+              <NoJeepsCard
+                direction={direction}
+                route={route}
+                watching={liveWatch?.directionId === direction.id}
+                onWatch={() => watchLive(direction.id)}
+                onStopWatching={stopWatchingLive}
+                other={other ? { direction: other, live: otherLive } : null}
+                onSwitch={() => other && setDirection(other.id)}
+              />
+            ) : (
+              <Rail>
+                {trip.boarding ? (
+                  <View className="min-h-[28px] flex-row items-center gap-2">
+                    <RailMarker kind="boarding" />
+                    <ThemedText variant="eyebrow" tone="muted">
+                      {STRINGS.commuter.map.yourStop}
+                    </ThemedText>
+                    <ThemedText variant="label" numberOfLines={1} className="flex-1">
+                      {trip.boarding.name}
+                    </ThemedText>
+                  </View>
+                ) : (
+                  <Card className="gap-2 p-3">
+                    <ThemedText variant="small" tone="muted">
+                      {t.pickStopForTimes}
+                    </ThemedText>
+                    <Button
+                      label={t.pickStop}
+                      variant="outline"
+                      size="md"
+                      onPress={() => router.navigate(ROUTES.commuter.stops)}
+                    />
+                  </Card>
+                )}
+                {arrivals.map((a) => (
+                  <JeepRow
+                    key={a.jeep.id}
+                    arrival={a}
+                    nearest={a.jeep.id === nearestId}
+                    frozen={offline}
+                    onPress={() => router.push(ROUTES.commuter.jeepney(a.jeep.id))}
+                  />
+                ))}
+              </Rail>
+            )}
+
+            {offline && (
+              <Pressable
+                onPress={() => router.navigate(ROUTES.commuter.fare)}
+                accessibilityRole="button"
+                style={shadows.sm}
+                className="min-h-[56px] flex-row items-center gap-3 rounded-tile border-[1.5px] border-line bg-card px-4 py-3"
+              >
+                <View className="flex-1">
+                  <ThemedText variant="strong">{t.offlineWorks}</ThemedText>
+                  <ThemedText variant="small" tone="muted">
+                    {t.offlineWorksHint}
+                  </ThemedText>
+                </View>
+                <Icon name="chevron-forward" size={18} tone="faint" />
+              </Pressable>
+            )}
+          </View>
+        )}
+      </Sheet>
     </View>
   );
-};
-
-export default HomeScreen;
+}

@@ -1,6 +1,6 @@
 import { forwardRef, useRef, useImperativeHandle, ReactNode } from "react";
 import { BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useColorScheme } from "nativewind";
+import { useTheme } from "@/theme";
 import { BottomSheetModalBaseRef } from "@/types";
 import ThemedText from "@/components/ui/ThemedText";
 
@@ -12,12 +12,12 @@ interface BottomSheetModalBaseProps {
 const BottomSheetModalBase = forwardRef<BottomSheetModalBaseRef, BottomSheetModalBaseProps>(
   ({ title, children }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
-    const { colorScheme } = useColorScheme();
+    const { colors } = useTheme();
 
     const contentStyle = {
       paddingHorizontal: 20,
       paddingTop: 4,
-      paddingBottom: 20,
+      paddingBottom: 32,
     };
 
     useImperativeHandle(ref, () => ({
@@ -33,19 +33,14 @@ const BottomSheetModalBase = forwardRef<BottomSheetModalBaseRef, BottomSheetModa
           <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
         )}
         backgroundStyle={{
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          borderWidth: 1,
-          backgroundColor: colorScheme === "dark" ? "#0A0A0A" : "#E5E5E5",
-          borderColor: colorScheme === "dark" ? "#262626" : "#D4D4D4",
+          borderTopLeftRadius: 28,
+          borderTopRightRadius: 28,
+          backgroundColor: colors.card,
         }}
-        handleIndicatorStyle={{
-          backgroundColor: colorScheme === "dark" ? "#262626" : "#D4D4D4",
-          width: 40,
-        }}
+        handleIndicatorStyle={{ backgroundColor: colors.lineStrong, width: 40, height: 4 }}
       >
         <BottomSheetScrollView contentContainerStyle={contentStyle}>
-          <ThemedText variant="h600" className="mb-2">
+          <ThemedText variant="title" className="mb-4">
             {title}
           </ThemedText>
           {children}
@@ -54,5 +49,7 @@ const BottomSheetModalBase = forwardRef<BottomSheetModalBaseRef, BottomSheetModa
     );
   },
 );
+
+BottomSheetModalBase.displayName = "BottomSheetModalBase";
 
 export default BottomSheetModalBase;

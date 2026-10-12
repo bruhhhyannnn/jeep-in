@@ -1,85 +1,71 @@
-import { useColorScheme } from "nativewind";
 import Mapbox, { MapView, Camera } from "@rnmapbox/maps";
 import { useEffect, useRef } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMap } from "@/store";
-import {
-  JeepneysLayer,
-  RoutePolylineLayer,
-  StopPointsLayer,
-  UserLocationLayer,
-} from "@/components/map/layers";
+import { useTheme } from "@/theme";
+import type { CameraPadding, LngLat } from "@/types";
+import { CommuterMapLayers } from "@/components/map/layers";
+
+const DEFAULT_CENTER: LngLat = [120.548662, 18.059751];
+
+const toPaddingArray = (p: number | CameraPadding) =>
+  typeof p === "number" ? p : [p.top, p.right, p.bottom, p.left];
 
 const MapboxMap = () => {
   const map = useMap();
+  const { isDark } = useTheme();
+  const { top } = useSafeAreaInsets();
 
-  // Theme color changing Mapbox style
-  const { colorScheme } = useColorScheme();
-  const mapStyle =
-    colorScheme === "dark" ? Mapbox.StyleURL.TrafficNight : Mapbox.StyleURL.TrafficDay;
-
-  // Camera center reference
   const cameraRef = useRef<Camera>(null);
   const mapViewRef = useRef<MapView>(null);
 
-  // store the ref globally
+  // Expose camera controls to screens through the map context.
   useEffect(() => {
     map.current = {
       ...map.current,
-      flyTo: (coords, duration = 1500) => {
+      flyTo: (coords, { duration = 1200, zoom = 16, bottomInset = 0 } = {}) => {
         cameraRef.current?.setCamera({
           centerCoordinate: coords,
+          zoomLevel: zoom,
           animationDuration: duration,
           animationMode: "flyTo",
-          zoomLevel: 17.5,
+          padding: { paddingTop: 0, paddingRight: 0, paddingBottom: bottomInset, paddingLeft: 0 },
         });
       },
 
-      fitBounds: (sw, ne, padding = 40) => {
-        cameraRef.current?.fitBounds(sw, ne, padding, 500);
+      fitBounds: (sw, ne, padding = 48) => {
+        cameraRef.current?.fitBounds(ne, sw, toPaddingArray(padding), 700);
       },
 
       zoomInAt: async (coords, zoomIncrement = 1.5) => {
         const currentZoom = await mapViewRef.current?.getZoom();
-        const nextZoom = (currentZoom ?? 13) + zoomIncrement;
-
         cameraRef.current?.setCamera({
           centerCoordinate: coords,
-          zoomLevel: nextZoom,
+          zoomLevel: (currentZoom ?? 13) + zoomIncrement,
           animationDuration: 300,
         });
       },
     };
-  }, []);
+  }, [map]);
 
   return (
-    <MapView style={{ flex: 1 }} styleURL={mapStyle} projection="globe" ref={mapViewRef}>
-      {/* Map camera */}
+    <MapView
+      ref={mapViewRef}
+      style={{ flex: 1 }}
+      styleURL={isDark ? Mapbox.StyleURL.Dark : Mapbox.StyleURL.Light}
+      pitchEnabled={false}
+      compassEnabled={false}
+      scaleBarEnabled={false}
+      // Keep the Mapbox logo and attribution clear of the bottom sheets.
+      logoPosition={{ top: top + 80, left: 16 }}
+      attributionPosition={{ top: top + 80, left: 100 }}
+    >
       <Camera
         ref={cameraRef}
-        pitch={50}
-        zoomLevel={13}
-        centerCoordinate={[120.548662, 18.059751]}
+        defaultSettings={{ centerCoordinate: DEFAULT_CENTER, zoomLevel: 13 }}
       />
 
-      {/* Render Route Polylines */}
-      <RoutePolylineLayer />
-
-      {/* Render User Location Puck */}
-      <UserLocationLayer />
-
-      {/* Render Stop Points */}
-      <StopPointsLayer />
-
-      {/* Render Jeepneys */}
-      <JeepneysLayer />
-
-      {/* Register all custom icons */}
-      {/* <Images
-        images={{
-          "stop-icon": require("@/assets/images/map/stop-pin.png"),
-          "jeepney-icon": require("@/assets/images/map/jeepney-pin.png"),
-        }}
-      /> */}
+      <CommuterMapLayers />
     </MapView>
   );
 };

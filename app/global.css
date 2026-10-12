@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Keep in sync with src/theme/tokens.ts (JS copies for the map and native props). */
+:root {
+  --page: 238 244 251;
+  --card: 255 255 255;
+  --sunken: 237 241 247;
+  --inverse: 17 48 90;
+  --inverse-raised: 23 61 112;
+  --line: 221 228 238;
+  --line-strong: 198 207 219;
+  --ink: 11 27 51;
+  --muted: 77 93 116;
+  --faint: 152 164 181;
+  --action: 22 112 224;
+  --action-ink: 255 255 255;
+  --action-tint: 230 241 255;
+  --accent: 255 198 46;
+  --accent-ink: 11 27 51;
+  --live: 18 184 134;
+  --live-tint: 227 248 240;
+  --live-ink: 11 122 88;
+  --danger: 239 75 95;
+  --danger-tint: 255 233 236;
+  --danger-ink: 179 38 58;
+  --warn-tint: 255 248 225;
+  --warn-ink: 74 58 6;
+}
+
+.dark:root {
+  --page: 11 22 40;
+  --card: 22 38 63;
+  --sunken: 28 45 72;
+  --inverse: 23 61 112;
+  --inverse-raised: 31 76 134;
+  --line: 38 57 90;
+  --line-strong: 48 71 107;
+  --ink: 238 243 250;
+  --muted: 147 163 187;
+  --faint: 95 114 144;
+  --action: 90 163 255;
+  --action-ink: 11 27 51;
+  --action-tint: 23 52 92;
+  --accent: 255 198 46;
+  --accent-ink: 11 27 51;
+  --live: 18 184 134;
+  --live-tint: 18 58 51;
+  --live-ink: 63 208 160;
+  --danger: 239 75 95;
+  --danger-tint: 61 26 36;
+  --danger-ink: 255 143 156;
+  --warn-tint: 58 48 15;
+  --warn-ink: 255 212 92;
+}
