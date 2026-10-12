@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JEEP-IN landing page
 
-## Getting Started
+Landing page for JEEP-IN, live jeepney tracking on the Laoag – Batac – Paoay route in Ilocos Norte. Built from the
+"JEEPIN Landing Page" design in the JEEP-IN Tracking Wireframes Claude Design project.
 
-First, run the development server:
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4. The page is fully static.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | What |
+| --- | --- |
+| `src/lib/site.ts` | Contact details, the Formspree endpoint, and the pilot settings below |
+| `src/app/globals.css` | Design tokens (colors, shadows, animations) from the hi-fi design system |
+| `src/app/page.tsx` | Section order |
+| `src/components/` | One file per section; `jeep-layer.tsx` runs the moving jeeps on both maps |
+| `src/assets/` | Logo icon and banner |
+| `src/app/icon.png`, `apple-icon.png`, `opengraph-image.png` | Favicon, home-screen icon and link preview image |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Pilot settings
 
-## Learn More
+In `src/lib/site.ts`:
 
-To learn more about Next.js, take a look at the following resources:
+- `pilot.status`: `"open"` or `"full"`. Full switches the buttons and sign-up copy to the waitlist.
+- `pilot.partner`: the cooperative running the pilot. While it's `null`, the hero hides the "Piloting with …" line.
+- `pilot.animateJeeps`: turn the moving jeeps off. Visitors who prefer reduced motion never see movement.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Sign-ups
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The "Join the pilot" form posts to Formspree (`site.formspreeEndpoint`), which emails each sign-up. The role and the
+mobile number or email are sent; an email address is also set as the reply-to.
 
-## Deploy on Vercel
+## Deploying
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pushes to `main` deploy to production on Vercel once the GitHub repo is imported there. No environment variables are
+needed. Vercel's production URL is used for the link preview image; set `NEXT_PUBLIC_SITE_URL` to override it, for
+example after adding a custom domain.
