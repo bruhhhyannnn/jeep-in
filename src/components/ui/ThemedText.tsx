@@ -11,6 +11,7 @@ export type TextTone =
   | "actionInk"
   | "onInverse"
   | "onInverseMuted"
+  | "onBlueMuted"
   | "accent"
   | "accentInk"
   | "live"
@@ -25,6 +26,7 @@ const tones: Record<TextTone, string> = {
   actionInk: "text-action-ink",
   onInverse: "text-white",
   onInverseMuted: "text-navy-200",
+  onBlueMuted: "text-blue-200",
   accent: "text-accent",
   accentInk: "text-accent-ink",
   live: "text-live-ink",

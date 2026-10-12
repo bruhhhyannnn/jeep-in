@@ -72,7 +72,7 @@ export default function ChooseStopScreen() {
 
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-2.5 pb-2"
+        contentContainerClassName="gap-2 pb-2"
         keyboardShouldPersistTaps="handled"
       >
         {transit.loading && !transit.stops.length ? (
@@ -86,9 +86,11 @@ export default function ChooseStopScreen() {
             <RadioCard
               key={s.id}
               title={s.name}
-              hint={s.landmark ?? s.address}
+              hint={s.address || s.landmark || undefined}
               selected={picked === s.id}
               onPress={() => setPicked(s.id)}
+              radioEnd
+              compact
             />
           ))
         )}
@@ -96,10 +98,11 @@ export default function ChooseStopScreen() {
 
       <View className="gap-1">
         {transit.stops.length === 0 ? (
-          <Button label={t.continue} onPress={finish} />
+          <Button label={t.continue} size="md" onPress={finish} />
         ) : (
           <Button
             label={pickedStop ? t.boardAt(pickedStop.name) : t.pickOne}
+            size="md"
             disabled={!pickedStop}
             onPress={boardHere}
           />
@@ -108,7 +111,7 @@ export default function ChooseStopScreen() {
           label={t.turnOnLocation}
           variant="ghost"
           size="md"
-          iconName="locate"
+          iconName="location-outline"
           onPress={turnOnLocation}
         />
       </View>

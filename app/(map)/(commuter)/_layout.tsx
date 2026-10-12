@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Slot, usePathname } from "expo-router";
 import { useCommuterWatchers, useLocationWatcher } from "@/hooks";
-import { FollowingCard, TabBar, TAB_PATHS } from "@/components/commuter";
+import { TabBar, TAB_PATHS } from "@/components/commuter";
 
 export default function CommuterLayout() {
   useLocationWatcher();
@@ -13,7 +13,6 @@ export default function CommuterLayout() {
   return (
     <View className="absolute inset-0" pointerEvents="box-none">
       <Slot />
-      {onTab && <FollowingCard />}
       {onTab && <TabBar />}
     </View>
   );

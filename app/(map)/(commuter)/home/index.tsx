@@ -7,16 +7,18 @@ import { useArrivals, useRecenterToUser, useTransit, useTrip } from "@/hooks";
 import { boundsOf } from "@/lib/geo";
 import { formatAgo } from "@/lib/format";
 import { useAlerts, useLocationStore, useMap, useMapInitStore, usePreferences } from "@/store";
-import { useTheme } from "@/theme";
+import { layout, useTheme } from "@/theme";
 import { Button, Card, Chip, Icon, IconButton, Sheet, ThemedText } from "@/components/ui";
 import {
+  FOLLOWING_CARD_SPACE,
+  FollowingCard,
   JeepRow,
   LiveChip,
   NoJeepsCard,
   OfflineBanner,
   Rail,
   RailMarker,
-  useBottomChrome,
+  useTabBarInset,
 } from "@/components/commuter";
 
 const TOP_CONTROLS = 76;
@@ -26,7 +28,7 @@ export default function MapTab() {
   const { height } = useWindowDimensions();
   const { colors, shadows } = useTheme();
   const map = useMap();
-  const bottomChrome = useBottomChrome();
+  const bottomChrome = useTabBarInset();
   const { recenterToUser } = useRecenterToUser();
 
   const transit = useTransit();
@@ -38,6 +40,7 @@ export default function MapTab() {
     trip.boarding,
   );
 
+  const following = useAlerts((s) => s.following);
   const liveWatch = useAlerts((s) => s.liveWatch);
   const watchLive = useAlerts((s) => s.watchLive);
   const stopWatchingLive = useAlerts((s) => s.stopWatchingLive);
@@ -46,8 +49,23 @@ export default function MapTab() {
   const hasCentered = useMapInitStore((s) => s.hasCentered);
   const setHasCentered = useMapInitStore((s) => s.setHasCentered);
 
+  // The followed jeep is measured to the stop the alert was set for.
+  const followTarget = following ? (transit.stopById[following.stopId] ?? null) : null;
+  const { arrivals: followArrivals } = useArrivals(
+    transit,
+    following?.directionId ?? null,
+    followTarget,
+  );
+  const followArrival = following
+    ? (followArrivals.find((a) => a.jeep.id === following.jeepneyId) ?? null)
+    : null;
+
   const available = height - bottomChrome - top - TOP_CONTROLS;
-  const snapPoints = [140, Math.round(available * 0.55), available];
+  const snapPoints = [
+    140 + (following ? FOLLOWING_CARD_SPACE : 0),
+    Math.round(available * 0.55),
+    available,
+  ];
 
   // First open: centre on the commuter, or show the whole route when location is off.
   useEffect(() => {
@@ -80,49 +98,64 @@ export default function MapTab() {
       <View
         pointerEvents="box-none"
         style={{ top: top + 8 }}
-        className="absolute left-4 right-4 flex-row items-start gap-2.5"
+        className="absolute left-4 right-4 items-center"
       >
-        {offline ? (
-          <View className="flex-1">
-            <OfflineBanner since={lastPositionAt} />
-          </View>
-        ) : (
-          <Pressable
-            onPress={() => router.push(ROUTES.commuter.direction)}
-            accessibilityRole="button"
-            accessibilityLabel={`${STRINGS.commuter.map.direction}: ${direction?.label ?? STRINGS.commuter.map.chooseDirection}`}
-            style={shadows.md}
-            className="h-[52px] flex-1 flex-row items-center gap-3 rounded-full border-[1.5px] border-line bg-card px-4 active:opacity-90"
-          >
-            <Icon name="navigate" size={18} tone="action" />
+        <View
+          pointerEvents="box-none"
+          style={{ maxWidth: layout.contentMaxWidth }}
+          className="w-full flex-row items-start gap-2.5"
+        >
+          {offline ? (
             <View className="flex-1">
-              <ThemedText variant="label" tone="muted">
-                {STRINGS.commuter.map.direction}
-              </ThemedText>
-              <ThemedText variant="strong" numberOfLines={1}>
-                {direction?.label ?? STRINGS.commuter.map.chooseDirection}
-              </ThemedText>
+              <OfflineBanner since={lastPositionAt} />
             </View>
-            <Icon name="chevron-down" size={18} tone="muted" />
-          </Pressable>
-        )}
-        <View className="gap-2.5">
-          <IconButton
-            iconName="settings-outline"
-            size={52}
-            accessibilityLabel={STRINGS.commuter.map.settings}
-            onPress={() => router.push(ROUTES.settings.home)}
-          />
-          <IconButton
-            iconName="locate"
-            size={52}
-            accessibilityLabel={STRINGS.commuter.map.recenter}
-            onPress={() => recenterToUser(snapPoints[1])}
-          />
+          ) : (
+            <>
+              <Pressable
+                onPress={() => router.push(ROUTES.commuter.direction)}
+                accessibilityRole="button"
+                accessibilityLabel={`${STRINGS.commuter.map.direction}: ${direction?.label ?? STRINGS.commuter.map.chooseDirection}`}
+                style={shadows.md}
+                className="h-[52px] flex-1 flex-row items-center gap-3 rounded-full border-[1.5px] border-line bg-card px-4 active:opacity-90"
+              >
+                <Icon name="navigate" size={18} tone="action" />
+                <View className="flex-1">
+                  <ThemedText variant="label" tone="muted">
+                    {STRINGS.commuter.map.direction}
+                  </ThemedText>
+                  <ThemedText variant="strong" numberOfLines={1}>
+                    {direction?.label ?? STRINGS.commuter.map.chooseDirection}
+                  </ThemedText>
+                </View>
+                <Icon name="chevron-down" size={18} tone="muted" />
+              </Pressable>
+              <View className="gap-2.5">
+                <IconButton
+                  iconName="settings-outline"
+                  size={52}
+                  accessibilityLabel={STRINGS.commuter.map.settings}
+                  onPress={() => router.push(ROUTES.settings.home)}
+                />
+                <IconButton
+                  iconName="location-outline"
+                  size={52}
+                  accessibilityLabel={STRINGS.commuter.map.recenter}
+                  onPress={() => recenterToUser(snapPoints[1])}
+                />
+              </View>
+            </>
+          )}
         </View>
       </View>
 
-      <Sheet snapPoints={snapPoints} index={1} bottomInset={bottomChrome} surface="page">
+      <Sheet
+        snapPoints={snapPoints}
+        index={1}
+        bottomInset={bottomChrome}
+        surface="page"
+        footerDivider={false}
+        footer={following ? <FollowingCard arrival={followArrival} /> : undefined}
+      >
         {!direction ? (
           <View className="items-center gap-3 py-8">
             {transit.loading ? (
@@ -153,7 +186,19 @@ export default function MapTab() {
                 : arrivals.length > 0 && <LiveChip updatedAt={lastPositionAt} />}
             </View>
 
-            {arrivals.length === 0 && !offline ? (
+            {offline ? (
+              <View className="gap-2">
+                {arrivals.map((a) => (
+                  <JeepRow
+                    key={a.jeep.id}
+                    arrival={a}
+                    frozen
+                    onRail={false}
+                    onPress={() => router.push(ROUTES.commuter.jeepney(a.jeep.id))}
+                  />
+                ))}
+              </View>
+            ) : arrivals.length === 0 ? (
               <NoJeepsCard
                 direction={direction}
                 route={route}
@@ -193,7 +238,6 @@ export default function MapTab() {
                     key={a.jeep.id}
                     arrival={a}
                     nearest={a.jeep.id === nearestId}
-                    frozen={offline}
                     onPress={() => router.push(ROUTES.commuter.jeepney(a.jeep.id))}
                   />
                 ))}

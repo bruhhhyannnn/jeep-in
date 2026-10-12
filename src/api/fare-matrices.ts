@@ -16,7 +16,7 @@ export const PLACEHOLDER_FARE_MATRIX: Omit<FareMatrix, "id" | "routeId"> = {
   baseKm: 4,
   perKm: 1.8,
   discountRate: 0.2,
-  roundTo: 0.25,
+  roundTo: 1,
 };
 
 export const normalizeFareMatrix = (id: string, d: DocumentData): FareMatrix => ({

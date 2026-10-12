@@ -30,14 +30,17 @@ export default function LocationPermissionScreen() {
 
   return (
     <SafeAreaContainer className="gap-5">
-      <View className="h-[240px] items-center justify-center overflow-hidden rounded-card bg-sunken">
-        <View className="absolute h-36 w-36 rounded-full bg-action/10" />
-        <View className="absolute h-24 w-24 rounded-full bg-action/15" />
+      <View className="h-[230px] items-center justify-center overflow-hidden rounded-[26px] bg-sunken">
+        {/* Streets */}
+        <View className="absolute left-[-10%] top-[68%] h-2.5 w-[120%] -rotate-[16deg] rounded-full bg-card" />
+        <View className="absolute left-[34%] top-[-10%] h-[120%] w-2.5 -rotate-[8deg] rounded-full bg-card" />
+        <View className="absolute left-[66%] top-[-10%] h-[120%] w-2.5 -rotate-[14deg] rounded-full bg-card" />
+        <View className="absolute h-[120px] w-[120px] rounded-full bg-action/10" />
         <View
           style={shadows.md}
-          className="h-16 w-16 items-center justify-center rounded-full border-4 border-card bg-action"
+          className="h-14 w-14 items-center justify-center rounded-full border-[5px] border-card bg-action"
         >
-          <Icon name="locate" size={26} tone="actionInk" />
+          <Icon name="location-outline" size={24} tone="actionInk" />
         </View>
       </View>
 
@@ -49,7 +52,7 @@ export default function LocationPermissionScreen() {
       </View>
 
       <Card className="flex-row items-center gap-3 rounded-tile px-4 py-3">
-        <Icon name="shield-checkmark-outline" tone="live" />
+        <Icon name="lock-closed-outline" size={18} tone="muted" />
         <ThemedText variant="small" tone="muted" className="flex-1">
           {t.privacy}
         </ThemedText>
@@ -58,8 +61,8 @@ export default function LocationPermissionScreen() {
       <View className="flex-1" />
 
       <View className="gap-2.5">
-        <Button label={t.allow} onPress={allow} />
-        <Button label={t.chooseStop} variant="outline" onPress={chooseStop} />
+        <Button label={t.allow} size="md" onPress={allow} />
+        <Button label={t.chooseStop} variant="outline" size="md" onPress={chooseStop} />
       </View>
     </SafeAreaContainer>
   );

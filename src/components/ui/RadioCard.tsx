@@ -10,9 +10,28 @@ type RadioCardProps = {
   selected: boolean;
   onPress: () => void;
   iconName?: string;
+  /** Drawn before the text, e.g. a theme thumbnail. */
+  leading?: React.ReactNode;
   /** Short mono text on the right, e.g. "5 live". */
   trailing?: string;
+  /** Radio on the right instead of the left. */
+  radioEnd?: boolean;
+  /** Smaller title and padding, for long lists such as stops. */
+  compact?: boolean;
 };
+
+function Radio({ selected }: { selected: boolean }) {
+  return (
+    <View
+      className={cn(
+        "h-[22px] w-[22px] items-center justify-center rounded-full border-2",
+        selected ? "border-action" : "border-line-strong",
+      )}
+    >
+      {selected && <View className="h-2.5 w-2.5 rounded-full bg-action" />}
+    </View>
+  );
+}
 
 /** Selected rows get a 2px blue border and a deeper shadow. */
 export default function RadioCard({
@@ -21,7 +40,10 @@ export default function RadioCard({
   selected,
   onPress,
   iconName,
+  leading,
   trailing,
+  radioEnd = false,
+  compact = false,
 }: RadioCardProps) {
   const { shadows } = useTheme();
 
@@ -32,23 +54,19 @@ export default function RadioCard({
       accessibilityState={{ checked: selected }}
       style={selected ? shadows.md : shadows.sm}
       className={cn(
-        "min-h-[64px] flex-row items-center gap-3 rounded-card bg-card px-4 py-3.5 active:opacity-90",
+        "flex-row items-center gap-3 bg-card active:opacity-90",
+        compact ? "min-h-[56px] rounded-[18px] py-2.5" : "min-h-[64px] rounded-card py-3.5",
+        leading ? "pl-2.5 pr-4" : compact ? "px-3.5" : "px-4",
         selected ? "border-2 border-action" : "border-[1.5px] border-line",
       )}
     >
-      <View
-        className={cn(
-          "h-[22px] w-[22px] items-center justify-center rounded-full border-2",
-          selected ? "border-action" : "border-line-strong",
-        )}
-      >
-        {selected && <View className="h-2.5 w-2.5 rounded-full bg-action" />}
-      </View>
+      {!radioEnd && <Radio selected={selected} />}
+      {leading}
       {iconName && <Icon name={iconName} tone={selected ? "action" : "muted"} />}
       <View className="flex-1">
-        <ThemedText variant="heading">{title}</ThemedText>
+        <ThemedText variant={compact ? "strong" : "heading"}>{title}</ThemedText>
         {hint && (
-          <ThemedText variant="small" tone="muted">
+          <ThemedText variant={compact ? "label" : "small"} tone="muted">
             {hint}
           </ThemedText>
         )}
@@ -58,6 +76,7 @@ export default function RadioCard({
           {trailing}
         </ThemedText>
       )}
+      {radioEnd && <Radio selected={selected} />}
     </Pressable>
   );
 }

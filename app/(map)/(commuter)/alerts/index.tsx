@@ -10,10 +10,12 @@ import {
   requestNotificationPermission,
   type NotificationPermission,
 } from "@/services/notifications/local";
+import { useNow } from "@/hooks";
 import { ALERT_MINUTES, useAlerts, usePreferences } from "@/store";
+import { layout, useTheme } from "@/theme";
 import type { AlertKind, CommuterAlert } from "@/types";
 import { Button, Card, Icon, ThemedText, ThemedView, Toggle } from "@/components/ui";
-import { ScreenHeader, useBottomChrome } from "@/components/commuter";
+import { ScreenHeader, useTabBarInset } from "@/components/commuter";
 
 const ICONS: Record<AlertKind, string> = {
   arrival: "time-outline",
@@ -22,14 +24,19 @@ const ICONS: Record<AlertKind, string> = {
   lost: "cloud-offline-outline",
 };
 
-function AlertRow({ alert }: { alert: CommuterAlert }) {
+/** Read alerts older than this fade back. */
+const RECENT_MS = 3 * 60 * 60 * 1000;
+
+/** Unread: blue border and dot · read: plain · older: faded border and dot. */
+function AlertRow({ alert, now }: { alert: CommuterAlert; now: number }) {
+  const { colors } = useTheme();
+  const older = alert.read && now - alert.createdAt > RECENT_MS;
   return (
     <Card
-      elevation={alert.read ? "none" : "sm"}
-      className={cn(
-        "flex-row items-center gap-3 rounded-[20px] px-3.5 py-3",
-        alert.read && "border-transparent bg-transparent",
-      )}
+      elevation={alert.read ? (older ? "none" : "sm") : "md"}
+      selected={!alert.read}
+      style={older ? { borderColor: colors.sunken } : undefined}
+      className="flex-row items-center gap-3 rounded-[20px] px-3.5 py-3"
     >
       <View className="h-10 w-10 items-center justify-center rounded-full border-[1.5px] border-line bg-sunken">
         <Icon name={ICONS[alert.kind]} size={18} tone="muted" />
@@ -44,7 +51,12 @@ function AlertRow({ alert }: { alert: CommuterAlert }) {
         <ThemedText variant="dataSm" tone="muted">
           {formatAlertTime(alert.createdAt)}
         </ThemedText>
-        <View className={cn("h-2 w-2 rounded-full", !alert.read && "bg-action")} />
+        <View
+          className={cn(
+            "h-2 w-2 rounded-full",
+            !alert.read ? "bg-action" : older ? "bg-line" : "bg-muted",
+          )}
+        />
       </View>
     </Card>
   );
@@ -53,8 +65,9 @@ function AlertRow({ alert }: { alert: CommuterAlert }) {
 /** Alerts kept on this phone only. Nothing is sent unless the commuter asked for it. */
 export default function AlertsTab() {
   const { top } = useSafeAreaInsets();
-  const bottomChrome = useBottomChrome();
+  const bottomChrome = useTabBarInset();
   const items = useAlerts((s) => s.items);
+  const now = useNow(60000);
   const markAllRead = useAlerts((s) => s.markAllRead);
   const arrivalAlerts = usePreferences((s) => s.arrivalAlerts);
   const setArrivalAlerts = usePreferences((s) => s.setArrivalAlerts);
@@ -83,8 +96,12 @@ export default function AlertsTab() {
   return (
     <ThemedView className="absolute inset-0">
       <ScrollView
-        contentContainerStyle={{ paddingTop: top + 12, paddingBottom: bottomChrome + 16 }}
-        contentContainerClassName="grow gap-3 px-5"
+        contentContainerStyle={{
+          paddingTop: top + 12,
+          paddingBottom: bottomChrome + 16,
+          maxWidth: layout.contentMaxWidth,
+        }}
+        contentContainerClassName="w-full grow gap-3 self-center px-5"
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader
@@ -99,8 +116,8 @@ export default function AlertsTab() {
         {items.length === 0 ? (
           <View className="flex-1 justify-center gap-3 py-6">
             <View className="items-center gap-3">
-              <View className="h-16 w-16 items-center justify-center rounded-full bg-sunken">
-                <Icon name="notifications-outline" size={26} tone="muted" />
+              <View className="h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-line-strong">
+                <Icon name="notifications-outline" size={26} tone="faint" />
               </View>
               <ThemedText variant="heading" className="text-center">
                 {t.emptyTitle}
@@ -120,7 +137,7 @@ export default function AlertsTab() {
               </ThemedText>
             </Card>
             {items.map((a) => (
-              <AlertRow key={a.id} alert={a} />
+              <AlertRow key={a.id} alert={a} now={now} />
             ))}
           </>
         )}

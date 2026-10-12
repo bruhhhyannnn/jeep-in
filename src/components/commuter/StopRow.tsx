@@ -13,6 +13,8 @@ type StopRowProps = {
   /** e.g. "3 jeeps · 4 min" */
   activity?: string;
   role?: "boarding" | "alighting" | null;
+  /** Rail marker for rows that aren't part of the trip. Defaults to a plain ring. */
+  marker?: "ring" | "result";
   onPress: () => void;
   /** Opens the stop. Without it the row has no Details button. */
   onDetails?: () => void;
@@ -29,6 +31,7 @@ export default function StopRow({
   km,
   activity,
   role = null,
+  marker = "ring",
   onPress,
   onDetails,
   fare,
@@ -43,11 +46,11 @@ export default function StopRow({
       accessibilityLabel={stop.name}
       style={selected ? shadows.md : shadows.sm}
       className={cn(
-        "min-h-[64px] flex-row items-center gap-3 rounded-[20px] bg-card py-3 pl-3.5 pr-2.5 active:opacity-90",
-        selected ? "border-2 border-action" : "border-[1.5px] border-line",
+        "min-h-[64px] flex-row items-center gap-3 rounded-[18px] bg-card py-3 pl-3.5 pr-2.5 active:opacity-90",
+        selected ? "border-[2.5px] border-action" : "border-[1.5px] border-line",
       )}
     >
-      <RailMarker kind={role ?? "ring"} />
+      <RailMarker kind={role ?? marker} />
       <View className="flex-1 gap-0.5">
         <View className="flex-row flex-wrap items-baseline gap-x-2">
           <ThemedText variant="strong">{stop.name}</ThemedText>

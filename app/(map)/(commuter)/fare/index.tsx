@@ -1,26 +1,28 @@
 import { useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ROUTES, STRINGS } from "@/constants";
 import { useTransit, useTrip, useTripActions } from "@/hooks";
-import { discountPercent, fareFormula, quoteFare } from "@/lib/fare";
-import { formatDate, formatKm, formatPeso } from "@/lib/format";
+import { discountPercent, fareFormula, isPlaceholderMatrix, quoteFare } from "@/lib/fare";
+import { formatKm, formatPeso } from "@/lib/format";
 import { usePreferences } from "@/store";
+import { layout, useTheme } from "@/theme";
 import type { BottomSheetModalBaseRef, StopPoint, TripField } from "@/types";
 import {
   BottomSheetModalBase,
-  Button,
+  Icon,
   Segmented,
   ThemedText,
   ThemedView,
   Toggle,
 } from "@/components/ui";
-import { Rail, ScreenHeader, StopRow, TripStrip, useBottomChrome } from "@/components/commuter";
+import { Rail, ScreenHeader, StopRow, TripStrip, useTabBarInset } from "@/components/commuter";
 
 export default function FareTab() {
   const { top } = useSafeAreaInsets();
-  const bottomChrome = useBottomChrome();
+  const bottomChrome = useTabBarInset();
+  const { shadows } = useTheme();
   const pickerRef = useRef<BottomSheetModalBaseRef>(null);
   const [picking, setPicking] = useState<TripField>("alighting");
 
@@ -58,8 +60,12 @@ export default function FareTab() {
   return (
     <ThemedView className="absolute inset-0">
       <ScrollView
-        contentContainerStyle={{ paddingTop: top + 12, paddingBottom: bottomChrome + 16 }}
-        contentContainerClassName="gap-4 px-5"
+        contentContainerStyle={{
+          paddingTop: top + 12,
+          paddingBottom: bottomChrome + 16,
+          maxWidth: layout.contentMaxWidth,
+        }}
+        contentContainerClassName="w-full gap-4 self-center px-5"
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader title={t.title} subtitle={route?.name} />
@@ -74,17 +80,17 @@ export default function FareTab() {
 
         <View className="gap-3 rounded-card bg-inverse p-4">
           <View className="flex-row items-center justify-between">
-            <ThemedText variant="eyebrow" tone="accent">
+            <ThemedText variant="eyebrow" tone="onInverseMuted">
               {t.yourFare}
             </ThemedText>
-            <View className="rounded-full bg-white/15 px-2.5 py-1">
+            <View className="rounded-full bg-inverse-raised px-2.5 py-1">
               <ThemedText variant="label" tone="onInverse">
                 {discount ? t.discounted : t.regular}
               </ThemedText>
             </View>
           </View>
 
-          {quote && amount != null && trip.stopCount != null ? (
+          {quote && amount != null ? (
             <View className="gap-1.5">
               <View className="flex-row flex-wrap items-end gap-x-2">
                 <ThemedText
@@ -95,7 +101,7 @@ export default function FareTab() {
                   {formatPeso(amount)}
                 </ThemedText>
                 <ThemedText variant="small" tone="onInverseMuted" className="pb-1.5">
-                  {t.forTrip(formatKm(quote.km), trip.stopCount)}
+                  {t.forTrip(formatKm(quote.km))}
                 </ThemedText>
               </View>
               <ThemedText variant="dataSm" tone="onInverseMuted">
@@ -114,7 +120,7 @@ export default function FareTab() {
             </View>
           )}
 
-          <View className="h-px bg-white/15" />
+          <View className="h-px bg-navy-600" />
 
           <View className="flex-row items-center gap-3">
             <View className="flex-1">
@@ -150,26 +156,20 @@ export default function FareTab() {
           onPressField={openPicker}
         />
 
-        <ThemedText variant="small" tone="muted">
-          {t.idNote}
-        </ThemedText>
-
-        <View className="gap-2">
-          <Button
-            label={t.viewMatrix}
-            variant="outline"
-            iconRight="arrow-forward"
-            onPress={() => router.push(ROUTES.commuter.fareMatrix)}
-          />
-          <ThemedText variant="label" tone="muted" className="text-center">
-            {fareMatrix.orderNo
-              ? t.orderNote(
-                  fareMatrix.orderNo,
-                  fareMatrix.effectiveDate ? formatDate(fareMatrix.effectiveDate) : null,
-                )
-              : t.placeholderNote}
-          </ThemedText>
-        </View>
+        <Pressable
+          onPress={() => router.push(ROUTES.commuter.fareMatrix)}
+          accessibilityRole="button"
+          style={shadows.sm}
+          className="min-h-[60px] flex-row items-center gap-3 rounded-[20px] border-[1.5px] border-line bg-card px-4 py-3 active:opacity-90"
+        >
+          <View className="flex-1">
+            <ThemedText variant="strong">{t.everyStop}</ThemedText>
+            <ThemedText variant="small" tone="muted">
+              {isPlaceholderMatrix(fareMatrix) ? t.everyStopPlaceholder : t.everyStopHint}
+            </ThemedText>
+          </View>
+          <Icon name="chevron-forward" size={18} tone="faint" />
+        </Pressable>
       </ScrollView>
 
       <BottomSheetModalBase

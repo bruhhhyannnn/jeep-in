@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { STRINGS } from "@/constants";
 import { useTransit } from "@/hooks";
-import { discountPercent, isPlaceholderMatrix, quoteFare } from "@/lib/fare";
+import { discountPercent, isPlaceholderMatrix, quoteFare, roundingLabel } from "@/lib/fare";
 import { formatClock, formatDate, formatKm, formatPeso } from "@/lib/format";
 import { useOfflineCache } from "@/store";
 import { sendEmail } from "@/utils";
@@ -111,11 +111,12 @@ export default function FareMatrixSheet() {
           <Card className="gap-2.5 rounded-tile p-4">
             <Row label={t.orderNo} value={fareMatrix.orderNo ?? t.notPosted} />
             <Row label={t.issuedBy} value={fareMatrix.issuedBy ?? t.notPosted} />
+            <Row label={t.route} value={route?.name ?? STRINGS.commuter.routeFallback} />
+            <Row label={t.vehicleClass} value={fareMatrix.vehicleClass} />
             <Row
               label={t.effective}
               value={fareMatrix.effectiveDate ? formatDate(fareMatrix.effectiveDate) : t.notPosted}
             />
-            <Row label={t.vehicleClass} value={fareMatrix.vehicleClass} />
             {syncedAt != null && (
               <Row
                 label={t.lastSynced}
@@ -139,8 +140,8 @@ export default function FareMatrixSheet() {
             <Card className="gap-2.5 rounded-tile p-4">
               <Row label={t.baseFare(fareMatrix.baseKm)} value={formatPeso(fareMatrix.baseFare)} />
               <Row label={t.perKm} value={formatPeso(fareMatrix.perKm)} />
-              <Row label={t.discount} value={`${discountPercent(fareMatrix)}% off`} />
-              <Row label={t.rounding} value={formatPeso(fareMatrix.roundTo)} />
+              <Row label={t.discount} value={`−${discountPercent(fareMatrix)}%`} />
+              <Row label={t.rounding} value={roundingLabel(fareMatrix)} />
             </Card>
           </View>
 

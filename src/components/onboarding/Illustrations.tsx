@@ -49,12 +49,12 @@ export function FareArt({ matrix }: { matrix: FareMatrix }) {
 
   return (
     <View className="flex-1 justify-center gap-3 bg-page p-4">
-      <View className="gap-2.5 rounded-card bg-inverse p-4">
+      <View className="gap-2.5 rounded-card bg-navy-900 p-4">
         <View className="flex-row items-center justify-between">
-          <ThemedText variant="eyebrow" tone="accent">
+          <ThemedText variant="eyebrow" tone="onInverseMuted">
             {t.yourFare}
           </ThemedText>
-          <View className="rounded-full bg-white/15 px-2.5 py-1">
+          <View className="rounded-full bg-inverse-raised px-2.5 py-1">
             <ThemedText variant="label" tone="onInverse">
               {t.regular}
             </ThemedText>
@@ -71,13 +71,21 @@ export function FareArt({ matrix }: { matrix: FareMatrix }) {
         <ThemedText variant="dataSm" tone="onInverseMuted">
           {fareFormula(matrix, quote)}
         </ThemedText>
-        <View className="h-px bg-white/15" />
-        <ThemedText variant="label" tone="onInverse">
-          {t.discountLabel(discountPercent(matrix))}
-        </ThemedText>
-        <ThemedText variant="small" tone="onInverseMuted">
-          {t.youdPay(formatPeso(quote.discounted))}
-        </ThemedText>
+        <View className="h-px bg-navy-600" />
+        <View className="flex-row items-center gap-3">
+          <View className="flex-1">
+            <ThemedText variant="label" tone="onInverse">
+              {t.discountLabel(discountPercent(matrix))}
+            </ThemedText>
+            <ThemedText variant="small" tone="onInverseMuted">
+              {t.youdPay(formatPeso(quote.discounted))}
+            </ThemedText>
+          </View>
+          {/* Switched off, as on the Fare tab before the commuter turns it on. */}
+          <View className="h-6 w-10 justify-center rounded-full border-[1.5px] border-navy-400 px-[2px]">
+            <View className="h-4 w-4 rounded-full bg-navy-400" />
+          </View>
+        </View>
       </View>
       <Card className="gap-1.5 rounded-[20px] p-2">
         {[

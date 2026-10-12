@@ -1,12 +1,12 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import BottomSheet, {
   BottomSheetFooter,
   BottomSheetScrollView,
   BottomSheetView,
   type BottomSheetFooterProps,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/theme";
+import { layout, useTheme } from "@/theme";
 import type { SheetRef } from "@/types";
 
 type SheetProps = {
@@ -19,13 +19,15 @@ type SheetProps = {
   scrollable?: boolean;
   /** Pinned to the bottom of the sheet, above the content. */
   footer?: React.ReactNode;
+  /** Hairline between the content and the footer. */
+  footerDivider?: boolean;
   enablePanDownToClose?: boolean;
   onClose?: () => void;
   onChange?: (index: number) => void;
   children: React.ReactNode;
 };
 
-/** Bottom sheet that leaves the top of the map visible. */
+/** Bottom sheet that leaves the top of the map visible. On tablets it's a centred column. */
 const Sheet = forwardRef<SheetRef, SheetProps>(
   (
     {
@@ -35,6 +37,7 @@ const Sheet = forwardRef<SheetRef, SheetProps>(
       surface = "card",
       scrollable = true,
       footer,
+      footerDivider = true,
       enablePanDownToClose = false,
       onClose,
       onChange,
@@ -44,6 +47,7 @@ const Sheet = forwardRef<SheetRef, SheetProps>(
   ) => {
     const sheetRef = useRef<BottomSheet>(null);
     const { colors, shadows } = useTheme();
+    const { width } = useWindowDimensions();
     const [footerHeight, setFooterHeight] = useState(0);
 
     useImperativeHandle(ref, () => ({
@@ -60,15 +64,16 @@ const Sheet = forwardRef<SheetRef, SheetProps>(
           <View
             onLayout={(e) => setFooterHeight(e.nativeEvent.layout.height)}
             style={{ backgroundColor: background }}
-            className="border-t border-line px-5 pb-4 pt-3"
+            className={footerDivider ? "border-t border-line px-5 pb-4 pt-3" : "px-4 pb-3 pt-1"}
           >
             {footer}
           </View>
         </BottomSheetFooter>
       ),
-      [footer, background],
+      [footer, footerDivider, background],
     );
 
+    const side = Math.max(0, (width - layout.contentMaxWidth) / 2);
     const contentStyle = { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 24 + footerHeight };
 
     return (
@@ -82,7 +87,7 @@ const Sheet = forwardRef<SheetRef, SheetProps>(
         onClose={onClose}
         onChange={onChange}
         footerComponent={footer ? renderFooter : undefined}
-        style={shadows.lg}
+        style={[shadows.lg, side > 0 && { marginHorizontal: side }]}
         backgroundStyle={{
           backgroundColor: background,
           borderTopLeftRadius: 28,

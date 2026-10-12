@@ -30,7 +30,7 @@ const light = {
   onInverse: "#ffffff",
   onInverseMuted: "#b9cbe6",
   backdrop: "rgba(11, 27, 51, 0.32)",
-  mapRoute: "#173d70",
+  mapRoute: "#0b1b33",
   mapStopFill: "#ffffff",
   mapStopRing: "#173d70",
   mapLabelHalo: "#ffffff",
@@ -63,7 +63,7 @@ const dark: typeof light = {
   onInverse: "#ffffff",
   onInverseMuted: "#b9cbe6",
   backdrop: "rgba(0, 0, 0, 0.45)",
-  mapRoute: "#7fa2d6",
+  mapRoute: "#c9d6ea",
   mapStopFill: "#16263f",
   mapStopRing: "#b9cbe6",
   mapLabelHalo: "#0b1628",
@@ -130,8 +130,9 @@ export const textScale: Record<TextSize, number> = {
 
 export const layout = {
   gutter: 20,
-  tabBarHeight: 66,
-  tabBarGap: 8,
+  tabBarHeight: 64,
+  /** Widest a list column or sheet gets on a tablet. */
+  contentMaxWidth: 480,
   control: 52,
   minTap: 48,
 };

@@ -9,6 +9,7 @@ export type ChipTone =
   | "error"
   | "selected"
   | "neutral"
+  | "fresh"
   | "onInverse";
 
 const containers: Record<ChipTone, string> = {
@@ -18,6 +19,7 @@ const containers: Record<ChipTone, string> = {
   error: "bg-danger-tint",
   selected: "bg-action",
   neutral: "border-[1.5px] border-line bg-card",
+  fresh: "border-[1.5px] border-line bg-card",
   onInverse: "bg-white/15",
 };
 
@@ -28,6 +30,7 @@ const labels: Record<ChipTone, TextTone> = {
   error: "danger",
   selected: "actionInk",
   neutral: "ink",
+  fresh: "muted",
   onInverse: "onInverse",
 };
 
@@ -35,6 +38,7 @@ const dots: Partial<Record<ChipTone, string>> = {
   live: "bg-live",
   pending: "bg-accent",
   error: "bg-danger",
+  fresh: "bg-muted",
 };
 
 type ChipProps = {
@@ -45,7 +49,10 @@ type ChipProps = {
   className?: string;
 };
 
-/** Status chip: Live, Pending, Stale (dashed), Error, or a solid blue selected filter. */
+/**
+ * Status chip: Live, Pending, Stale (dashed), Error, a solid blue selected filter,
+ * or Fresh — the quiet "8s ago" on the jeep list.
+ */
 export default function Chip({ label, tone = "neutral", data = false, className }: ChipProps) {
   return (
     <View

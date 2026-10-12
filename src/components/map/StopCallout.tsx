@@ -27,7 +27,7 @@ export default function StopCallout({ eyebrow, name, variant }: StopCalloutProps
           allowFontScaling={false}
           numberOfLines={1}
           style={{ fontFamily: fonts.bold, fontSize: 9, letterSpacing: 0.8 }}
-          className={cn("uppercase", suggested ? "text-accent" : "text-action")}
+          className={cn("uppercase", suggested ? "text-accent" : "text-ink")}
         >
           {eyebrow}
         </Text>

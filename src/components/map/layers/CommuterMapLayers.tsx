@@ -36,7 +36,7 @@ export default function CommuterMapLayers() {
   const { colors } = useTheme();
   const transit = useTransit();
   const trip = useTrip(transit);
-  const { jeeps } = useFleet(transit);
+  const { jeeps, offline } = useFleet(transit);
   const { selectedJeepId, selectedJeepBadge, focusedStopId } = useMapUi(
     useShallow((s) => ({
       selectedJeepId: s.selectedJeepId,
@@ -152,12 +152,14 @@ export default function CommuterMapLayers() {
           id="stop-dots"
           style={{
             circleRadius: ["match", ["get", "kind"], "stop", 5, 8],
-            circleColor: colors.mapStopFill,
+            circleColor: ["match", ["get", "kind"], "focused", colors.mapRoute, colors.mapStopFill],
             circleStrokeColor: [
               "match",
               ["get", "kind"],
               "stop",
               colors.mapStopRing,
+              "focused",
+              colors.mapStopFill,
               colors.action,
             ],
             circleStrokeWidth: ["match", ["get", "kind"], "stop", 2.5, 3.5],
@@ -201,11 +203,7 @@ export default function CommuterMapLayers() {
 
       {focused && (
         <MarkerView coordinate={[focused.long, focused.lat]} anchor={{ x: 0.5, y: 1 }} allowOverlap>
-          <StopCallout
-            variant="chosen"
-            eyebrow={STRINGS.commuter.stops.details}
-            name={focused.name}
-          />
+          <StopCallout variant="chosen" eyebrow={STRINGS.commuter.map.stop} name={focused.name} />
         </MarkerView>
       )}
 
@@ -223,7 +221,7 @@ export default function CommuterMapLayers() {
         <MarkerView key={j.id} coordinate={j.position} anchor={{ x: 0.5, y: 0.5 }} allowOverlap>
           <JeepMarker
             unit={j.unit}
-            state={j.directionId == null ? "unknown" : j.stale ? "stale" : "live"}
+            state={j.stale || offline ? "stale" : j.directionId == null ? "unknown" : "live"}
             selected={j.id === selectedJeepId}
             onPress={() => router.push(ROUTES.commuter.jeepney(j.id))}
           />
@@ -232,8 +230,8 @@ export default function CommuterMapLayers() {
 
       {selected && selectedJeepBadge && (
         <MarkerView coordinate={selected.position} anchor={{ x: 0, y: 0.5 }} allowOverlap>
-          <View className="ml-[34px] rounded-full bg-action px-2.5 py-1">
-            <ThemedText variant="dataSm" tone="actionInk">
+          <View className="ml-[34px] rounded-full bg-navy-900 px-2.5 py-1">
+            <ThemedText variant="dataSm" tone="onInverse">
               {selectedJeepBadge}
             </ThemedText>
           </View>

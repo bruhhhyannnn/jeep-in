@@ -9,7 +9,7 @@ type LiveChipProps = {
   stale?: boolean;
 };
 
-/** "Live · 8s ago", or dashed "Last seen 9 min ago" once positions stop updating. */
+/** "8s ago" while positions update, dashed "Last seen 9 min ago" once they stop. */
 export default function LiveChip({ updatedAt, stale = false }: LiveChipProps) {
   const now = useNow(1000);
 
@@ -18,14 +18,6 @@ export default function LiveChip({ updatedAt, stale = false }: LiveChipProps) {
       <Chip tone="stale" data label={STRINGS.commuter.home.lastSeen(formatAgo(updatedAt, now))} />
     );
   }
-  return (
-    <Chip
-      tone="live"
-      label={
-        updatedAt != null
-          ? `${STRINGS.commuter.home.live} · ${formatAgo(updatedAt, now)}`
-          : STRINGS.commuter.home.live
-      }
-    />
-  );
+  if (updatedAt == null) return <Chip tone="live" label={STRINGS.commuter.home.live} />;
+  return <Chip tone="fresh" data label={formatAgo(updatedAt, now)} />;
 }

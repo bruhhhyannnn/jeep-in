@@ -132,7 +132,7 @@ export interface FareMatrix {
   perKm: number;
   /** Student, senior and PWD discount as a fraction, e.g. 0.2. */
   discountRate: number;
-  /** Fares are rounded to the nearest multiple of this, e.g. 0.25. */
+  /** Regular fares are rounded to the nearest multiple of this, e.g. 1 for the nearest peso. */
   roundTo: number;
 }
 

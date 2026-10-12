@@ -32,13 +32,18 @@ export default function Toggle({
             ? "bg-accent"
             : "bg-action"
           : onInverse
-            ? "bg-white/25"
+            ? "border-[1.5px] border-navy-400"
             : "bg-line-strong",
         value ? "items-end" : "items-start",
         disabled && "opacity-50",
       )}
     >
-      <View className="h-[22px] w-[22px] rounded-full bg-white" />
+      <View
+        className={cn(
+          "rounded-full",
+          !value && onInverse ? "h-[18px] w-[18px] bg-navy-400" : "h-[22px] w-[22px] bg-white",
+        )}
+      />
     </Pressable>
   );
 }

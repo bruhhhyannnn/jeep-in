@@ -1,7 +1,6 @@
 export { default as TabBar, TAB_PATHS, useTabBarInset } from "@/components/commuter/TabBar";
 export {
   default as FollowingCard,
-  useBottomChrome,
   FOLLOWING_CARD_SPACE,
 } from "@/components/commuter/FollowingCard";
 export { default as LiveChip } from "@/components/commuter/LiveChip";

@@ -49,7 +49,7 @@ function Field({
       accessibilityLabel={`${label}: ${value ?? hint}`}
       accessibilityState={{ selected: active }}
       className={cn(
-        "min-h-[56px] flex-row items-center gap-3 rounded-tile px-3 py-2",
+        "min-h-[56px] flex-row items-center gap-3 rounded-xl px-3 py-2",
         active ? "border-2 border-action bg-card" : "border-[1.5px] border-sunken bg-sunken",
       )}
     >
@@ -74,7 +74,7 @@ function Field({
           </ThemedText>
         </View>
       ) : (
-        <ThemedText variant="label" tone="action">
+        <ThemedText variant="label" tone="muted">
           {trailing ?? STRINGS.commuter.stops.change}
         </ThemedText>
       )}

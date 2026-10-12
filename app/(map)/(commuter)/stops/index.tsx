@@ -7,17 +7,19 @@ import { useFleet, useKeyboardSheet, useTransit, useTrip, useTripActions } from 
 import { minutesFor } from "@/lib/fleet";
 import { measureOnPath } from "@/lib/geo";
 import { matchesStop, suggestionWords } from "@/lib/search";
+import { cn } from "@/lib/utils";
 import { usePreferences } from "@/store";
+import { layout } from "@/theme";
 import type { SheetRef, StopPoint } from "@/types";
-import { Button, Card, Icon, Segmented, Sheet, TextField, ThemedText } from "@/components/ui";
-import { Rail, StopRow, TripStrip, useBottomChrome } from "@/components/commuter";
+import { Button, Card, Icon, Sheet, TextField, ThemedText } from "@/components/ui";
+import { Rail, StopRow, TripStrip, useTabBarInset } from "@/components/commuter";
 
 const SEARCH_SPACE = 72;
 
 export default function StopsTab() {
   const { top } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
-  const bottomChrome = useBottomChrome();
+  const bottomChrome = useTabBarInset();
   const sheetRef = useRef<SheetRef>(null);
   useKeyboardSheet(sheetRef);
 
@@ -82,6 +84,7 @@ export default function StopsTab() {
           km={stopKm[s.id]}
           activity={activity[s.id]}
           role={role(s)}
+          marker={searching ? "result" : "ring"}
           onPress={() => onPick(s)}
           onDetails={() => router.push(ROUTES.commuter.stop(s.id))}
         />
@@ -91,17 +94,19 @@ export default function StopsTab() {
 
   return (
     <View className="absolute inset-0" pointerEvents="box-none">
-      <View style={{ top: top + 8 }} className="absolute left-4 right-4">
-        <TextField
-          iconName="search"
-          placeholder={t.search}
-          value={query}
-          onChangeText={setQuery}
-          onClear={clearSearch}
-          returnKeyType="search"
-          autoCorrect={false}
-          accessibilityLabel={t.search}
-        />
+      <View style={{ top: top + 8 }} className="absolute left-4 right-4 items-center">
+        <View style={{ maxWidth: layout.contentMaxWidth }} className="w-full">
+          <TextField
+            iconName="search"
+            placeholder={t.search}
+            value={query}
+            onChangeText={setQuery}
+            onClear={clearSearch}
+            returnKeyType="search"
+            autoCorrect={false}
+            accessibilityLabel={t.search}
+          />
+        </View>
       </View>
 
       <Sheet
@@ -197,13 +202,27 @@ export default function StopsTab() {
                 emptyHint={t.tapStopBelow}
                 onPressField={setFillingField}
               />
-              <View className="flex-row items-center gap-3">
-                <Segmented
-                  className="flex-1"
-                  options={directions.map((d) => ({ value: d.id, label: d.label }))}
-                  value={direction?.id ?? null}
-                  onChange={setDirection}
-                />
+              <View className="flex-row items-center gap-1.5">
+                {directions.map((d) => {
+                  const on = d.id === direction?.id;
+                  return (
+                    <Pressable
+                      key={d.id}
+                      onPress={() => setDirection(d.id)}
+                      accessibilityRole="tab"
+                      accessibilityState={{ selected: on }}
+                      className={cn(
+                        "h-9 justify-center rounded-full px-3.5",
+                        on ? "bg-action" : "border-[1.5px] border-line bg-card",
+                      )}
+                    >
+                      <ThemedText variant="label" tone={on ? "actionInk" : "muted"}>
+                        {d.label}
+                      </ThemedText>
+                    </Pressable>
+                  );
+                })}
+                <View className="flex-1" />
                 <ThemedText variant="label" tone="muted">
                   {t.stopCount(stops.length)}
                 </ThemedText>

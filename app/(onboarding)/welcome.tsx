@@ -1,13 +1,62 @@
 import { useRef, useState } from "react";
-import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ROUTES, STRINGS } from "@/constants";
 import { useTransit } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { usePreferences } from "@/store";
-import { useTheme } from "@/theme";
-import { Button, RadioCard, SafeAreaContainer, ThemedText } from "@/components/ui";
+import { typeRoles, useTheme } from "@/theme";
+import { RadioCard, ThemedText } from "@/components/ui";
 import { FareArt, LiveMapArt } from "@/components/onboarding/Illustrations";
+
+/** Each slide has its own colour, and the same colour in dark mode. */
+const SLIDE_THEMES = [
+  {
+    // Navy
+    bg: "bg-navy-900",
+    skip: "text-navy-300",
+    title: "text-white",
+    body: "text-navy-200",
+    dot: "bg-navy-500",
+    dotOn: "bg-yellow-400",
+    button: "bg-yellow-400",
+    buttonText: "text-navy-950",
+    statusBar: "light",
+  },
+  {
+    // Blue
+    bg: "bg-blue-600",
+    skip: "text-blue-200",
+    title: "text-white",
+    body: "text-blue-100",
+    dot: "bg-blue-400",
+    dotOn: "bg-white",
+    button: "bg-white",
+    buttonText: "text-blue-600",
+    statusBar: "light",
+  },
+  {
+    // Yellow
+    bg: "bg-yellow-400",
+    skip: "text-yellow-800",
+    title: "text-navy-950",
+    body: "text-yellow-800",
+    dot: "bg-yellow-600",
+    dotOn: "bg-navy-950",
+    button: "bg-navy-950",
+    buttonText: "text-white",
+    statusBar: "dark",
+  },
+] as const;
 
 /** Real directions from the route, so the pick on this slide is the one the map uses. */
 function DirectionArt() {
@@ -18,7 +67,7 @@ function DirectionArt() {
   const t = STRINGS.commuter.onboarding.direction;
 
   return (
-    <View className="flex-1 justify-center gap-3 bg-page p-4">
+    <View className="flex-1 justify-center gap-2.5 bg-page p-4">
       {transit.route && (
         <ThemedText variant="eyebrow" tone="muted" className="px-1">
           {transit.route.name}
@@ -74,6 +123,7 @@ export default function WelcomeScreen() {
     },
   ];
   const last = index === slides.length - 1;
+  const theme = SLIDE_THEMES[index];
 
   const toLocation = () => router.replace(ROUTES.onboarding.location);
   const next = () => {
@@ -82,9 +132,21 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <SafeAreaContainer showPadding={false}>
+    <SafeAreaView edges={["top", "left", "right", "bottom"]} className={cn("flex-1", theme.bg)}>
+      <StatusBar style={theme.statusBar} />
       <View className="h-14 flex-row items-center justify-end px-3">
-        {!last && <Button label={t.skip} variant="ghost" size="sm" onPress={toLocation} />}
+        {!last && (
+          <Pressable
+            onPress={toLocation}
+            accessibilityRole="button"
+            hitSlop={8}
+            className="h-12 justify-center px-3"
+          >
+            <Text maxFontSizeMultiplier={1.4} style={typeRoles.strong} className={theme.skip}>
+              {t.skip}
+            </Text>
+          </Pressable>
+        )}
       </View>
 
       <ScrollView
@@ -96,22 +158,34 @@ export default function WelcomeScreen() {
         onMomentumScrollEnd={(e) => setIndex(Math.round(e.nativeEvent.contentOffset.x / width))}
         className="flex-1"
       >
-        {slides.map((slide) => (
-          <View key={slide.key} style={{ width, height: pageHeight }} className="gap-6 px-5 pb-2">
-            <View className="flex-1 overflow-hidden rounded-card border-[1.5px] border-line">
-              {slide.art}
+        {slides.map((slide, i) => {
+          const own = SLIDE_THEMES[i];
+          return (
+            <View
+              key={slide.key}
+              style={{ width, height: pageHeight }}
+              className={cn("gap-6 px-5 pb-2", own.bg)}
+            >
+              <View className="flex-1 overflow-hidden rounded-[26px]">{slide.art}</View>
+              <View className="gap-2">
+                <Text
+                  accessibilityRole="header"
+                  maxFontSizeMultiplier={1.4}
+                  style={[typeRoles.momentMd, { letterSpacing: -0.3 }]}
+                  className={own.title}
+                >
+                  {slide.title}
+                </Text>
+                <Text maxFontSizeMultiplier={1.6} style={typeRoles.body} className={own.body}>
+                  {slide.body}
+                </Text>
+              </View>
             </View>
-            <View className="gap-2">
-              <ThemedText variant="title" accessibilityRole="header">
-                {slide.title}
-              </ThemedText>
-              <ThemedText tone="muted">{slide.body}</ThemedText>
-            </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
 
-      <View className="flex-row items-center gap-4 px-5 pb-4 pt-5">
+      <View className="flex-row items-center gap-3.5 px-5 pb-4 pt-5">
         <View
           className="flex-row gap-1.5"
           accessibilityLabel={`Slide ${index + 1} of ${slides.length}`}
@@ -121,15 +195,24 @@ export default function WelcomeScreen() {
               key={s.key}
               className={cn(
                 "h-2 rounded-full",
-                i === index ? "w-6 bg-action" : "w-2 bg-line-strong",
+                i === index ? cn("w-6", theme.dotOn) : cn("w-2", theme.dot),
               )}
             />
           ))}
         </View>
-        <View className="flex-1">
-          <Button label={last ? t.start : t.next} onPress={next} />
-        </View>
+        <Pressable
+          onPress={next}
+          accessibilityRole="button"
+          className={cn(
+            "h-[54px] flex-1 items-center justify-center rounded-full active:opacity-90",
+            theme.button,
+          )}
+        >
+          <Text maxFontSizeMultiplier={1.4} style={typeRoles.button} className={theme.buttonText}>
+            {last ? t.start : t.next}
+          </Text>
+        </Pressable>
       </View>
-    </SafeAreaContainer>
+    </SafeAreaView>
   );
 }

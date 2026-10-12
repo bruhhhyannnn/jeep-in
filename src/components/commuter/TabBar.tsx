@@ -2,8 +2,7 @@ import { Pressable, View } from "react-native";
 import { router, usePathname } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ROUTES, STRINGS } from "@/constants";
-import { cn } from "@/lib/utils";
-import { layout, useTheme } from "@/theme";
+import { fonts, layout } from "@/theme";
 import { useAlerts } from "@/store";
 import { Icon, ThemedText } from "@/components/ui";
 
@@ -13,56 +12,50 @@ const TABS = [
     href: ROUTES.commuter.home,
     label: STRINGS.commuter.tabs.map,
     icon: "map-outline",
-    activeIcon: "map",
   },
   {
     path: "/stops",
     href: ROUTES.commuter.stops,
     label: STRINGS.commuter.tabs.stops,
     icon: "list-outline",
-    activeIcon: "list",
   },
   {
     path: "/fare",
     href: ROUTES.commuter.fare,
     label: STRINGS.commuter.tabs.fare,
     icon: "receipt-outline",
-    activeIcon: "receipt",
   },
   {
     path: "/alerts",
     href: ROUTES.commuter.alerts,
     label: STRINGS.commuter.tabs.alerts,
     icon: "notifications-outline",
-    activeIcon: "notifications",
   },
 ] as const;
 
 export const TAB_PATHS: string[] = TABS.map((t) => t.path);
 
-/** Height the floating tab bar takes from the bottom of the screen, gap included. */
+/** Height the docked tab bar takes from the bottom of the screen, safe area included. */
 export function useTabBarInset() {
   const { bottom } = useSafeAreaInsets();
-  return layout.tabBarHeight + layout.tabBarGap * 2 + Math.max(bottom, layout.tabBarGap);
+  return layout.tabBarHeight + bottom;
 }
 
-/** Map · Stops · Fare · Alerts. Floats above the map, outside the sheets. */
+/** Map · Stops · Fare · Alerts, docked under the sheets. The open tab is blue. */
 export default function TabBar() {
   const pathname = usePathname();
   const { bottom } = useSafeAreaInsets();
-  const { shadows } = useTheme();
   const unread = useAlerts((s) => s.items.filter((a) => !a.read).length);
 
   return (
     <View
-      pointerEvents="box-none"
-      style={{ bottom: Math.max(bottom, layout.tabBarGap) + layout.tabBarGap }}
-      className="absolute left-0 right-0 items-center px-3"
+      style={{ paddingBottom: bottom }}
+      className="absolute bottom-0 left-0 right-0 items-center border-t-[1.5px] border-line bg-card"
     >
       <View
         accessibilityRole="tablist"
-        style={[{ height: layout.tabBarHeight }, shadows.md]}
-        className="w-full max-w-[480px] flex-row rounded-[24px] border border-line bg-card px-1.5"
+        style={{ height: layout.tabBarHeight, maxWidth: layout.contentMaxWidth }}
+        className="w-full flex-row"
       >
         {TABS.map((tab) => {
           const active = pathname === tab.path;
@@ -76,22 +69,17 @@ export default function TabBar() {
               accessibilityState={{ selected: active }}
               className="flex-1 items-center justify-center gap-1"
             >
-              <View
-                className={cn(
-                  "h-8 w-14 items-center justify-center rounded-full",
-                  active && "bg-action-tint",
-                )}
-              >
-                <Icon
-                  name={active ? tab.activeIcon : tab.icon}
-                  size={21}
-                  tone={active ? "action" : "muted"}
-                />
+              <View>
+                <Icon name={tab.icon} size={22} tone={active ? "action" : "muted"} />
                 {badge && (
-                  <View className="absolute right-3 top-1 h-2.5 w-2.5 rounded-full border-2 border-card bg-danger" />
+                  <View className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-card bg-danger" />
                 )}
               </View>
-              <ThemedText variant="label" tone={active ? "action" : "muted"}>
+              <ThemedText
+                variant="label"
+                tone={active ? "action" : "muted"}
+                style={active ? { fontFamily: fonts.bold } : undefined}
+              >
                 {tab.label}
               </ThemedText>
             </Pressable>
