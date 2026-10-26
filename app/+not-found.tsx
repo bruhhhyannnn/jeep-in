@@ -1,33 +1,29 @@
 import { ROUTES, STRINGS } from "@/constants";
 import { View } from "react-native";
 import { router } from "expo-router";
-import { ThemedText, ThemedView, ButtonText } from "@/components/ui";
+import { Button, Icon, SafeAreaContainer, ThemedText } from "@/components/ui";
 
 export default function NotFoundScreen() {
   return (
-    <ThemedView variant="bg" className="flex-1 items-center justify-center px-6">
-      <View className="items-center gap-4">
-        <View className="gap-2">
-          {/* 404 Header */}
-          <ThemedText variant="h900" className="text-center">
-            {STRINGS.errors.notFound}
-          </ThemedText>
-
-          {/* Message */}
-          <ThemedText color="text_muted" variant="h500" className="text-center">
-            {STRINGS.errors.notFoundDescription}
-          </ThemedText>
-        </View>
-
-        {/* Back Button */}
-        <View className="w-full">
-          <ButtonText
-            label={STRINGS.general.goBack}
-            iconName="home-outline"
-            onPress={() => router.replace(ROUTES.root.index)}
-          />
-        </View>
+    <SafeAreaContainer className="items-center justify-center gap-5">
+      <View className="h-16 w-16 items-center justify-center rounded-full bg-sunken">
+        <Icon name="compass-outline" size={28} tone="muted" />
       </View>
-    </ThemedView>
+      <View className="items-center gap-1.5">
+        <ThemedText variant="title" className="text-center" accessibilityRole="header">
+          {STRINGS.errors.notFound}
+        </ThemedText>
+        <ThemedText tone="muted" className="text-center">
+          {STRINGS.errors.notFoundDescription}
+        </ThemedText>
+      </View>
+      <View className="w-full">
+        <Button
+          label={STRINGS.general.goBack}
+          iconName="home-outline"
+          onPress={() => router.replace(ROUTES.root.index)}
+        />
+      </View>
+    </SafeAreaContainer>
   );
 }

@@ -17,15 +17,21 @@ The app supports 2 roles: **Commuter** and **Driver**, each with tailored dashbo
 
 ### Commuter Features
 
-- Real-time tracking of jeepneys
-- Interactive map with route and stop points
-- Search for jeepneys and stops
-- Fare guide information
+- Live jeepneys for the direction you pick, sorted by minutes to your stop
+- Nearest stop from your location, or a stop you choose when location is off
+- Stop search by name, address or landmark, with stop details
+- Fare for your trip from the posted LTFRB matrix, with the student / senior discount
+- "Notify me at 3 min" arrival alerts, kept on the phone only
+- Last known positions and offline fares when there is no signal
+- Light, dark or match-phone appearance and three text sizes
 
 ### Driver Features
 
-- Background location sharing
-- View assigned jeepney and route
+- One switch to share location, confirmed only once commuters can actually see it
+- Sharing follows the shift hours and stops by itself at the end, with optional extra time
+- Direction switch, with a prompt at the end of the route
+- Report a problem to the manager in one tap
+- Direction and Report lock while the jeep is moving
 
 ## Tech Stack
 
@@ -40,8 +46,22 @@ The app supports 2 roles: **Commuter** and **Driver**, each with tailored dashbo
 
 - Clean role-based layouts via folder routing
 - Firebase modular SDK for scalable backend logic
-- Shared reusable components for map markers, floating cards, and more
-- Direction API integration with Mapbox for ETA & distance calculation
+- Design tokens shared between Tailwind (CSS variables) and JS, switching with the Appearance setting
+- Arrival times measured along the route path, so no Directions API call per jeep
+
+## Firestore Data Model
+
+Older documents still load: missing fields fall back to defaults, and `stop_points.routeDirection` and string `routes.directions` are read as before.
+
+| Collection         | Fields                                                                                                                                                                                                                                                                                 |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `routes`           | `name`, `vehicleClass`, `isActive`, `workingHours { start, end }` ("HH:mm"), `averageSpeedKph`, `directions[] { id, label, via[], path[] { lat, lng } }`. Without `path`, the road is traced through the stops with Mapbox Directions.                                                 |
+| `stop_points`      | `name`, `address`, `landmark`, `description`, `amenities[]`, `photoUrl`, `routeId`, `directionId`, `order`, `distanceKm` (from the first stop, for fares), `lat`, `long`, `isActive`                                                                                                   |
+| `fare_matrices`    | `routeId`, `vehicleClass`, `orderNo`, `issuedBy`, `effectiveDate`, `baseFare`, `baseKm`, `perKm`, `discountRate`, `roundTo` (regular fares round to this, e.g. `1`; the discount is taken off the rounded fare). Without a document, placeholder rates are shown and labelled as such. |
+| `jeepneys`         | `plateNumber`, `jeepneyNumber`, `routeId`, `assignedDriverId`, `status`, `seats`                                                                                                                                                                                                       |
+| `drivers`          | `name`, `employeeId`, `role` (`main` / `reliever`), `phone`, `licenseNo`, `licenseExpiry`, `photoUrl`                                                                                                                                                                                  |
+| `driver_locations` | `driverId`, `lat`, `long`, `heading`, `speed`, `directionId`, `isSharing`, `updatedAt` (server time), `overtimeUntil`                                                                                                                                                                  |
+| `driver_reports`   | `driverId`, `jeepneyId`, `unit`, `reason`, `note`, `lat`, `long`, `directionId`, `status` (`sent` / `withdrawn`), `createdAt`                                                                                                                                                          |
 
 ## Setup & Installation
 

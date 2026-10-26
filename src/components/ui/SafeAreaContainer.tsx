@@ -14,12 +14,12 @@ export default function SafeAreaContainer({
   showPadding = true,
   ...props
 }: SafeAreaContainerProps) {
-  const paddingClass = showPadding ? "p-5" : "";
+  const paddingClass = showPadding ? "px-5 pb-5 pt-3" : "";
 
   return (
     <ThemedView className="flex-1">
       <SafeAreaView
-        edges={["top", "left", "right"]}
+        edges={["top", "left", "right", "bottom"]}
         className={cn("flex-1", paddingClass, className)}
         {...props}
       >

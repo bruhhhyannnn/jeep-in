@@ -3,11 +3,16 @@ export type BottomSheetModalBaseRef = {
   close: () => void;
 };
 
-export type BottomSheetContainerRef = {
+export type SheetRef = {
   expand: () => void;
   collapse: () => void;
+  snapToIndex: (index: number) => void;
 };
 
-export type ThemeMode = "light" | "dark" | "system";
+/** "system" is shown as "Match phone". */
+export type Appearance = "light" | "dark" | "system";
 
-export type BottomSheetRef = React.RefObject<BottomSheetContainerRef | null>;
+export type TextSize = "default" | "large" | "largest";
+
+/** Which end of the trip a tapped stop fills. */
+export type TripField = "boarding" | "alighting";

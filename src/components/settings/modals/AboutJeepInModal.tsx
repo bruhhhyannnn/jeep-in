@@ -1,11 +1,11 @@
 import { STRINGS } from "@/constants";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import * as Clipboard from "expo-clipboard";
-import { BottomSheetModalBase, ButtonText, ThemedText } from "@/components/ui";
+import { BottomSheetModalBase, Button, ThemedText } from "@/components/ui";
 import { openWebsite } from "@/utils";
 import { Share, ToastAndroid, View } from "react-native";
 import { BottomSheetModalBaseRef } from "@/types";
-import SettingsModalCard from "@/components/settings/modals/SettingsModalCard";
+import SettingsRow from "@/components/settings/SettingsRow";
 
 const AboutJeepInModal = forwardRef<BottomSheetModalBaseRef>((_, ref) => {
   const baseRef = useRef<BottomSheetModalBaseRef>(null);
@@ -63,23 +63,23 @@ function DefaultAboutJeepInView({
   const handleVisitPage = () => openWebsite(STRINGS.settings.about.visit.content);
 
   return (
-    <View className="gap-4">
+    <View className="gap-5">
       {/* Love JEEP-IN Section */}
       <View className="gap-2">
-        <ThemedText variant="h500" className="uppercase">
+        <ThemedText variant="eyebrow" tone="muted">
           {STRINGS.settings.about.loveSection}
         </ThemedText>
-        <SettingsModalCard
+        <SettingsRow
           label={STRINGS.settings.about.likeFb.title}
           iconName="thumbs-up-outline"
           onPress={handleFacebook}
         />
-        <SettingsModalCard
+        <SettingsRow
           label={STRINGS.settings.about.share.title}
           iconName="megaphone-outline"
           onPress={handleShare}
         />
-        <SettingsModalCard
+        <SettingsRow
           label={STRINGS.settings.about.visit.title}
           iconName="document-text-outline"
           onPress={handleVisitPage}
@@ -88,15 +88,15 @@ function DefaultAboutJeepInView({
 
       {/* Legal Section */}
       <View className="gap-2">
-        <ThemedText variant="h500" className="uppercase">
+        <ThemedText variant="eyebrow" tone="muted">
           {STRINGS.settings.about.legalSection}
         </ThemedText>
-        <SettingsModalCard
+        <SettingsRow
           label={STRINGS.settings.about.dataAttribution.title}
           iconName="file-tray-full-outline"
           onPress={onDataAttribution}
         />
-        <SettingsModalCard
+        <SettingsRow
           label={STRINGS.settings.about.privacyPolicy.title}
           iconName="newspaper-outline"
           onPress={onPrivacyPolicy}
@@ -109,7 +109,7 @@ function DefaultAboutJeepInView({
 // Data Attribution View
 function DataAttributionView({ onBack }: { onBack: () => void }) {
   return (
-    <View className="gap-4">
+    <View className="gap-5">
       <View>
         {STRINGS.settings.about.dataAttribution.content.map((text, i) => (
           <ThemedText key={i}>• {text}</ThemedText>
@@ -117,8 +117,14 @@ function DataAttributionView({ onBack }: { onBack: () => void }) {
       </View>
 
       {/* Go Back Button */}
-      <View className="self-start">
-        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
+      <View>
+        <Button
+          label={STRINGS.general.goBack}
+          variant="outline"
+          size="md"
+          iconName="arrow-back"
+          onPress={onBack}
+        />
       </View>
     </View>
   );
@@ -127,7 +133,7 @@ function DataAttributionView({ onBack }: { onBack: () => void }) {
 // Privacy Policy View
 function PrivacyPolicyView({ onBack }: { onBack: () => void }) {
   return (
-    <View className="gap-4">
+    <View className="gap-5">
       <View>
         {STRINGS.settings.about.privacyPolicy.content.map((text, i) => (
           <ThemedText key={i}>• {text}</ThemedText>
@@ -135,8 +141,14 @@ function PrivacyPolicyView({ onBack }: { onBack: () => void }) {
       </View>
 
       {/* Go Back Button */}
-      <View className="self-start">
-        <ButtonText label={STRINGS.general.goBack} variant="secondary" onPress={onBack} />
+      <View>
+        <Button
+          label={STRINGS.general.goBack}
+          variant="outline"
+          size="md"
+          iconName="arrow-back"
+          onPress={onBack}
+        />
       </View>
     </View>
   );

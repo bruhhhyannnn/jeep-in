@@ -1,13 +1,21 @@
+import { View } from "react-native";
 import { Slot } from "expo-router";
 import { MapProvider } from "@/store";
-import { MapLayout } from "@/components/layout";
+import { MapboxMap } from "@/components/map";
+import { useFleetSubscription } from "@/hooks";
 
-export default function MapViewLayout() {
+/** One map stays mounted under every commuter screen; screens draw on top of it. */
+export default function MapGroupLayout() {
+  useFleetSubscription();
+
   return (
     <MapProvider>
-      <MapLayout>
-        <Slot />
-      </MapLayout>
+      <View className="flex-1 bg-page">
+        <MapboxMap />
+        <View className="absolute inset-0" pointerEvents="box-none">
+          <Slot />
+        </View>
+      </View>
     </MapProvider>
   );
 }

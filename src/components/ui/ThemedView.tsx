@@ -2,23 +2,25 @@ import { View, ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
 
 interface ThemedViewProps extends ViewProps {
-  variant?: "bg_dark" | "bg" | "bg_light";
+  /** page: every screen background · card: cards and sheets · sunken: inputs and tracks */
+  variant?: "page" | "card" | "sunken" | "inverse";
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
+const variants = {
+  page: "bg-page",
+  card: "bg-card",
+  sunken: "bg-sunken",
+  inverse: "bg-inverse",
+};
+
 export default function ThemedView({
-  variant = "bg_dark",
+  variant = "page",
   className,
   children,
   ...props
 }: ThemedViewProps) {
-  const variants = {
-    bg_dark: "bg-neutral-bg-light-50 dark:bg-neutral-bg-dark-50",
-    bg: "bg-neutral-bg-light-100 dark:bg-neutral-bg-dark-100",
-    bg_light: "bg-neutral-bg-light-200 dark:bg-neutral-bg-dark-200",
-  };
-
   return (
     <View className={cn(variants[variant], className)} {...props}>
       {children}

@@ -6,8 +6,10 @@ export const ROUTES = {
 
   onboarding: {
     layout: "/(onboarding)",
-    welcome: "/(onboarding)/welcome",
     roleSelection: "/(onboarding)/role-selection",
+    welcome: "/(onboarding)/welcome",
+    location: "/(onboarding)/location",
+    chooseStop: "/(onboarding)/choose-stop",
   },
 
   auth: {
@@ -16,17 +18,23 @@ export const ROUTES = {
 
   commuter: {
     layout: "/(map)/(commuter)",
-    home: "/(map)/(commuter)/home", // TODO: this is set as default for now
+    home: "/(map)/(commuter)/home",
+    stops: "/(map)/(commuter)/stops",
+    fare: "/(map)/(commuter)/fare",
+    alerts: "/(map)/(commuter)/alerts",
+    direction: "/(map)/(commuter)/direction",
+    fareMatrix: "/(map)/(commuter)/fare-matrix",
 
-    jeepney: (id: string) => `/(map)/jeepney/${id}` as const,
-    stop: (id: string) => `/(map)/stop/${id}` as const,
-    etaJeepney: (id: string) => `/(map)/eta-jeepney/${id}` as const,
-    etaStop: (id: string) => `/(map)/eta-stop/${id}` as const,
+    jeepney: (id: string) => `/(map)/(commuter)/jeepney/${id}` as const,
+    stop: (id: string) => `/(map)/(commuter)/stop/${id}` as const,
   },
 
   driver: {
-    layout: "/(map)/(driver)",
-    home: "/(map)/(driver)/home",
+    home: "/driver/gps",
+    direction: "/driver/direction",
+    report: "/driver/report",
+    profile: "/driver/profile",
+    display: "/driver/display",
   },
 
   settings: {

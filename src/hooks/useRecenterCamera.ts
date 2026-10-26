@@ -10,7 +10,7 @@ export const useFlyToCamera = () => {
 
   const flyToCamera = useCallback(
     (coords: [number, number], duration = 1200) => {
-      map.current.flyTo(coords, duration);
+      map.current.flyTo(coords, { duration });
     },
     [map],
   );

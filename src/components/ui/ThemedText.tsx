@@ -1,53 +1,69 @@
 import { Text, TextProps } from "react-native";
 import { cn } from "@/lib/utils";
+import { textScale, typeRoles, type TypeRole } from "@/theme";
+import { usePreferences } from "@/store";
+
+export type TextTone =
+  | "ink"
+  | "muted"
+  | "faint"
+  | "action"
+  | "actionInk"
+  | "onInverse"
+  | "onInverseMuted"
+  | "onBlueMuted"
+  | "accent"
+  | "accentInk"
+  | "live"
+  | "danger"
+  | "warn";
+
+const tones: Record<TextTone, string> = {
+  ink: "text-ink",
+  muted: "text-muted",
+  faint: "text-faint",
+  action: "text-action",
+  actionInk: "text-action-ink",
+  onInverse: "text-white",
+  onInverseMuted: "text-navy-200",
+  onBlueMuted: "text-blue-200",
+  accent: "text-accent",
+  accentInk: "text-accent-ink",
+  live: "text-live-ink",
+  danger: "text-danger-ink",
+  warn: "text-warn-ink",
+};
 
 interface ThemedTextProps extends TextProps {
-  variant?:
-    | "hero10"
-    | "h900"
-    | "h800"
-    | "h700"
-    | "h600"
-    | "h500"
-    | "h400"
-    | "h300"
-    | "h200"
-    | "h100"
-    | "h50";
-  color?: "text" | "text_muted" | "default_blue";
+  variant?: TypeRole;
+  tone?: TextTone;
   className?: string;
   children: React.ReactNode;
 }
 
+/** Text in one of the hi-fi type roles, scaled by the Text size setting. */
 export default function ThemedText({
-  variant = "h200",
-  color = "text",
+  variant = "body",
+  tone = "ink",
   className,
+  style,
   children,
   ...props
 }: ThemedTextProps) {
-  const variants = {
-    hero10: "text-hero10 font-puffin-extrabold-italic",
-    h900: "text-h900 font-puffin-bold",
-    h800: "text-h800 font-puffin-bold",
-    h700: "text-h700 font-puffin-semibold",
-    h600: "text-h600 font-puffin-semibold",
-    h500: "text-h500 font-puffin-medium",
-    h400: "text-h400 font-puffin-medium",
-    h300: "text-h300 font-puffin-medium",
-    h200: "text-h200 font-puffin",
-    h100: "text-h100 font-puffin",
-    h50: "text-h50 font-puffin",
-  };
-
-  const colors = {
-    text: "text-neutral-950 dark:text-neutral-50",
-    text_muted: "text-neutral-500",
-    default_blue: "text-dodger-blue-50",
-  };
+  const scale = textScale[usePreferences((s) => s.textSize)];
+  const role = typeRoles[variant];
+  const sized =
+    scale === 1
+      ? role
+      : { ...role, fontSize: role.fontSize * scale, lineHeight: role.lineHeight * scale };
 
   return (
-    <Text className={cn(variants[variant], colors[color], className)} {...props}>
+    <Text
+      maxFontSizeMultiplier={1.6}
+      className={cn(tones[tone], className)}
+      style={[sized, style]}
+      {...props}
+    >
       {children}
     </Text>
   );
