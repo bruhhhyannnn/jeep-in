@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { cn, formatDirection, timeAgo } from "@/lib";
+import { cn, directionLabel, timeAgo } from "@/lib";
 import {
   Map,
   MapControls,
@@ -12,7 +12,7 @@ import {
   StatusChip,
   useMap,
 } from "@/components/ui";
-import type { StopPoint } from "@/types";
+import type { RouteDirection, StopPoint } from "@/types";
 import { driverName, type FleetUnit } from "./fleet-state";
 
 const DEFAULT_CENTER: [number, number] = [120.551474, 18.058174];
@@ -21,6 +21,8 @@ const DEFAULT_ZOOM = 13.5;
 interface FleetMapProps {
   units: FleetUnit[];
   stops: StopPoint[];
+  /** The route's directions, for the stop labels. */
+  directions?: RouteDirection[];
   selectedKey: string | null;
   onSelect: (key: string | null) => void;
   now: number;
@@ -28,7 +30,15 @@ interface FleetMapProps {
   emptyState?: { title: string; description: string } | null;
 }
 
-export function FleetMap({ units, stops, selectedKey, onSelect, now, emptyState }: FleetMapProps) {
+export function FleetMap({
+  units,
+  stops,
+  directions,
+  selectedKey,
+  onSelect,
+  now,
+  emptyState,
+}: FleetMapProps) {
   const placed = units.filter((u) => u.location);
 
   return (
@@ -37,13 +47,13 @@ export function FleetMap({ units, stops, selectedKey, onSelect, now, emptyState 
         <MapControls position="top-right" showZoom showLocate showFullscreen />
 
         {stops.map((stop) => (
-          <MapMarker key={stop.id} longitude={stop.longitude} latitude={stop.latitude}>
+          <MapMarker key={stop.id} longitude={stop.long} latitude={stop.lat}>
             <MarkerContent>
               <span className="block h-3.5 w-3.5 rounded-full border-[3px] border-ink-mark bg-card shadow-sm" />
             </MarkerContent>
             <MarkerTooltip>
               <span className="font-semibold">{stop.name}</span>
-              <span className="opacity-70"> · {formatDirection(stop.routeDirection)}</span>
+              <span className="opacity-70"> · {directionLabel(directions, stop.directionId)}</span>
             </MarkerTooltip>
           </MapMarker>
         ))}

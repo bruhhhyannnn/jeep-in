@@ -1,4 +1,14 @@
 import type { Timestamp } from "firebase/firestore";
+import type {
+  FareMatrix,
+  FareRow,
+  Route as RouteModel,
+  RouteDirection,
+  StopPoint,
+} from "@jeep-in/core/model";
+
+// Routes, stops and fares follow the model every app shares (packages/core).
+export type { FareMatrix, FareRow, RouteDirection, StopPoint };
 
 /* ─── Role ─── */
 export type UserRole = "super_admin" | "admin" | "driver" | "commuter";
@@ -79,30 +89,9 @@ export interface DriverLocation {
 }
 
 /* ─── Route (/routes/{routeId}) ─── */
-export interface Route {
-  id: string;
-  name: string;
+export interface Route extends RouteModel {
+  /** Shown to admins only. */
   description: string | null;
-  directions: string[];
-  isActive: boolean;
-  workingHours: {
-    start: string; // "06:00"
-    end: string; // "20:00"
-  };
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-/* ─── Stop Point (/stop_points/{stopId}) ─── */
-export interface StopPoint {
-  id: string;
-  name: string;
-  address?: string;
-  routeId: string;
-  routeDirection: string;
-  latitude: number;
-  longitude: number;
-  isActive: boolean;
 }
 
 /* ─── Fare Guide (/fare_guide/{fareId}) ─── */

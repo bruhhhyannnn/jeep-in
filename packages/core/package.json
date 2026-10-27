@@ -4,6 +4,7 @@
   "private": true,
   "description": "The JEEP-IN data model, Firestore document readers, and the fare, fleet, geo, format and search logic every app shares.",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
     "./documents": "./src/documents.ts",

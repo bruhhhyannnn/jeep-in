@@ -22,7 +22,7 @@ export function useCreateStopPoint() {
 export function useUpdateStopPoint() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<StopPointFormData> }) =>
+    mutationFn: ({ id, data }: { id: string; data: StopPointFormData }) =>
       updateStopPoint(id, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["stop-points"] }),
   });

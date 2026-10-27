@@ -1,19 +1,55 @@
 "use server";
 
-import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type DocumentData } from "firebase-admin/firestore";
+import { normalizeRoute, normalizeStopPoint } from "@jeep-in/core/documents";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
-import { WorkingHoursFormData, RouteFormData, serializeDoc } from "@/lib";
-import type { Route } from "@/types";
+import { WorkingHoursFormData, RouteFormData, splitList } from "@/lib";
+import type { Route, RouteDirection } from "@/types";
+
+const toRoute = (id: string, d: DocumentData): Route => ({
+  ...normalizeRoute(id, d),
+  description: typeof d.description === "string" && d.description.trim() ? d.description : null,
+});
 
 export async function getRoute(routeId: string): Promise<Route | null> {
   const snap = await adminDb.collection("routes").doc(routeId).get();
-  if (!snap.exists) return null;
-  return serializeDoc({ ...(snap.data() as Route), id: snap.id });
+  return snap.exists ? toRoute(snap.id, snap.data()!) : null;
 }
 
 export async function getAllRoutes(): Promise<Route[]> {
   const snap = await adminDb.collection("routes").get();
-  return snap.docs.map((d) => serializeDoc({ ...(d.data() as Route), id: d.id }));
+  return snap.docs.map((d) => toRoute(d.id, d.data()));
+}
+
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+/**
+ * The directions as stored. Existing ones keep their id (stops point to it); a new one
+ * is named after its first and last town, e.g. "laoag_paoay". Road paths, which the
+ * form doesn't edit, are carried over. Firestore can't nest arrays, so path points are
+ * stored as { lat, lng }.
+ */
+function toStoredDirections(form: RouteFormData["directions"], current: RouteDirection[]) {
+  const used = new Set<string>();
+  return form.map((d) => {
+    const via = splitList(d.via);
+    const base = d.id || `${slug(via[0])}_${slug(via[via.length - 1])}`;
+    let id = base;
+    for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
+    used.add(id);
+    const path = current.find((c) => c.id === id)?.path ?? [];
+    return {
+      id,
+      label: d.label.trim(),
+      via,
+      ...(path.length ? { path: path.map(([lng, lat]) => ({ lat, lng })) } : {}),
+    };
+  });
 }
 
 export async function updateWorkingHours(
@@ -29,32 +65,52 @@ export async function updateWorkingHours(
     });
 }
 
-export async function createRoute(data: RouteFormData): Promise<string> {
-  const now = Timestamp.now();
-  const ref = await adminDb.collection("routes").add({
-    name: data.name,
-    description: data.description ?? null,
-    directions: data.directions,
+function fields(data: RouteFormData, current: RouteDirection[]) {
+  return {
+    name: data.name.trim(),
+    description: data.description?.trim() || null,
+    vehicleClass: data.vehicleClass.trim(),
+    averageSpeedKph: data.averageSpeedKph,
+    directions: toStoredDirections(data.directions, current),
     isActive: data.isActive,
     workingHours: { start: data.workingHours.start, end: data.workingHours.end },
-    createdAt: now,
-    updatedAt: now,
-  });
+  };
+}
+
+export async function createRoute(data: RouteFormData): Promise<string> {
+  const now = FieldValue.serverTimestamp();
+  const ref = await adminDb
+    .collection("routes")
+    .add({ ...fields(data, []), createdAt: now, updatedAt: now });
   return ref.id;
 }
 
 export async function updateRoute(routeId: string, data: RouteFormData): Promise<void> {
+  const current = await getRoute(routeId);
+  if (!current) throw new Error("This route no longer exists.");
+  const next = fields(data, current.directions);
+
+  // A direction can't go while stops still point to it: they'd vanish from the apps.
+  const kept = new Set(next.directions.map((d) => d.id));
+  const removed = current.directions.filter((d) => !kept.has(d.id));
+  if (removed.length) {
+    const stops = await adminDb.collection("stop_points").where("routeId", "==", routeId).get();
+    for (const direction of removed) {
+      const count = stops.docs.filter(
+        (d) => normalizeStopPoint(d.id, d.data()).directionId === direction.id,
+      ).length;
+      if (count) {
+        throw new Error(
+          `${count} ${count === 1 ? "stop is" : "stops are"} still ${direction.label.toLowerCase()}. Move or remove ${count === 1 ? "it" : "them"} first.`,
+        );
+      }
+    }
+  }
+
   await adminDb
     .collection("routes")
     .doc(routeId)
-    .update({
-      name: data.name,
-      description: data.description ?? null,
-      directions: data.directions,
-      isActive: data.isActive,
-      workingHours: { start: data.workingHours.start, end: data.workingHours.end },
-      updatedAt: FieldValue.serverTimestamp(),
-    });
+    .update({ ...next, updatedAt: FieldValue.serverTimestamp() });
 }
 
 export async function deleteRoute(routeId: string): Promise<void> {
@@ -64,9 +120,12 @@ export async function deleteRoute(routeId: string): Promise<void> {
   const stopsSnap = await adminDb.collection("stop_points").where("routeId", "==", routeId).get();
   stopsSnap.docs.forEach((d) => batch.delete(d.ref));
 
-  // Fare guide entries
-  const fareSnap = await adminDb.collection("fare_guide").where("routeId", "==", routeId).get();
-  fareSnap.docs.forEach((d) => batch.delete(d.ref));
+  // Fare guide entries and the fare matrix
+  const [fareSnap, matrixSnap] = await Promise.all([
+    adminDb.collection("fare_guide").where("routeId", "==", routeId).get(),
+    adminDb.collection("fare_matrices").where("routeId", "==", routeId).get(),
+  ]);
+  [...fareSnap.docs, ...matrixSnap.docs].forEach((d) => batch.delete(d.ref));
 
   // Unassign organizations that reference this route
   const orgsSnap = await adminDb.collection("organizations").where("routeId", "==", routeId).get();

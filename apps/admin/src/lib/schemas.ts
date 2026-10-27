@@ -52,17 +52,43 @@ export const workingHoursSchema = z.object({
 export const stopPointSchema = z.object({
   name: z.string().min(1, "Name is required"),
   address: z.string().optional(),
-  routeDirection: z.string().min(1, "Direction is required"),
-  latitude: z.coerce.number().min(-90, "Invalid latitude").max(90, "Invalid latitude"),
-  longitude: z.coerce.number().min(-180, "Invalid longitude").max(180, "Invalid longitude"),
+  landmark: z.string().optional(),
+  description: z.string().optional(),
+  /** Comma-separated, e.g. "Covered shed, Lights". */
+  amenities: z.string().optional(),
+  directionId: z.string().min(1, "Direction is required"),
+  /** Position along the direction, 1 for the first stop. The other stops move to make room. */
+  order: z.coerce.number().int("Use a whole number").min(1, "The first stop is 1"),
+  lat: z.coerce.number().min(-90, "Invalid latitude").max(90, "Invalid latitude"),
+  long: z.coerce.number().min(-180, "Invalid longitude").max(180, "Invalid longitude"),
   isActive: z.boolean().default(true),
 });
 
+/** "Laoag, Batac, Paoay" or "Laoag → Batac → Paoay" → ["Laoag", "Batac", "Paoay"]. */
+export const splitList = (value: string | undefined) =>
+  (value ?? "")
+    .split(/\s*(?:,|→|->)\s*/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
 /* ─── Route ─── */
+export const routeDirectionSchema = z.object({
+  /** Kept for an existing direction; a new one gets an id from its towns. */
+  id: z.string().optional(),
+  label: z.string().min(1, "Name the direction, e.g. Toward Paoay"),
+  /** Towns in travel order, e.g. "Laoag, Batac, Paoay". */
+  via: z.string().refine((v) => splitList(v).length >= 2, "List at least the first and last town"),
+});
+
 export const routeSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
-  directions: z.array(z.string().min(1)).min(1, "At least one direction is required"),
+  vehicleClass: z.string().min(1, "Vehicle class is required"),
+  averageSpeedKph: z.coerce
+    .number()
+    .min(5, "Use the average speed including stops, 5 km/h or more")
+    .max(80, "That's faster than a jeepney averages"),
+  directions: z.array(routeDirectionSchema).min(1, "At least one direction is required"),
   isActive: z.boolean().default(true),
   workingHours: z.object({
     start: z.string().min(1, "Start time is required"),
@@ -98,5 +124,6 @@ export type FareGuideFormData = z.infer<typeof fareGuideSchema>;
 export type WorkingHoursFormData = z.infer<typeof workingHoursSchema>;
 export type StopPointFormData = z.infer<typeof stopPointSchema>;
 export type RouteFormData = z.infer<typeof routeSchema>;
+export type RouteDirectionFormData = z.infer<typeof routeDirectionSchema>;
 export type OrganizationFormData = z.infer<typeof organizationSchema>;
 export type AdminCreateFormData = z.infer<typeof adminCreateSchema>;

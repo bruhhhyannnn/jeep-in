@@ -53,6 +53,14 @@ export function formatDirection(dir: string): string {
     .join(" → ");
 }
 
+/** A direction's label from its route ("Toward Paoay"), or its id made readable. */
+export function directionLabel(
+  directions: { id: string; label: string }[] | undefined,
+  id: string,
+) {
+  return directions?.find((d) => d.id === id)?.label ?? formatDirection(id);
+}
+
 /** "06:00" → "6:00 AM" */
 export function formatClock(hhmm: string | undefined | null): string {
   if (!hhmm) return "—";

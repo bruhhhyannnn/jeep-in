@@ -24,6 +24,7 @@ import { join } from "node:path";
 import { config } from "dotenv";
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
+import { normalizeStopPoint } from "@jeep-in/core/documents";
 import {
   MAX_BOTS,
   SIMULATION_TICK_S,
@@ -75,17 +76,16 @@ type Stop = { name: string; order: number; lng: number; lat: number };
 /** Stops per direction in order: live documents, or the seed lists while `order` isn't saved yet. */
 async function loadStops(): Promise<Record<string, Stop[]>> {
   const snap = await db.collection("stop_points").where("routeId", "==", ROUTE_ID).get();
-  const live = snap.docs.map((d) => d.data()).filter((s) => s.isActive !== false);
+  const live = snap.docs.map((d) => normalizeStopPoint(d.id, d.data())).filter((s) => s.isActive);
   const byDirection: Record<string, Stop[]> = {};
 
-  if (live.length && live.every((s) => typeof s.order === "number")) {
+  if (live.length && live.every((s) => s.order >= 1)) {
     for (const s of live) {
-      const direction = String(s.routeDirection ?? s.directionId);
-      (byDirection[direction] ??= []).push({
+      (byDirection[s.directionId] ??= []).push({
         name: s.name,
         order: s.order,
-        lng: Number(s.longitude ?? s.long),
-        lat: Number(s.latitude ?? s.lat),
+        lng: s.long,
+        lat: s.lat,
       });
     }
   } else {

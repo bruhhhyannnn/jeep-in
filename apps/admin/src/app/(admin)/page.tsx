@@ -204,6 +204,7 @@ export default function FleetOverviewPage() {
           <FleetMap
             units={visible}
             stops={stopPoints}
+            directions={route?.directions}
             selectedKey={selectedKey}
             onSelect={setSelectedKey}
             now={now}

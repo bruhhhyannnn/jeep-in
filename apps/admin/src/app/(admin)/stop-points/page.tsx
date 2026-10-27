@@ -22,6 +22,7 @@ import {
   SidePanel,
   StatusChip,
   Switch,
+  Textarea,
   useMap,
 } from "@/components/ui";
 import { Notice, PageHeader, SearchField } from "@/components/common";
@@ -34,8 +35,8 @@ import {
   useAllRoutes,
   useOrganization,
 } from "@/hooks";
-import { formatDirection, stopPointSchema, type StopPointFormData } from "@/lib";
-import type { StopPoint } from "@/types";
+import { directionLabel, stopPointSchema, type StopPointFormData } from "@/lib";
+import type { RouteDirection, StopPoint } from "@/types";
 
 const DEFAULT_CENTER: [number, number] = [120.551474, 18.058174];
 const DEFAULT_ZOOM = 12;
@@ -73,7 +74,7 @@ export default function StopPointsPage() {
   const q = query.trim().toLowerCase();
   const filtered = stopPoints
     .filter((s) => !q || `${s.name} ${s.address ?? ""}`.toLowerCase().includes(q))
-    .filter((s) => !selectedDirection || s.routeDirection === selectedDirection);
+    .filter((s) => !selectedDirection || s.directionId === selectedDirection);
 
   const openPanel = (id: string | null) => {
     setEditId(id);
@@ -81,6 +82,15 @@ export default function StopPointsPage() {
   };
 
   const columns: ColumnDef<StopPoint, unknown>[] = [
+    {
+      id: "order",
+      header: "#",
+      // Direction first, so sorting by # keeps each direction's stops together.
+      accessorFn: (s) => `${s.directionId}:${String(s.order).padStart(3, "0")}`,
+      cell: ({ row: { original: s } }) => (
+        <span className="font-data text-[13px] text-ink-muted">{s.order || "—"}</span>
+      ),
+    },
     {
       id: "name",
       header: "Stop",
@@ -90,7 +100,9 @@ export default function StopPointsPage() {
           <span className="h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-ink-mark bg-card" />
           <div className="min-w-0">
             <p className="truncate font-semibold text-ink">{s.name}</p>
-            {s.address && <p className="truncate text-[12px] text-ink-muted">{s.address}</p>}
+            {(s.landmark || s.address) && (
+              <p className="truncate text-[12px] text-ink-muted">{s.landmark ?? s.address}</p>
+            )}
           </div>
         </div>
       ),
@@ -98,18 +110,18 @@ export default function StopPointsPage() {
     {
       id: "direction",
       header: "Direction",
-      accessorFn: (s) => s.routeDirection,
+      accessorFn: (s) => directionLabel(directions, s.directionId),
       cell: ({ row: { original: s } }) => (
-        <StatusChip tone="info">{formatDirection(s.routeDirection)}</StatusChip>
+        <StatusChip tone="info">{directionLabel(directions, s.directionId)}</StatusChip>
       ),
     },
     {
       id: "latLng",
       header: "Coordinates",
-      accessorFn: (s) => `${s.latitude}, ${s.longitude}`,
+      accessorFn: (s) => `${s.lat}, ${s.long}`,
       cell: ({ row: { original: s } }) => (
         <span className="font-data text-[12px] text-ink-muted">
-          {s.latitude.toFixed(5)}, {s.longitude.toFixed(5)}
+          {s.lat.toFixed(5)}, {s.long.toFixed(5)}
         </span>
       ),
     },
@@ -181,7 +193,7 @@ export default function StopPointsPage() {
                   aria-label="Direction"
                   options={[
                     { value: "", label: "Both directions" },
-                    ...directions.map((d) => ({ value: d, label: formatDirection(d) })),
+                    ...directions.map((d) => ({ value: d.id, label: d.label })),
                   ]}
                   value={selectedDirection}
                   onChange={(e) => setSelectedDirection(e.target.value)}
@@ -227,6 +239,7 @@ export default function StopPointsPage() {
         routeId={routeId}
         routeName={currentRoute?.name}
         directions={directions}
+        stops={stopPoints}
         stop={stopPoints.find((s) => s.id === editId) ?? null}
         onDelete={setDeleting}
       />
@@ -284,6 +297,7 @@ function StopPointPanel({
   routeId,
   routeName,
   directions,
+  stops,
   stop,
   onDelete,
 }: {
@@ -291,7 +305,9 @@ function StopPointPanel({
   onClose: () => void;
   routeId: string;
   routeName?: string;
-  directions: string[];
+  directions: RouteDirection[];
+  /** The route's stops, to number a new one after the last in its direction. */
+  stops: StopPoint[];
   stop: StopPoint | null;
   onDelete: (stop: StopPoint) => void;
 }) {
@@ -313,38 +329,52 @@ function StopPointPanel({
     defaultValues: { isActive: true },
   });
 
+  /** After the last stop of the direction. */
+  const nextOrder = (directionId: string) =>
+    stops.filter((s) => s.directionId === directionId).length + 1;
+
   useEffect(() => {
     if (!isOpen) return;
+    const onlyDirection = directions.length === 1 ? directions[0].id : "";
     reset(
       stop
         ? {
             name: stop.name,
-            address: stop.address ?? "",
-            routeDirection: stop.routeDirection,
-            latitude: stop.latitude,
-            longitude: stop.longitude,
+            address: stop.address,
+            landmark: stop.landmark ?? "",
+            description: stop.description ?? "",
+            amenities: stop.amenities.join(", "),
+            directionId: stop.directionId,
+            order: stop.order || nextOrder(stop.directionId),
+            lat: stop.lat,
+            long: stop.long,
             isActive: stop.isActive,
           }
         : {
             name: "",
             address: "",
-            routeDirection: directions.length === 1 ? directions[0] : "",
+            landmark: "",
+            description: "",
+            amenities: "",
+            directionId: onlyDirection,
+            order: nextOrder(onlyDirection),
             isActive: true,
           },
     );
-    // Directions is compared by value; the array itself is rebuilt on every render.
-  }, [isOpen, stop, directions.join("|"), reset]);
+    // Directions are compared by id; the array itself is rebuilt on every render.
+  }, [isOpen, stop, directions.map((d) => d.id).join("|"), reset]);
 
-  const lat = watch("latitude");
-  const lng = watch("longitude");
+  const lat = watch("lat");
+  const lng = watch("long");
+  const directionId = watch("directionId");
   const hasPin = typeof lat === "number" && !isNaN(lat) && typeof lng === "number" && !isNaN(lng);
 
   const handlePick = (pickedLng: number, pickedLat: number) => {
-    setValue("longitude", pickedLng, { shouldValidate: true, shouldDirty: true });
-    setValue("latitude", pickedLat, { shouldValidate: true, shouldDirty: true });
+    setValue("long", pickedLng, { shouldValidate: true, shouldDirty: true });
+    setValue("lat", pickedLat, { shouldValidate: true, shouldDirty: true });
   };
 
-  const mapCenter: [number, number] = stop ? [stop.longitude, stop.latitude] : DEFAULT_CENTER;
+  const mapCenter: [number, number] = stop ? [stop.long, stop.lat] : DEFAULT_CENTER;
   const mapZoom = stop ? 15 : DEFAULT_ZOOM;
   const isSaving = isSubmitting || createStopPoint.isPending || updateStopPoint.isPending;
 
@@ -369,7 +399,7 @@ function StopPointPanel({
       title={stop ? stop.name : "Add a stop"}
       subtitle={
         stop
-          ? `${formatDirection(stop.routeDirection)}${routeName ? ` · ${routeName}` : ""}`
+          ? `${directionLabel(directions, stop.directionId)}${routeName ? ` · ${routeName}` : ""}`
           : routeName
             ? `A new stop on ${routeName}.`
             : "A new stop on this route."
@@ -400,22 +430,65 @@ function StopPointPanel({
           placeholder="National Highway, Batac City"
           {...register("address")}
         />
-        <Field label="Direction" htmlFor="stop-direction" error={errors.routeDirection?.message}>
-          <Select
-            id="stop-direction"
-            options={directions.map((d) => ({ value: d, label: formatDirection(d) }))}
-            placeholder={
-              directions.length === 0 ? "This route has no directions yet" : "Choose a direction"
-            }
-            disabled={directions.length === 0}
-            error={!!errors.routeDirection}
-            {...register("routeDirection")}
+        <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_120px]">
+          <Field label="Direction" htmlFor="stop-direction" error={errors.directionId?.message}>
+            <Select
+              id="stop-direction"
+              options={directions.map((d) => ({ value: d.id, label: d.label }))}
+              placeholder={
+                directions.length === 0 ? "This route has no directions yet" : "Choose a direction"
+              }
+              disabled={directions.length === 0}
+              error={!!errors.directionId}
+              {...register("directionId", {
+                // A new stop goes after the last one of the direction it's added to.
+                onChange: (e) => {
+                  if (!stop) setValue("order", nextOrder(e.target.value));
+                },
+              })}
+            />
+          </Field>
+          <Input
+            id="stop-order"
+            label="Stop no."
+            type="number"
+            inputMode="numeric"
+            min={1}
+            error={!!errors.order}
+            {...register("order")}
+          />
+        </div>
+        <p className="-mt-3 text-[13px] text-ink-muted">
+          {errors.order?.message ??
+            `1 is the first stop${directionId ? ` ${directionLabel(directions, directionId).toLowerCase()}` : ""}. The other stops move to make room.`}
+        </p>
+
+        <Input
+          id="stop-landmark"
+          label="Landmark (optional)"
+          placeholder="Across Jollibee"
+          hint="Commuters can search for it."
+          {...register("landmark")}
+        />
+        <Field label="About this stop (optional)" htmlFor="stop-description">
+          <Textarea
+            id="stop-description"
+            rows={3}
+            placeholder="Jeeps wait here for up to five minutes."
+            {...register("description")}
           />
         </Field>
+        <Input
+          id="stop-amenities"
+          label="Amenities (optional)"
+          placeholder="Covered shed, Lights"
+          hint="Separate them with commas. Shown as chips under About this stop."
+          {...register("amenities")}
+        />
 
-        {/* Hidden inputs so RHF registers lat/lng for validation */}
-        <input type="hidden" {...register("latitude")} />
-        <input type="hidden" {...register("longitude")} />
+        {/* Hidden inputs so RHF registers lat/long for validation */}
+        <input type="hidden" {...register("lat")} />
+        <input type="hidden" {...register("long")} />
 
         <div>
           <p className="mb-1.5 text-label text-ink-muted">
@@ -423,7 +496,7 @@ function StopPointPanel({
           </p>
           <div
             className={
-              errors.latitude || errors.longitude
+              errors.lat || errors.long
                 ? "h-64 overflow-hidden rounded-tile border-[1.5px] border-danger"
                 : "h-64 overflow-hidden rounded-tile border-[1.5px] border-line-strong"
             }
@@ -457,7 +530,7 @@ function StopPointPanel({
           ) : (
             <p
               className={
-                errors.latitude || errors.longitude
+                errors.lat || errors.long
                   ? "mt-1.5 text-[13px] text-danger-ink"
                   : "mt-1.5 text-[13px] text-ink-muted"
               }

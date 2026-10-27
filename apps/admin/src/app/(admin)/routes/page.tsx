@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, X } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -11,7 +11,6 @@ import {
   ConfirmDialog,
   ConfirmFacts,
   DataTable,
-  Field,
   Input,
   PageError,
   PanelActionRow,
@@ -21,8 +20,11 @@ import {
 } from "@/components/ui";
 import { PageHeader, SearchField } from "@/components/common";
 import { useAllRoutes, useCreateRoute, useUpdateRoute, useDeleteRoute } from "@/hooks";
-import { formatClock, formatDirection, routeSchema, type RouteFormData } from "@/lib";
+import { formatClock, routeSchema, splitList, type RouteFormData } from "@/lib";
 import type { Route } from "@/types";
+
+const DEFAULT_VEHICLE_CLASS = "Traditional PUJ";
+const DEFAULT_SPEED_KPH = 20;
 
 export default function RoutesPage() {
   const [query, setQuery] = useState("");
@@ -62,11 +64,11 @@ export default function RoutesPage() {
       enableSorting: false,
       cell: ({ row: { original: r } }) => (
         <div className="flex flex-wrap gap-1.5">
-          {r.directions?.length ? (
+          {r.directions.length ? (
             r.directions.map((d) => (
-              <StatusChip key={d} tone="info">
-                {formatDirection(d)}
-              </StatusChip>
+              <span key={d.id} title={d.via.join(" → ")}>
+                <StatusChip tone="info">{d.label}</StatusChip>
+              </span>
             ))
           ) : (
             <span className="text-ink-muted">None</span>
@@ -178,7 +180,7 @@ export default function RoutesPage() {
           items={[
             {
               label: "Deleted",
-              text: "Its stop points, fare guide, and the drivers on it (including their sign-ins).",
+              text: "Its stop points, fares, and the drivers on it (including their sign-ins).",
             },
             {
               label: "Kept",
@@ -208,42 +210,47 @@ function RoutePanel({
   const updateRoute = useUpdateRoute();
   const formId = "route-form";
 
-  const [dirInput, setDirInput] = useState("");
-  const [directions, setDirections] = useState<string[]>([]);
-
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
+    getValues,
     control,
     formState: { errors, isSubmitting },
   } = useForm<RouteFormData>({
     resolver: zodResolver(routeSchema),
     defaultValues: {
       isActive: true,
+      vehicleClass: DEFAULT_VEHICLE_CLASS,
+      averageSpeedKph: DEFAULT_SPEED_KPH,
       directions: [],
       workingHours: { start: "06:00", end: "20:00" },
     },
   });
+  const directions = useFieldArray({ control, name: "directions", keyName: "key" });
 
   useEffect(() => {
     if (!isOpen) return;
-    const dirs = route?.directions ?? [];
-    setDirections(dirs);
-    setDirInput("");
     reset(
       route
         ? {
             name: route.name,
             description: route.description ?? "",
-            directions: dirs,
+            vehicleClass: route.vehicleClass,
+            averageSpeedKph: route.averageSpeedKph,
+            directions: route.directions.map((d) => ({
+              id: d.id,
+              label: d.label,
+              via: d.via.join(", "),
+            })),
             isActive: route.isActive,
             workingHours: route.workingHours,
           }
         : {
             name: "",
             description: "",
+            vehicleClass: DEFAULT_VEHICLE_CLASS,
+            averageSpeedKph: DEFAULT_SPEED_KPH,
             directions: [],
             isActive: true,
             workingHours: { start: "06:00", end: "20:00" },
@@ -251,19 +258,15 @@ function RoutePanel({
     );
   }, [isOpen, route, reset]);
 
+  /** The second direction starts as the first one's return trip. */
   const addDirection = () => {
-    const val = dirInput.trim().toLowerCase().replace(/\s+/g, "_");
-    if (!val || directions.includes(val)) return;
-    const next = [...directions, val];
-    setDirections(next);
-    setValue("directions", next, { shouldValidate: true, shouldDirty: true });
-    setDirInput("");
-  };
-
-  const removeDirection = (index: number) => {
-    const next = directions.filter((_, i) => i !== index);
-    setDirections(next);
-    setValue("directions", next, { shouldValidate: true, shouldDirty: true });
+    const current = getValues("directions");
+    const towns = current.length === 1 ? splitList(current[0].via) : [];
+    directions.append(
+      towns.length >= 2
+        ? { label: `Toward ${towns[0]}`, via: [...towns].reverse().join(", ") }
+        : { label: "", via: "" },
+    );
   };
 
   const isSaving = isSubmitting || createRoute.isPending || updateRoute.isPending;
@@ -318,56 +321,79 @@ function RoutePanel({
           {...register("description")}
         />
 
-        <Field
-          label="Directions"
-          htmlFor="route-direction"
-          error={
-            errors.directions
-              ? ((errors.directions as { message?: string }).message ??
-                "Add at least one direction")
-              : undefined
-          }
-          hint="Type both ends with an underscore, e.g. laoag_paoay, then press Enter."
-        >
-          <div className="flex gap-2">
-            <input
-              id="route-direction"
-              value={dirInput}
-              onChange={(e) => setDirInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addDirection();
-                }
-              }}
-              placeholder="laoag_paoay"
-              className="h-12 min-w-0 flex-1 rounded-input border-[1.5px] border-line-strong bg-card px-4 font-data text-[14px] text-ink placeholder:text-ink-meta focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
-            />
-            <Button variant="outline" className="h-12" onClick={addDirection}>
-              Add
-            </Button>
-          </div>
-        </Field>
-        {directions.length > 0 && (
-          <div className="-mt-2 flex flex-wrap gap-2">
-            {directions.map((dir, i) => (
-              <span
-                key={dir}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-action-soft pr-1.5 pl-3 text-[13px] font-semibold text-action"
-              >
-                {formatDirection(dir)}
-                <button
-                  type="button"
-                  onClick={() => removeDirection(i)}
-                  aria-label={`Remove ${formatDirection(dir)}`}
-                  className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full hover:bg-action/15"
-                >
-                  <X size={13} />
-                </button>
-              </span>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_140px]">
+          <Input
+            id="route-vehicle-class"
+            label="Vehicle class"
+            placeholder={DEFAULT_VEHICLE_CLASS}
+            error={!!errors.vehicleClass}
+            hint={errors.vehicleClass?.message ?? "Shown on the fare matrix."}
+            {...register("vehicleClass")}
+          />
+          <Input
+            id="route-speed"
+            label="Average km/h"
+            type="number"
+            inputMode="decimal"
+            className="font-data"
+            error={!!errors.averageSpeedKph}
+            hint={errors.averageSpeedKph?.message ?? "With stops."}
+            {...register("averageSpeedKph")}
+          />
+        </div>
+
+        <div>
+          <p className="mb-1.5 text-label text-ink-muted">Directions</p>
+          <div className="space-y-3">
+            {directions.fields.map((field, i) => (
+              <div key={field.key} className="rounded-tile border-[1.5px] border-line p-3">
+                <div className="flex items-start gap-2">
+                  <div className="grid min-w-0 flex-1 gap-3">
+                    <Input
+                      id={`route-direction-${i}-label`}
+                      label="Name"
+                      placeholder="Toward Paoay"
+                      error={!!errors.directions?.[i]?.label}
+                      hint={errors.directions?.[i]?.label?.message}
+                      {...register(`directions.${i}.label`)}
+                    />
+                    <Input
+                      id={`route-direction-${i}-via`}
+                      label="Towns in order"
+                      placeholder="Laoag, Batac, Paoay"
+                      error={!!errors.directions?.[i]?.via}
+                      hint={errors.directions?.[i]?.via?.message}
+                      {...register(`directions.${i}.via`)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => directions.remove(i)}
+                    aria-label={`Remove direction ${i + 1}`}
+                    className="mt-7 flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted hover:bg-sunken"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
-        )}
+          {errors.directions?.message && (
+            <p className="mt-1.5 text-[13px] text-danger-ink">{errors.directions.message}</p>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-3"
+            startIcon={<Plus size={15} />}
+            onClick={addDirection}
+          >
+            Add a direction
+          </Button>
+          <p className="mt-1.5 text-[13px] text-ink-muted">
+            Commuters pick a direction by its name. A direction with stops can&apos;t be removed.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
