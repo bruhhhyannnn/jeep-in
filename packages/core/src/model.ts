@@ -121,12 +121,25 @@ export interface DriverLocation {
   updatedAt: number | null;
 }
 
-/** Fare rule from the posted LTFRB order: base fare covers `baseKm`, then `perKm` for each km after. */
+/** One row of the posted fare guide: the fares for a trip of `km`. */
+export interface FareRow {
+  km: number;
+  /** The landmark the guide lists this far from the start of the route, e.g. "Batac Public Market". */
+  landmark: string | null;
+  regular: number;
+  discounted: number;
+}
+
+/**
+ * Fares from the posted LTFRB guide. Trips are charged the `table` row for their
+ * distance, rounded to the nearest km. Past the last row (or with no table), the
+ * rule applies: base fare covers `baseKm`, then `perKm` for each km after.
+ */
 export interface FareMatrix {
   id: string;
   routeId: string;
   vehicleClass: string;
-  /** Null until the official order is added; the app then labels the rates as placeholders. */
+  /** Null until the order number is added. With no table either, the app labels the rates as placeholders. */
   orderNo: string | null;
   issuedBy: string | null;
   /** ISO date the order took effect. */
@@ -140,6 +153,8 @@ export interface FareMatrix {
   roundTo: number;
   /** Discounted fares are rounded to the nearest multiple of this, e.g. 0.25. Null → to the centavo. */
   discountRoundTo: number | null;
+  /** The posted fares by whole km, in km order. Same for both directions: a fare depends only on the trip's length. */
+  table: FareRow[];
 }
 
 export type AlertKind = "arrival" | "live" | "passed" | "lost";

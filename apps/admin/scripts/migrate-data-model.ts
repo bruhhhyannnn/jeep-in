@@ -7,16 +7,15 @@
  *   stops       stop_points: `lat` / `long` from `latitude` / `longitude`, and
  *               `directionId` from `routeDirection`. The old fields are kept until
  *               every app writes the new ones.
- *   distances   stop_points: `distanceKm` from fare_guide, only for a direction whose
- *               stops all have a fare_guide entry of the same name.
+ *   orphans     stop_points: delete stops whose route no longer exists.
  *   route-info  routes: `vehicleClass` and `averageSpeedKph`, where missing.
  *   directions  routes: `directions` from labels ("laoag_paoay") to objects
  *               ({ id, label, via }). The ids stay the same, so stops and saved
- *               commuter settings still match. ⚠️ An admin deployed before this
- *               change shows directions as text and breaks on objects: apply this
- *               group only once the new admin is live.
- *   fares       fare_matrices: one document per route that has fare_guide rows, with
- *               the rule those rows follow. Rows the rule doesn't reproduce are listed.
+ *               commuter settings still match. ⚠️ An admin built before this change
+ *               shows directions as text and breaks on objects.
+ *   fares       fare_matrices: one document per route with fare_guide rows. The rows
+ *               become the matrix's posted `table`, charged as is; the rule they
+ *               follow covers distances past the table.
  *
  * Dry run (default) — changes nothing; writes scripts/backups/model-plan.json:
  *   npx tsx scripts/migrate-data-model.ts
@@ -31,20 +30,22 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore, FieldValue, type DocumentData } from "firebase-admin/firestore";
-import { quoteFare, type FareMatrix, type RouteDirection } from "@jeep-in/core";
+import { quoteFare, type FareMatrix, type FareRow, type RouteDirection } from "@jeep-in/core";
 
 // ─── CONFIGURE BEFORE RUNNING ───────────────────────────────────────────────
 const SERVICE_ACCOUNT_PATH = "./serviceAccountKey.json";
 const VEHICLE_CLASS = "Traditional PUJ";
 /** Average jeep speed including stops; the apps' default until a route sets its own. */
 const AVERAGE_SPEED_KPH = 20;
+/** fare_guide holds the LTFRB guide (confirmed by the owner, 2026-10-27). */
+const ISSUED_BY = "LTFRB";
 /** The fare rule's rounding steps. fare_guide's fares are all multiples of ₱0.25. */
 const ROUND_TO = 0.25;
 const DISCOUNT_ROUND_TO = 0.25;
 const DISCOUNT_RATE = 0.2;
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GROUPS = ["stops", "distances", "route-info", "directions", "fares"] as const;
+const GROUPS = ["stops", "orphans", "route-info", "directions", "fares"] as const;
 type Group = (typeof GROUPS)[number];
 
 const APPLY = process.argv.includes("--apply");
@@ -68,13 +69,12 @@ type Change = {
   id: string;
   label: string;
   /** "create" writes a new document and refuses to overwrite one. */
-  kind: "update" | "create";
+  kind: "update" | "create" | "delete";
   /** Fields as they are now, for the review. */
   before: Record<string, unknown>;
   set: Record<string, unknown>;
 };
 
-const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, " ");
 const title = (s: string) => s.toLowerCase().replace(/(^|\s)\p{L}/gu, (c) => c.toUpperCase());
 const peso = (n: number) => `₱${n.toFixed(2)}`;
 
@@ -102,18 +102,28 @@ async function plan(): Promise<Change[]> {
   const changes: Change[] = [];
   const routes = new Map(routesSnap.docs.map((d) => [d.id, d.data()]));
 
-  // ── stops ──
+  // ── stops and orphans ──
   console.log(`\nstops — ${stopsSnap.size} stop_points`);
   for (const d of stopsSnap.docs) {
     const s = d.data();
+    if (!routes.has(s.routeId)) {
+      console.log(`  🗑️  ${s.name} (${d.id}) is on route ${s.routeId}, which doesn't exist`);
+      changes.push({
+        group: "orphans",
+        collection: "stop_points",
+        id: d.id,
+        label: `orphan stop ${s.name}`,
+        kind: "delete",
+        before: s,
+        set: {},
+      });
+      continue;
+    }
     const set: DocumentData = {};
     if (typeof s.lat !== "number" && typeof s.latitude === "number") set.lat = s.latitude;
     if (typeof s.long !== "number" && typeof s.longitude === "number") set.long = s.longitude;
     if (typeof s.directionId !== "string" && typeof s.routeDirection === "string") {
       set.directionId = s.routeDirection;
-    }
-    if (!routes.has(s.routeId)) {
-      console.log(`  ❓ ${s.name} (${d.id}) is on route ${s.routeId}, which doesn't exist`);
     }
     if (!Object.keys(set).length) continue;
     changes.push({
@@ -126,58 +136,9 @@ async function plan(): Promise<Change[]> {
       set,
     });
   }
-  console.log(`  ${changes.length} stops get lat / long / directionId`);
-
-  // ── distances ──
-  console.log("\ndistances — posted distances from fare_guide");
-  const guideByRoute = new Map<string, { name: string; km: number }[]>();
-  for (const d of guideSnap.docs) {
-    const g = d.data();
-    const rows = guideByRoute.get(g.routeId) ?? [];
-    rows.push({ name: String(g.stopPointName), km: Number(g.distanceKm) });
-    guideByRoute.set(g.routeId, rows);
-  }
-  for (const [routeId, rows] of guideByRoute) {
-    const byName = new Map(rows.map((r) => [normalize(r.name), r.km]));
-    const lastKm = Math.max(...rows.map((r) => r.km));
-    const routeStops = stopsSnap.docs.filter((d) => d.data().routeId === routeId);
-    const directions = new Set(
-      routeStops.map((d) => String(d.data().directionId ?? d.data().routeDirection)),
-    );
-    for (const direction of directions) {
-      const stops = routeStops
-        .filter((d) => String(d.data().directionId ?? d.data().routeDirection) === direction)
-        .sort((a, b) => Number(a.data().order ?? 0) - Number(b.data().order ?? 0));
-      const missing = stops.filter((d) => !byName.has(normalize(String(d.data().name))));
-      if (missing.length) {
-        console.log(
-          `  ${direction}: ${stops.length - missing.length} of ${stops.length} stops have a fare_guide entry — skipped (measured along the path instead)`,
-        );
-        console.log(`    no entry: ${missing.map((d) => d.data().name).join(", ")}`);
-        continue;
-      }
-      // fare_guide counts from the start of the route; the other direction counts back.
-      const firstKm = byName.get(normalize(String(stops[0].data().name))) ?? 0;
-      const reverse = firstKm > 0;
-      console.log(
-        `  ${direction}: all ${stops.length} stops matched${reverse ? " (reversed)" : ""}`,
-      );
-      for (const d of stops) {
-        const km = byName.get(normalize(String(d.data().name))) ?? 0;
-        const distanceKm = reverse ? lastKm - km : km;
-        if (d.data().distanceKm === distanceKm) continue;
-        changes.push({
-          group: "distances",
-          collection: "stop_points",
-          id: d.id,
-          label: `${direction} ${d.data().name}`,
-          kind: "update",
-          before: { distanceKm: d.data().distanceKm ?? null },
-          set: { distanceKm },
-        });
-      }
-    }
-  }
+  console.log(
+    `  ${changes.filter((c) => c.group === "stops").length} stops get lat / long / directionId`,
+  );
 
   // ── route-info and directions ──
   console.log("\nroutes");
@@ -224,35 +185,37 @@ async function plan(): Promise<Change[]> {
   // ── fares ──
   console.log("\nfares — fare_matrices from fare_guide");
   const existing = new Set(matricesSnap.docs.map((d) => d.data().routeId));
-  for (const routeId of guideByRoute.keys()) {
+  const guideRoutes = new Set(guideSnap.docs.map((d) => String(d.data().routeId)));
+  for (const routeId of guideRoutes) {
     const route = routes.get(routeId);
     if (existing.has(routeId)) {
       console.log(`  ${route?.name ?? routeId}: already has a fare matrix — left as is`);
       continue;
     }
-    const rows = guideSnap.docs
+    const table: FareRow[] = guideSnap.docs
       .map((d) => d.data())
       .filter((g) => g.routeId === routeId)
       .map((g) => ({
         km: Number(g.distanceKm),
+        landmark: typeof g.stopPointName === "string" ? g.stopPointName : null,
         regular: Number(g.regularFare),
         discounted: Number(g.discountedFare),
       }))
       .sort((a, b) => a.km - b.km);
 
     // The base fare is the one charged at the shortest distances, until the fare first rises.
-    const baseFare = rows[0].regular;
-    const firstRise = rows.find((r) => r.regular > baseFare);
-    const baseKm = firstRise ? firstRise.km - 1 : rows.at(-1)!.km;
+    const baseFare = table[0].regular;
+    const firstRise = table.find((r) => r.regular > baseFare);
+    const baseKm = firstRise ? firstRise.km - 1 : table.at(-1)!.km;
     // Per-km rate from the longest distance: regular fares are rounded, so this is the best estimate.
-    const last = rows.at(-1)!;
+    const last = table.at(-1)!;
     const perKm = Math.round(((last.regular - baseFare) / (last.km - baseKm)) * 10) / 10;
 
     const matrix: Omit<FareMatrix, "id"> = {
       routeId,
       vehicleClass: route?.vehicleClass ?? VEHICLE_CLASS,
       orderNo: null,
-      issuedBy: null,
+      issuedBy: ISSUED_BY,
       effectiveDate: null,
       baseFare,
       baseKm,
@@ -260,21 +223,23 @@ async function plan(): Promise<Change[]> {
       discountRate: DISCOUNT_RATE,
       roundTo: ROUND_TO,
       discountRoundTo: DISCOUNT_ROUND_TO,
+      table,
     };
     console.log(
-      `  ${route?.name ?? routeId}: ${peso(baseFare)} for the first ${baseKm} km, then ${peso(perKm)}/km; rounded to ${peso(ROUND_TO)}; ${DISCOUNT_RATE * 100}% discount rounded to ${peso(DISCOUNT_ROUND_TO)}`,
+      `  ${route?.name ?? routeId}: ${table.length} posted fares, ${table[0].km}–${last.km} km (${table[0].landmark} → ${last.landmark})`,
     );
-    const off = rows.filter((r) => {
-      const q = quoteFare({ ...matrix, id: "check" }, r.km);
+    console.log(
+      `    past ${last.km} km: ${peso(baseFare)} for the first ${baseKm} km, then ${peso(perKm)}/km; rounded to ${peso(ROUND_TO)}; ${DISCOUNT_RATE * 100}% discount rounded to ${peso(DISCOUNT_ROUND_TO)}`,
+    );
+    // How closely that rule follows the posted fares, for the record.
+    const rule = { ...matrix, id: "rule", table: [] };
+    const off = table.filter((r) => {
+      const q = quoteFare(rule, r.km);
       return q.regular !== r.regular || q.discounted !== r.discounted;
     });
-    console.log(`    reproduces ${rows.length - off.length} of ${rows.length} fare_guide rows`);
-    for (const r of off) {
-      const q = quoteFare({ ...matrix, id: "check" }, r.km);
-      console.log(
-        `    ⚠️ ${String(r.km).padStart(2)} km: fare_guide ${peso(r.regular)} / ${peso(r.discounted)}, rule ${peso(q.regular)} / ${peso(q.discounted)}`,
-      );
-    }
+    console.log(
+      `    the rule gives the posted fares at ${table.length - off.length} of ${table.length} distances${off.length ? `; differs at ${off.map((r) => `${r.km} km`).join(", ")}` : ""}`,
+    );
     changes.push({
       group: "fares",
       collection: "fare_matrices",
@@ -303,7 +268,7 @@ async function apply() {
   for (const c of changes) {
     const ref = db.collection(c.collection).doc(c.id);
     const exists = (await ref.get()).exists;
-    if (c.kind === "update" && !exists) {
+    if (c.kind !== "create" && !exists) {
       console.error(`❌ ${c.collection}/${c.id} no longer exists — run the dry run again.`);
       process.exit(1);
     }
@@ -313,6 +278,7 @@ async function apply() {
     }
     const now = FieldValue.serverTimestamp();
     if (c.kind === "create") batch.create(ref, { ...c.set, createdAt: now, updatedAt: now });
+    else if (c.kind === "delete") batch.delete(ref);
     else batch.update(ref, { ...c.set, updatedAt: now });
   }
   await batch.commit();

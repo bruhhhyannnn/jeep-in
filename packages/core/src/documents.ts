@@ -2,6 +2,7 @@ import type {
   Driver,
   DriverLocation,
   FareMatrix,
+  FareRow,
   Jeepney,
   LngLat,
   Route,
@@ -78,6 +79,17 @@ export const PLACEHOLDER_FARE_MATRIX: Omit<FareMatrix, "id" | "routeId"> = {
   discountRate: 0.2,
   roundTo: 1,
   discountRoundTo: null,
+  table: [],
+};
+
+/** A posted fare row; null when its distance or fares are missing. */
+const toFareRow = (raw: unknown): FareRow | null => {
+  const r = (raw ?? {}) as Record<string, unknown>;
+  const km = optionalNum(r.km);
+  const regular = optionalNum(r.regular);
+  const discounted = optionalNum(r.discounted);
+  if (km == null || regular == null || discounted == null) return null;
+  return { km, landmark: optionalStr(r.landmark), regular, discounted };
 };
 
 export const normalizeFareMatrix = (id: string, d: RawDoc): FareMatrix => ({
@@ -93,6 +105,12 @@ export const normalizeFareMatrix = (id: string, d: RawDoc): FareMatrix => ({
   discountRate: num(d.discountRate, PLACEHOLDER_FARE_MATRIX.discountRate),
   roundTo: num(d.roundTo, PLACEHOLDER_FARE_MATRIX.roundTo),
   discountRoundTo: optionalNum(d.discountRoundTo),
+  table: Array.isArray(d.table)
+    ? d.table
+        .map(toFareRow)
+        .filter((r): r is FareRow => r !== null)
+        .sort((a, b) => a.km - b.km)
+    : [],
 });
 
 export const normalizeJeepney = (id: string, d: RawDoc): Jeepney => ({

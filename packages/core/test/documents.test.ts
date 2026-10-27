@@ -76,6 +76,21 @@ describe("normalizeFareMatrix", () => {
     assert.equal(normalizeFareMatrix("f1", {}).discountRoundTo, null);
     assert.equal(normalizeFareMatrix("f1", { discountRoundTo: 0.25 }).discountRoundTo, 0.25);
   });
+
+  it("sorts the posted table and drops incomplete rows", () => {
+    const matrix = normalizeFareMatrix("f1", {
+      table: [
+        { km: 5, landmark: "Green Meadows", regular: 16.25, discounted: 13 },
+        { km: 0, regular: 14, discounted: 11.25 },
+        { km: 1, landmark: "Gabu Junction", regular: 14 },
+      ],
+    });
+    assert.deepEqual(matrix.table, [
+      { km: 0, landmark: null, regular: 14, discounted: 11.25 },
+      { km: 5, landmark: "Green Meadows", regular: 16.25, discounted: 13 },
+    ]);
+    assert.deepEqual(normalizeFareMatrix("f2", {}).table, []);
+  });
 });
 
 describe("normalizeDriverLocation", () => {
