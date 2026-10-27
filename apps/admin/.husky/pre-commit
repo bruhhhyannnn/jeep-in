@@ -1,6 +1,0 @@
-#!/bin/sh
-echo "✨ Formatting staged files..."
-npx prettier --write .
-
-echo "🔍 Type checking..."
-npx tsc --noEmit

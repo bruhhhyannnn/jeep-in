@@ -32,7 +32,7 @@
 /* Spline Sans Mono from @fontsource, under the native app's family names. Latin-ext carries ₱. */
 @font-face {
   font-family: "SplineSansMono_500Medium";
-  src: url("../node_modules/@fontsource/spline-sans-mono/files/spline-sans-mono-latin-500-normal.woff2")
+  src: url("@fontsource/spline-sans-mono/files/spline-sans-mono-latin-500-normal.woff2")
     format("woff2");
   font-display: swap;
   unicode-range:
@@ -41,7 +41,7 @@
 }
 @font-face {
   font-family: "SplineSansMono_500Medium";
-  src: url("../node_modules/@fontsource/spline-sans-mono/files/spline-sans-mono-latin-ext-500-normal.woff2")
+  src: url("@fontsource/spline-sans-mono/files/spline-sans-mono-latin-ext-500-normal.woff2")
     format("woff2");
   font-display: swap;
   unicode-range:
@@ -51,7 +51,7 @@
 }
 @font-face {
   font-family: "SplineSansMono_600SemiBold";
-  src: url("../node_modules/@fontsource/spline-sans-mono/files/spline-sans-mono-latin-600-normal.woff2")
+  src: url("@fontsource/spline-sans-mono/files/spline-sans-mono-latin-600-normal.woff2")
     format("woff2");
   font-display: swap;
   unicode-range:
@@ -60,7 +60,7 @@
 }
 @font-face {
   font-family: "SplineSansMono_600SemiBold";
-  src: url("../node_modules/@fontsource/spline-sans-mono/files/spline-sans-mono-latin-ext-600-normal.woff2")
+  src: url("@fontsource/spline-sans-mono/files/spline-sans-mono-latin-ext-600-normal.woff2")
     format("woff2");
   font-display: swap;
   unicode-range:

@@ -1,0 +1,11 @@
+# dependencies (each app keeps its own .gitignore for build output and env files)
+node_modules/
+
+# Turborepo
+.turbo/
+
+# local env files — never commit
+.env*.local
+
+# OS
+.DS_Store

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Type-check the apps and packages this commit touches, each with its own tsconfig.
+# (Formatting moves here once the apps share one Prettier config in packages/config.)
+npx turbo run typecheck --affected
