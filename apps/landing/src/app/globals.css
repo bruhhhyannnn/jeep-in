@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/*
+ * JEEP-IN hi-fi design system (v2), trimmed to what the landing page uses.
+ * Names follow the semantic roles in the Claude Design project's DESIGN.md.
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+
+  /* Ink */
+  --color-ink: #0b1b33; /* text/strong, dark sections */
+  --color-ink-hover: #1b3257;
+  --color-muted: #4d5d74; /* text/muted — all support text */
+  --color-subtle: #6b7a90; /* eyebrows and placeholders only, below 4.5:1 on sky */
+  --color-slate-700: #33445c;
+
+  /* Surfaces and lines */
+  --color-sky: #eef4fb; /* surface/page */
+  --color-sky-50: #f6f9fd;
+  --color-sunken: #edf1f7; /* inputs, tiles, segmented tracks */
+  --color-line: #dde4ee; /* dividers */
+  --color-line-strong: #c6cfdb; /* control outlines */
+
+  /* Action and accent */
+  --color-primary: #1670e0;
+  --color-primary-hover: #0f57b3;
+  --color-on-primary: #dbe8fb;
+  --color-accent: #ffc62e; /* live jeeps, one moment per screen */
+  --color-accent-hover: #f0b400;
+  --color-danger: #c2401f;
+
+  /* Map */
+  --color-map: #dfe9f5;
+  --color-map-street: #cfdcec;
+  --color-mist: #b3c3d8; /* secondary roads, muted text on ink */
+
+  /* Navy-tinted shadows, never grey */
+  --shadow-sm: 0 1px 3px rgb(17 48 90 / 0.08);
+  --shadow-md: 0 10px 26px rgb(17 48 90 / 0.1);
+  --shadow-pop: 0 18px 40px rgb(17 48 90 / 0.18), 0 2px 6px rgb(17 48 90 / 0.08);
+
+  --animate-ring: jp-ring 2.4s ease-out infinite;
+  --animate-dot: jp-dot 1.8s ease-out infinite;
+  --animate-ride: jp-ride 22s ease-in-out infinite alternate;
+  --animate-pop: jp-pop 180ms ease-out;
+
+  @keyframes jp-ring {
+    0% { transform: scale(1); opacity: 0.55; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes jp-dot {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+  @keyframes jp-ride {
+    0% { left: 8.33%; }
+    100% { left: 91.67%; }
+  }
+  @keyframes jp-pop {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/*
+ * Spline Sans Mono has no peso sign, and next/font's fallback (Arial scaled up 135%) draws an oversized one.
+ * This face covers only ₱ and takes it from a system monospace font instead.
+ */
+@font-face {
+  font-family: "Peso Mono";
+  src: local("Consolas"), local("Menlo-Regular"), local("Menlo Regular"), local("DejaVu Sans Mono"),
+    local("Droid Sans Mono"), local("Roboto Mono");
+  unicode-range: U+20B1;
+}
+
+@theme inline {
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  --font-mono: "Peso Mono", var(--font-spline-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 68px;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  a {
+    @apply text-primary;
+  }
+  a:hover {
+    @apply text-primary-hover;
+  }
+  input::placeholder {
+    @apply text-subtle;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
