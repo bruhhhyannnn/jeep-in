@@ -2,12 +2,17 @@ import { useRef } from "react";
 import { STRINGS } from "@/constants";
 import { useSafeAreaInsets } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { usePreferences } from "@/store";
+import { isIOS, promptInstall, useInstallStore, usePreferences } from "@/store";
 import { fonts, layout, palette } from "@/theme";
 import type { Appearance, BottomSheetModalBaseRef, TextSize } from "@/types";
 import { Pressable, RadioCard, ThemedText, ThemedView, View } from "@/components/ui";
 import { ScreenHeader } from "@/components/commuter";
-import { AboutJeepInModal, GetSupportModal, SettingsRow } from "@/components/settings";
+import {
+  AboutJeepInModal,
+  GetSupportModal,
+  InstallAppModal,
+  SettingsRow,
+} from "@/components/settings";
 import logoMmsu from "@/assets/images/logo-mmsu.png";
 import logoJeepIn from "@/assets/images/logo-jeep-in.png";
 
@@ -127,6 +132,13 @@ export default function SettingsScreen() {
   const { top, bottom } = useSafeAreaInsets();
   const supportRef = useRef<BottomSheetModalBaseRef>(null);
   const aboutRef = useRef<BottomSheetModalBaseRef>(null);
+  const installRef = useRef<BottomSheetModalBaseRef>(null);
+
+  // Hidden once installed, and where the browser has no way to install (e.g. Firefox desktop).
+  const canPrompt = useInstallStore((s) => s.promptEvent != null);
+  const installed = useInstallStore((s) => s.installed);
+  const showInstall = !installed && (canPrompt || isIOS());
+  const install = () => (canPrompt ? promptInstall() : installRef.current?.open());
 
   const appearance = usePreferences((s) => s.appearance);
   const setAppearance = usePreferences((s) => s.setAppearance);
@@ -197,6 +209,20 @@ export default function SettingsScreen() {
             />
           </View>
 
+          {showInstall && (
+            <View className="gap-2.5">
+              <ThemedText variant="eyebrow" tone="muted">
+                {STRINGS.web.install.section}
+              </ThemedText>
+              <SettingsRow
+                label={STRINGS.web.install.title}
+                hint={STRINGS.web.install.hint}
+                iconName="phone-portrait-outline"
+                onPress={install}
+              />
+            </View>
+          )}
+
           <View className="flex-row items-center justify-center gap-4 pt-2">
             <img
               src={logoMmsu}
@@ -214,6 +240,7 @@ export default function SettingsScreen() {
 
       <GetSupportModal ref={supportRef} />
       <AboutJeepInModal ref={aboutRef} />
+      <InstallAppModal ref={installRef} />
     </ThemedView>
   );
 }

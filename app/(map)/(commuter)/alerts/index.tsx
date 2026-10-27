@@ -10,7 +10,7 @@ import {
 } from "@/services/notifications/local";
 import { showWarning } from "@/services/ui/toasts";
 import { useNow, useSafeAreaInsets } from "@/hooks";
-import { ALERT_MINUTES, useAlerts, usePreferences } from "@/store";
+import { ALERT_MINUTES, isIOS, isStandalone, useAlerts, usePreferences } from "@/store";
 import { layout, useTheme } from "@/theme";
 import type { AlertKind, CommuterAlert } from "@/types";
 import {
@@ -172,6 +172,12 @@ export default function AlertsTab() {
               <ThemedText variant="small" tone="muted">
                 {t.arrivalAlertsHint(ALERT_MINUTES)}
               </ThemedText>
+              {/* iOS only offers notifications to apps added to the Home Screen. */}
+              {isIOS() && !isStandalone() && (
+                <ThemedText variant="label" tone="muted" className="mt-1">
+                  {STRINGS.web.alerts.iosHint}
+                </ThemedText>
+              )}
             </View>
             <Toggle
               value={arrivalAlerts}

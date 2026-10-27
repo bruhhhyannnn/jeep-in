@@ -6,3 +6,4 @@ export * from "./location";
 export * from "./fleet";
 export * from "./mapUi";
 export * from "../context";
+export * from "./install";

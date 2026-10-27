@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAlerts, useOfflineCache, usePreferences } from "@/store";
 import { useFonts } from "@/hooks/useFonts";
+import { useUpdatePrompt } from "@/services/pwa/useUpdatePrompt";
 import { fonts } from "@/theme";
 
 const queryClient = new QueryClient({
@@ -41,6 +42,7 @@ function hideSplash() {
 }
 
 export default function RootLayout() {
+  useUpdatePrompt();
   const hydrated = useStoresHydrated();
   const [fontsLoaded] = useFonts([
     fonts.regular,
@@ -71,8 +73,10 @@ export default function RootLayout() {
           classNames: {
             toast:
               "flex w-full items-center gap-3 rounded-tile border-[1.5px] border-line bg-card px-4 py-3 shadow-md",
-            title: "font-puffin-semibold text-[15px] leading-5 text-ink",
+            title: "flex-1 font-puffin-semibold text-[15px] leading-5 text-ink",
             icon: "shrink-0",
+            actionButton:
+              "h-9 shrink-0 rounded-full bg-action px-4 font-puffin-bold text-[12px] text-action-ink",
             success: "[&_[data-icon]]:text-live",
             error: "[&_[data-icon]]:text-danger",
             info: "[&_[data-icon]]:text-action",
