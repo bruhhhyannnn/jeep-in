@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAlerts, useOfflineCache, usePreferences } from "@/store";
 import { useFonts } from "@/hooks/useFonts";
+import { markAppReady } from "@/lib/splash";
 import { useUpdatePrompt } from "@/services/pwa/useUpdatePrompt";
 import { fonts } from "@/theme";
 
@@ -33,14 +34,6 @@ function useStoresHydrated() {
   return hydrated;
 }
 
-/** Fades out the splash drawn by index.html. */
-function hideSplash() {
-  const splash = document.getElementById("splash");
-  if (!splash) return;
-  splash.classList.add("hidden");
-  window.setTimeout(() => splash.remove(), 250);
-}
-
 export default function RootLayout() {
   useUpdatePrompt();
   const hydrated = useStoresHydrated();
@@ -55,8 +48,9 @@ export default function RootLayout() {
   ]);
   const ready = fontsLoaded && hydrated;
 
+  // The splash stays up until this and any screen still loading are ready.
   useEffect(() => {
-    if (ready) hideSplash();
+    if (ready) markAppReady();
   }, [ready]);
 
   if (!ready) return null;

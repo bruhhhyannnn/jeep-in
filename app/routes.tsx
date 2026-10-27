@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from "react-router";
 import { bindRouter } from "@/lib/router";
+import { KeepSplash } from "@/lib/splash";
 import RootLayout from "./_layout";
 import RootScreen from "./index";
 import NotFoundScreen from "./+not-found";
@@ -26,7 +27,7 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
       {
         path: "dev/ui-kit",
         lazy: async () => ({ Component: (await import("./dev/ui-kit")).default }),
-        HydrateFallback: () => null,
+        HydrateFallback: KeepSplash,
       },
     ]
   : [];
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
         // Loaded on first use with mapbox-gl, so the welcome slides don't wait for the map.
         // The splash stays up meanwhile when the app opens straight onto the map.
         lazy: async () => ({ Component: (await import("./(map)/_layout")).default }),
-        HydrateFallback: () => null,
+        HydrateFallback: KeepSplash,
         children: [
           {
             element: <CommuterLayout />,
