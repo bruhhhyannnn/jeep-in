@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#edf9ff" />
+    <meta
+      name="description"
+      content="Live jeepneys, stops and fares on your route in Ilocos Norte. No account needed."
+    />
+    <title>JEEP-IN</title>
+
+    <link
+      rel="preload"
+      href="/src/assets/fonts/Puffin-Regular.otf"
+      as="font"
+      type="font/otf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/src/assets/fonts/Puffin-SemiBold.otf"
+      as="font"
+      type="font/otf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/src/assets/fonts/Puffin-Bold.otf"
+      as="font"
+      type="font/otf"
+      crossorigin
+    />
+
+    <script>
+      // Before first paint: apply the saved Appearance so dark mode never flashes light.
+      (function () {
+        var appearance = "system";
+        try {
+          var saved = JSON.parse(localStorage.getItem("jeepin-preferences") || "null");
+          if (saved && saved.state && saved.state.appearance) appearance = saved.state.appearance;
+        } catch (e) {}
+        var dark =
+          appearance === "dark" ||
+          (appearance === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) {
+          document.documentElement.classList.add("dark");
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#11305a");
+        }
+      })();
+    </script>
+
+    <style>
+      /* Native splash: #edf9ff light, #11305a dark, splash-icon at 200px. */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #edf9ff;
+        transition: opacity 200ms ease-out;
+      }
+      .dark #splash {
+        background: #11305a;
+      }
+      #splash img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+      }
+      #splash.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash" aria-hidden="true">
+      <img src="/src/assets/images/splash-icon.png" alt="" />
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
