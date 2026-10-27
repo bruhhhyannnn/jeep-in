@@ -94,16 +94,9 @@ export interface Route extends RouteModel {
   description: string | null;
 }
 
-/* ─── Fare Guide (/fare_guide/{fareId}) ─── */
-export interface FareGuide {
-  id: string;
+/* ─── Fare Guide: a posted fare in a route's fare matrix (/fare_matrices/{id}.table) ─── */
+export interface FareGuideRow extends FareRow {
   routeId: string;
-  stopPointName: string;
-  distanceKm: number;
-  regularFare: number;
-  discountedFare: number;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
 }
 
 /* ─── Audit Log (/audit_logs/{logId}) ─── */

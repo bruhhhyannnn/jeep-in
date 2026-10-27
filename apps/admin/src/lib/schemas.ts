@@ -33,13 +33,31 @@ export const jeepneySchema = z.object({
     .max(2, "Jeepney number must be 2 characters or less"),
 });
 
-/* ─── Fare Guide ─── */
-export const fareGuideSchema = z.object({
+/* ─── Fare Guide (a route's fare matrix) ─── */
+/** One posted fare. The apps charge a trip the row for its distance to the nearest km. */
+export const fareRowSchema = z.object({
   routeId: z.string().min(1, "Route is required"),
-  stopPointName: z.string().min(1, "Stop point name is required"),
-  distanceKm: z.coerce.number().min(0, "Distance must be 0 or more"),
-  regularFare: z.coerce.number().min(0, "Fare must be 0 or more"),
-  discountedFare: z.coerce.number().min(0, "Discounted fare must be 0 or more"),
+  landmark: z.string().min(1, "Name the landmark at this distance"),
+  km: z.coerce.number().int("Use whole kilometres, as posted").min(0, "Distance must be 0 or more"),
+  regular: z.coerce.number().min(0, "Fare must be 0 or more"),
+  discounted: z.coerce.number().min(0, "Discounted fare must be 0 or more"),
+});
+
+const peso = (label: string) => z.coerce.number().min(0, `${label} must be 0 or more`);
+const step = z.coerce.number().positive("Use a step like 0.25 or 1");
+
+export const fareMatrixSchema = z.object({
+  orderNo: z.string().optional(),
+  issuedBy: z.string().optional(),
+  /** "YYYY-MM-DD" from a date input; empty until posted. */
+  effectiveDate: z.string().optional(),
+  vehicleClass: z.string().min(1, "Vehicle class is required"),
+  baseFare: peso("Base fare"),
+  baseKm: z.coerce.number().min(0, "Distance must be 0 or more"),
+  perKm: peso("The per-km rate"),
+  discountPercent: z.coerce.number().min(0, "0 to 100").max(100, "0 to 100"),
+  roundTo: step,
+  discountRoundTo: step,
 });
 
 /* ─── Working Hours ─── */
@@ -120,7 +138,8 @@ export const adminCreateSchema = z.object({
 export type SignInFormData = z.infer<typeof signInSchema>;
 export type DriverCreateFormData = z.infer<typeof driverCreateSchema>;
 export type JeepneyFormData = z.infer<typeof jeepneySchema>;
-export type FareGuideFormData = z.infer<typeof fareGuideSchema>;
+export type FareRowFormData = z.infer<typeof fareRowSchema>;
+export type FareMatrixFormData = z.infer<typeof fareMatrixSchema>;
 export type WorkingHoursFormData = z.infer<typeof workingHoursSchema>;
 export type StopPointFormData = z.infer<typeof stopPointSchema>;
 export type RouteFormData = z.infer<typeof routeSchema>;

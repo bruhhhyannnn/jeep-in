@@ -85,26 +85,38 @@ async function seedFareGuide() {
     process.exit(1);
   }
 
-  console.log(`Seeding ${FARE_DATA.length} fare guide entries...`);
+  console.log(`Seeding the fare matrix with ${FARE_DATA.length} posted fares...`);
 
   const now = Timestamp.now();
-  const batch = db.batch();
-
-  FARE_DATA.forEach((entry) => {
-    const ref = db.collection("fare_guide").doc();
-    batch.set(ref, {
+  // The apps read fares from the route's fare matrix (see packages/core). `create`
+  // refuses to overwrite a matrix that's already there.
+  await db
+    .collection("fare_matrices")
+    .doc(ROUTE_ID)
+    .create({
       routeId: ROUTE_ID,
-      stopPointName: entry.stopPointName,
-      distanceKm: entry.distanceKm,
-      regularFare: entry.regularFare,
-      discountedFare: entry.discountedFare,
+      vehicleClass: "Traditional PUJ",
+      orderNo: null,
+      issuedBy: "LTFRB",
+      effectiveDate: null,
+      // The rule for trips longer than the posted table.
+      baseFare: 14,
+      baseKm: 4,
+      perKm: 2.2,
+      discountRate: 0.2,
+      roundTo: 0.25,
+      discountRoundTo: 0.25,
+      table: FARE_DATA.map((entry) => ({
+        km: entry.distanceKm,
+        landmark: entry.stopPointName,
+        regular: entry.regularFare,
+        discounted: entry.discountedFare,
+      })),
       createdAt: now,
       updatedAt: now,
     });
-  });
 
-  await batch.commit();
-  console.log("Done — fare guide seeded successfully.");
+  console.log("Done — fare matrix seeded successfully.");
   process.exit(0);
 }
 

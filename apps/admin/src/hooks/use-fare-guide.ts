@@ -1,6 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFareGuide, createFareEntry, updateFareEntry, deleteFareEntry } from "@/actions";
-import { FareGuideFormData } from "@/lib";
+import {
+  getFareGuide,
+  getFareMatrix,
+  saveFareRow,
+  deleteFareRow,
+  updateFareMatrix,
+} from "@/actions";
+import type { FareMatrixFormData, FareRowFormData } from "@/lib";
 
 export function useFareGuide(routeId?: string) {
   return useQuery({
@@ -9,27 +15,36 @@ export function useFareGuide(routeId?: string) {
   });
 }
 
-export function useCreateFareEntry() {
+export function useFareMatrix(routeId?: string) {
+  return useQuery({
+    queryKey: ["fare-guide", "matrix", routeId],
+    queryFn: () => getFareMatrix(routeId!),
+    enabled: !!routeId,
+  });
+}
+
+export function useSaveFareRow() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: FareGuideFormData) => createFareEntry(data),
+    mutationFn: ({ data, previousKm }: { data: FareRowFormData; previousKm?: number }) =>
+      saveFareRow(data, previousKm),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["fare-guide"] }),
   });
 }
 
-export function useUpdateFareEntry() {
+export function useDeleteFareRow() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<FareGuideFormData> }) =>
-      updateFareEntry(id, data),
+    mutationFn: ({ routeId, km }: { routeId: string; km: number }) => deleteFareRow(routeId, km),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["fare-guide"] }),
   });
 }
 
-export function useDeleteFareEntry() {
+export function useUpdateFareMatrix() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => deleteFareEntry(id),
+    mutationFn: ({ routeId, data }: { routeId: string; data: FareMatrixFormData }) =>
+      updateFareMatrix(routeId, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["fare-guide"] }),
   });
 }
