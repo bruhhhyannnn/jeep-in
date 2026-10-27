@@ -6,13 +6,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": [
-        "VITE_*",
-        "NEXT_PUBLIC_*",
-        "EXPO_PUBLIC_*",
-        "FIREBASE_*",
-        "MAPBOX_*"
-      ],
+      "env": ["VITE_*", "NEXT_PUBLIC_*", "EXPO_PUBLIC_*", "FIREBASE_*", "MAPBOX_*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "typecheck": {

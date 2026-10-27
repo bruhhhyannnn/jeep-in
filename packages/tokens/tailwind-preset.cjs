@@ -71,11 +71,7 @@ module.exports = {
         "puffin-bold": ["Puffin-Bold", "system-ui", "sans-serif"],
         moment: ["Puffin-ExtraBold-Italic", "system-ui", "sans-serif"],
         mono: ["SplineSansMono_500Medium", "ui-monospace", "monospace"],
-        "mono-bold": [
-          "SplineSansMono_600SemiBold",
-          "ui-monospace",
-          "monospace",
-        ],
+        "mono-bold": ["SplineSansMono_600SemiBold", "ui-monospace", "monospace"],
       },
     },
   },
