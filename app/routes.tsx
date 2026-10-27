@@ -13,6 +13,11 @@ import DirectionSheet from "./(map)/(commuter)/direction";
 import FareMatrixSheet from "./(map)/(commuter)/fare-matrix";
 import JeepneyDetail from "./(map)/(commuter)/jeepney/[id]";
 import StopDetail from "./(map)/(commuter)/stop/[id]";
+import OnboardingLayout from "./(onboarding)/_layout";
+import WelcomeScreen from "./(onboarding)/welcome";
+import LocationPermissionScreen from "./(onboarding)/location";
+import ChooseStopScreen from "./(onboarding)/choose-stop";
+import SettingsScreen from "./(settings)/index";
 
 // The native app's file routes, wired by hand. URLs match what expo-router
 // produces on the web (route groups don't appear in the path).
@@ -33,6 +38,14 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <RootScreen /> },
       {
+        element: <OnboardingLayout />,
+        children: [
+          { path: "welcome", element: <WelcomeScreen /> },
+          { path: "location", element: <LocationPermissionScreen /> },
+          { path: "choose-stop", element: <ChooseStopScreen /> },
+        ],
+      },
+      {
         element: <MapGroupLayout />,
         children: [
           {
@@ -46,6 +59,9 @@ export const router = createBrowserRouter([
               { path: "fare-matrix", element: <FareMatrixSheet /> },
               { path: "jeepney/:id", element: <JeepneyDetail /> },
               { path: "stop/:id", element: <StopDetail /> },
+              // Settings sits over the map, as on the native stack, so the map and the
+              // alert watchers keep running behind it.
+              { path: "settings", element: <SettingsScreen /> },
             ],
           },
         ],
