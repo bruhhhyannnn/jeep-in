@@ -3,7 +3,6 @@ import { bindRouter } from "@/lib/router";
 import RootLayout from "./_layout";
 import RootScreen from "./index";
 import NotFoundScreen from "./+not-found";
-import MapGroupLayout from "./(map)/_layout";
 import CommuterLayout from "./(map)/(commuter)/_layout";
 import MapTab from "./(map)/(commuter)/home/index";
 import StopsTab from "./(map)/(commuter)/stops/index";
@@ -46,7 +45,10 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        element: <MapGroupLayout />,
+        // Loaded on first use with mapbox-gl, so the welcome slides don't wait for the map.
+        // The splash stays up meanwhile when the app opens straight onto the map.
+        lazy: async () => ({ Component: (await import("./(map)/_layout")).default }),
+        HydrateFallback: () => null,
         children: [
           {
             element: <CommuterLayout />,

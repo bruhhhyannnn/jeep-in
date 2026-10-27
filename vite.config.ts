@@ -53,4 +53,26 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  build: {
+    // mapbox-gl alone is ~1.9 MB minified; it loads with the map screens.
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // zod's source comments mention @__PURE__ where Rollup can't use them; nothing to fix here.
+        if (warning.code === "INVALID_ANNOTATION" && warning.id?.includes("/node_modules/zod/"))
+          return;
+        warn(warning);
+      },
+      output: {
+        // Large libraries in their own files, so an app update doesn't re-download them.
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("/mapbox-gl/")) return "mapbox";
+          if (id.includes("/@firebase/") || id.includes("/firebase/")) return "firebase";
+          if (id.includes("/@turf/")) return "turf";
+          if (/\/node_modules\/(react|react-dom|react-router|scheduler)\//.test(id)) return "react";
+        },
+      },
+    },
+  },
 });
