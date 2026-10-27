@@ -15,6 +15,7 @@
     "@expo-google-fonts/spline-sans-mono": "^0.4.2",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.2.6",
+    "@jeep-in/tokens": "*",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-firebase/analytics": "^23.7.0",
     "@react-native-firebase/app": "^23.7.0",

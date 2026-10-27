@@ -1,0 +1,23 @@
+{
+  "name": "@jeep-in/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "JEEP-IN design tokens: colours, type, shadows and layout, plus the generated Tailwind preset.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tailwind": "./tailwind-preset.cjs"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "lint": "eslint . && tsx scripts/generate.ts --check",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@jeep-in/config": "*",
+    "@types/node": "^22.20.5",
+    "prettier": "^3.9.10",
+    "tsx": "^4.21.0",
+    "typescript": "~5.9.3"
+  }
+}

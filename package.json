@@ -13,7 +13,8 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "tokens": "npm run generate -w @jeep-in/tokens --"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,css,json,md}": "prettier --write --ignore-unknown"

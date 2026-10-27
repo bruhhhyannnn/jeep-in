@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fontsource/spline-sans-mono": "^5.3.0",
+    "@jeep-in/tokens": "*",
     "@tanstack/react-query": "^5.105.0",
     "@turf/turf": "^7.4.0",
     "dayjs": "^1.11.23",
