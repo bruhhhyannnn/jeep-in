@@ -16,9 +16,12 @@
  *   fares       fare_matrices: one document per route with fare_guide rows. The rows
  *               become the matrix's posted `table`, charged as is; the rule they
  *               follow covers distances past the table.
+ *   cleanup     Only planned with --cleanup. Removes what nothing reads any more:
+ *               the old stop fields, once the new ones are there, and fare_guide
+ *               documents whose fare is in the route's fare matrix as is.
  *
  * Dry run (default) — changes nothing; writes scripts/backups/model-plan.json:
- *   npx tsx scripts/migrate-data-model.ts
+ *   npx tsx scripts/migrate-data-model.ts [--cleanup]
  * Apply the reviewed plan, all groups or some:
  *   npx tsx scripts/migrate-data-model.ts --apply
  *   npx tsx scripts/migrate-data-model.ts --apply --groups=stops,route-info,fares
@@ -45,10 +48,11 @@ const DISCOUNT_ROUND_TO = 0.25;
 const DISCOUNT_RATE = 0.2;
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GROUPS = ["stops", "orphans", "route-info", "directions", "fares"] as const;
+const GROUPS = ["stops", "orphans", "route-info", "directions", "fares", "cleanup"] as const;
 type Group = (typeof GROUPS)[number];
 
 const APPLY = process.argv.includes("--apply");
+const CLEANUP = process.argv.includes("--cleanup");
 const groupsArg = process.argv.find((a) => a.startsWith("--groups="));
 const SELECTED = new Set<Group>(
   groupsArg ? (groupsArg.slice("--groups=".length).split(",") as Group[]) : GROUPS,
@@ -73,6 +77,8 @@ type Change = {
   /** Fields as they are now, for the review. */
   before: Record<string, unknown>;
   set: Record<string, unknown>;
+  /** Fields an update removes. */
+  unset?: string[];
 };
 
 const title = (s: string) => s.toLowerCase().replace(/(^|\s)\p{L}/gu, (c) => c.toUpperCase());
@@ -251,6 +257,66 @@ async function plan(): Promise<Change[]> {
     });
   }
 
+  // ── cleanup (only with --cleanup) ──
+  if (CLEANUP) {
+    console.log("\ncleanup — what nothing reads any more");
+    const OLD_STOP_FIELDS = ["latitude", "longitude", "routeDirection"];
+    let stops = 0;
+    for (const d of stopsSnap.docs) {
+      const s = d.data();
+      if (!routes.has(s.routeId)) continue; // the orphans group deletes these
+      const unset = OLD_STOP_FIELDS.filter((f) => f in s);
+      const migrated =
+        typeof s.lat === "number" &&
+        typeof s.long === "number" &&
+        typeof s.directionId === "string";
+      if (!unset.length || !migrated) continue;
+      stops++;
+      changes.push({
+        group: "cleanup",
+        collection: "stop_points",
+        id: d.id,
+        label: `stop ${s.name}: drop ${unset.join(", ")}`,
+        kind: "update",
+        before: Object.fromEntries(unset.map((f) => [f, s[f]])),
+        set: {},
+        unset,
+      });
+    }
+    console.log(`  ${stops} stops drop latitude / longitude / routeDirection`);
+
+    // A fare_guide document goes only when its fare is in the route's matrix as is.
+    const tables = new Map(
+      matricesSnap.docs.map((d) => [d.data().routeId, (d.data().table ?? []) as FareRow[]]),
+    );
+    let kept = 0;
+    for (const d of guideSnap.docs) {
+      const g = d.data();
+      const row = tables.get(g.routeId)?.find((r) => r.km === Number(g.distanceKm));
+      const same =
+        row &&
+        row.regular === Number(g.regularFare) &&
+        row.discounted === Number(g.discountedFare) &&
+        row.landmark === g.stopPointName;
+      if (!same) {
+        kept++;
+        continue;
+      }
+      changes.push({
+        group: "cleanup",
+        collection: "fare_guide",
+        id: d.id,
+        label: `fare_guide ${g.distanceKm} km ${g.stopPointName}`,
+        kind: "delete",
+        before: g,
+        set: {},
+      });
+    }
+    console.log(
+      `  ${guideSnap.size - kept} fare_guide documents are in a fare matrix as is${kept ? `; ${kept} aren't and stay` : ""}`,
+    );
+  }
+
   return changes;
 }
 
@@ -279,7 +345,10 @@ async function apply() {
     const now = FieldValue.serverTimestamp();
     if (c.kind === "create") batch.create(ref, { ...c.set, createdAt: now, updatedAt: now });
     else if (c.kind === "delete") batch.delete(ref);
-    else batch.update(ref, { ...c.set, updatedAt: now });
+    else {
+      const unset = Object.fromEntries((c.unset ?? []).map((f) => [f, FieldValue.delete()]));
+      batch.update(ref, { ...c.set, ...unset, updatedAt: now });
+    }
   }
   await batch.commit();
   const groups = [...new Set(changes.map((c) => c.group))].join(", ");
