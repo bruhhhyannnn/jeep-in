@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import { Clock, Route as RouteIcon } from 'lucide-react';
+import { Bot, Clock, Route as RouteIcon } from 'lucide-react';
 import { Button, PageError } from '@/components/ui';
 import {
   Notice,
@@ -12,7 +12,14 @@ import {
   ShiftHoursPanel,
   StatTile,
 } from '@/components/common';
-import { FleetMap, UnitRail, buildFleet, driverName } from '@/components/fleet';
+import {
+  FleetMap,
+  SimulationNotice,
+  SimulationPanel,
+  UnitRail,
+  buildFleet,
+  driverName,
+} from '@/components/fleet';
 import {
   useDriverLocations,
   useDrivers,
@@ -40,6 +47,9 @@ export default function FleetOverviewPage() {
   const [query, setQuery] = useState('');
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [shiftOpen, setShiftOpen] = useState(false);
+  const [simulateOpen, setSimulateOpen] = useState(false);
+  // Bot jeeps for demos and testing; super admins only.
+  const canSimulate = isSuperAdmin && !!routeId && !!route;
 
   const inShift = route?.workingHours ? isWithinHours(route.workingHours, new Date(now)) : true;
 
@@ -121,9 +131,20 @@ export default function FleetOverviewPage() {
           <>
             <OrgPicker />
             <SearchField value={query} onChange={setQuery} placeholder="Search plate or driver" />
+            {canSimulate && (
+              <Button
+                variant="outline"
+                startIcon={<Bot size={16} />}
+                onClick={() => setSimulateOpen(true)}
+              >
+                Simulate
+              </Button>
+            )}
           </>
         }
       />
+
+      {isSuperAdmin && <SimulationNotice />}
 
       {org && !routeId && (
         <Notice
@@ -203,6 +224,15 @@ export default function FleetOverviewPage() {
       </div>
 
       <ShiftHoursPanel isOpen={shiftOpen} onClose={() => setShiftOpen(false)} routeId={routeId} />
+      {canSimulate && (
+        <SimulationPanel
+          isOpen={simulateOpen}
+          onClose={() => setSimulateOpen(false)}
+          organizationId={orgId}
+          routeId={routeId}
+          routeName={route.name}
+        />
+      )}
     </div>
   );
 }

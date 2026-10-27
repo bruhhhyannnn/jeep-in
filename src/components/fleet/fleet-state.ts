@@ -36,6 +36,27 @@ function stateFor(driver: DriverProfile | null, location: DriverLocation | null,
   return { state: stale ? ('stale' as const) : ('live' as const), lastSeen };
 }
 
+/**
+ * Simulated units have no driver record (bots aren't sign-in accounts), so they show
+ * with a placeholder driver instead.
+ */
+function simulatedDriver(j: Jeepney): DriverProfile {
+  return {
+    uid: j.assignedDriverId ?? '',
+    email: '',
+    firstName: 'Simulated',
+    lastName: 'driver',
+    organizationId: j.organizationId,
+    assignedJeepneyId: j.id,
+    routeId: j.routeId,
+    isActive: true,
+    mustChangePassword: false,
+    lastLocationUpdate: null,
+    createdAt: j.createdAt,
+    updatedAt: j.updatedAt,
+  };
+}
+
 /** Joins units, drivers and live positions into one list, live units first. */
 export function buildFleet(
   jeepneys: Jeepney[],
@@ -47,7 +68,9 @@ export function buildFleet(
   const locByDriver = new Map(locations.filter(hasPosition).map((l) => [l.driverId, l] as const));
 
   const units: FleetUnit[] = jeepneys.map((j) => {
-    const driver = j.assignedDriverId ? (driverById.get(j.assignedDriverId) ?? null) : null;
+    const driver = j.assignedDriverId
+      ? (driverById.get(j.assignedDriverId) ?? (j.isBot ? simulatedDriver(j) : null))
+      : null;
     const location = driver ? (locByDriver.get(driver.uid) ?? null) : null;
     return { key: j.id, jeepney: j, driver, location, ...stateFor(driver, location, now) };
   });

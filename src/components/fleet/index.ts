@@ -7,3 +7,4 @@ export {
   type FleetUnit,
   type UnitState,
 } from './fleet-state';
+export { SimulationPanel, SimulationNotice } from './simulation-panel';
