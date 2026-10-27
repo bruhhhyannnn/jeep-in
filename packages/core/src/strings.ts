@@ -1,6 +1,10 @@
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
-export const STRINGS = {
+/**
+ * Copy shared by the commuter apps, worded as in the native app. Each app spreads
+ * this into its own STRINGS and adds or overrides what differs on its platform.
+ */
+export const commuterStrings = {
   // General
   general: {
     appName: "JEEP-IN",
@@ -257,7 +261,7 @@ export const STRINGS = {
       title: "Alerts",
       markAllRead: "Mark all read",
       deviceOnly:
-        "Kept on this device only — there's no account to sync from. Clears if you clear this browser's data.",
+        "Kept on this device only — there's no account to sync from. Clears when you reinstall.",
       arrivalAlerts: "Arrival alerts",
       arrivalAlertsHint: (min: number) => `Ping me ${min} minutes before my jeep`,
       emptyTitle: "No alerts yet",
@@ -267,7 +271,7 @@ export const STRINGS = {
       blockedTitle: "Notifications are switched off for this app",
       blockedBody: "Alerts will only show inside the app",
       turnOn: "Turn on",
-      footer: "Alerts are kept on this phone only — they clear if you clear this browser's data",
+      footer: "Alerts are kept on this phone only — they clear if you reinstall",
 
       arrivalTitle: (unit: string, min: number) => `${unit} is ${min} min away`,
       arrivalBody: (stop: string, plate: string) => `Head to ${stop} now. Plate ${plate}.`,
@@ -395,34 +399,6 @@ export const STRINGS = {
         ],
       },
     },
-  },
-
-  // Web app only — install, updates and browser permissions
-  web: {
-    install: {
-      section: "App",
-      title: "Install app",
-      hint: "Add JEEP-IN to your home screen",
-      iosTitle: "Add to Home Screen",
-      iosSteps: [
-        "Tap the Share button in Safari's toolbar",
-        "Choose “Add to Home Screen”",
-        "Tap Add",
-      ],
-    },
-    update: {
-      ready: "A new version is ready",
-      reload: "Reload",
-    },
-    alerts: {
-      iosHint: "On iPhone, alerts need JEEP-IN on your Home Screen (iOS 16.4 or later).",
-    },
-    blocked: {
-      location: "Location is blocked for this site. Allow it in your browser's site settings.",
-      notifications:
-        "Notifications are blocked for this site. Allow them in your browser's site settings.",
-    },
-    copied: "Copied to clipboard!",
   },
 
   // Errors / Feedback

@@ -1,4 +1,4 @@
-import type { LngLat } from "@/types";
+import type { LngLat } from "./model";
 
 // Firestore documents are read through these helpers so older documents
 // (written before the current data model) still load with sensible defaults.

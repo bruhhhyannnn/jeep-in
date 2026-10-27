@@ -1,4 +1,4 @@
-import type { StopPoint } from "@/types";
+import type { StopPoint } from "./model";
 
 /** Name, address and landmark are all searched. */
 export function matchesStop(stop: StopPoint, query: string) {

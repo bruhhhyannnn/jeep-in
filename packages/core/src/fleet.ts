@@ -5,8 +5,8 @@ import type {
   LngLat,
   RouteDirection,
   StopPoint,
-} from "@/types";
-import { angleBetween, measureOnPath, segmentBearing } from "@/lib/geo";
+} from "./model";
+import { angleBetween, measureOnPath, segmentBearing } from "./geo";
 
 /** A position older than this is shown as "last seen" and gets no arrival time. */
 export const STALE_AFTER_MS = 2 * 60 * 1000;
@@ -160,13 +160,34 @@ export function computeArrivals(params: {
     const remainingKm = targetKm - m.alongKm;
     const stopsAhead = ahead.filter((s) => (stopAlong[s.id] ?? 0) <= targetKm);
     if (remainingKm < -0.05) {
-      return { jeep, state: "passed", etaMin: null, remainingKm, nextStop, stopsAhead: [] };
+      return {
+        jeep,
+        state: "passed",
+        etaMin: null,
+        remainingKm,
+        nextStop,
+        stopsAhead: [],
+      };
     }
     if (jeep.stale) {
-      return { jeep, state: "stale", etaMin: null, remainingKm, nextStop, stopsAhead };
+      return {
+        jeep,
+        state: "stale",
+        etaMin: null,
+        remainingKm,
+        nextStop,
+        stopsAhead,
+      };
     }
     if (remainingKm < ARRIVING_KM) {
-      return { jeep, state: "arriving", etaMin: 0, remainingKm: 0, nextStop: target, stopsAhead };
+      return {
+        jeep,
+        state: "arriving",
+        etaMin: 0,
+        remainingKm: 0,
+        nextStop: target,
+        stopsAhead,
+      };
     }
     return {
       jeep,

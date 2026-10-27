@@ -1,5 +1,5 @@
-import type { FareMatrix } from "@/types";
-import { formatPeso } from "@/lib/format";
+import type { FareMatrix } from "./model";
+import { formatPeso } from "./format";
 
 export type FareQuote = {
   km: number;
@@ -14,15 +14,19 @@ const roundTo = (value: number, step: number) =>
 
 const toCentavo = (value: number) => Math.round(value * 100) / 100;
 
-/** The discount is taken off the rounded regular fare: ₱13.00 becomes ₱10.40. */
+/**
+ * The discount is taken off the rounded regular fare: ₱13.00 becomes ₱10.40, or
+ * ₱10.50 for a matrix whose discounted fares round to ₱0.25.
+ */
 export function quoteFare(matrix: FareMatrix, km: number): FareQuote {
   const extraKm = Math.max(0, Math.round((km - matrix.baseKm) * 10) / 10);
   const regular = roundTo(matrix.baseFare + extraKm * matrix.perKm, matrix.roundTo);
+  const discounted = regular * (1 - matrix.discountRate);
   return {
     km,
     extraKm,
     regular,
-    discounted: toCentavo(regular * (1 - matrix.discountRate)),
+    discounted: toCentavo(roundTo(discounted, matrix.discountRoundTo ?? 0)),
   };
 }
 

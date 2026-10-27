@@ -15,12 +15,17 @@ Planned: `apps/mobile-driver` (driver app) and `apps/web-driver` (driver PWA for
 
 ## Packages
 
-| Folder            | Package           | What                                                                                                                         |
-| ----------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `packages/config` | `@jeep-in/config` | Shared ESLint (`base`, `react`, `reactNative`), Prettier and TypeScript settings                                             |
-| `packages/tokens` | `@jeep-in/tokens` | The commuter design tokens (colours, type roles, radii, shadows, layout) as JS values, plus the generated Tailwind v3 preset |
+| Folder            | Package           | What                                                                                                                                    |
+| ----------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/config` | `@jeep-in/config` | Shared ESLint (`base`, `react`, `reactNative`), Prettier and TypeScript settings                                                        |
+| `packages/tokens` | `@jeep-in/tokens` | The commuter design tokens (colours, type roles, radii, shadows, layout) as JS values, plus the generated Tailwind v3 preset            |
+| `packages/core`   | `@jeep-in/core`   | The data model, the readers that turn Firestore documents into it, the fare, fleet, geo, format and search logic, and the commuter copy |
 
-Planned: `packages/core` — the Firestore data model (zod schemas and types), the readers that normalize documents, and the fare, arrival, geo, format and search logic.
+Packages ship TypeScript source; each app's bundler compiles it. The commuter apps still import through their own paths (`@/lib/fare`, `@/types`), which re-export the package.
+
+### Shared logic
+
+`packages/core` is plain TypeScript with no Firebase or React dependency, so every app (and the admin's server code) can use it. The readers in `documents.ts` take a document's fields, fill in defaults, and accept the older field names still in Firestore (`latitude`/`longitude`, `routeDirection`, directions stored as labels). Its tests run with `npm test`.
 
 ### Design tokens
 
@@ -61,6 +66,7 @@ Turborepo runs the same task in every app that has it:
 ```bash
 npm run typecheck
 npm run lint
+npm test
 npm run build
 ```
 

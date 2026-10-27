@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "tokens": "npm run generate -w @jeep-in/tokens --"
+    "tokens": "npm run generate -w @jeep-in/tokens --",
+    "test": "turbo run test"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,css,json,md}": "prettier --write --ignore-unknown"

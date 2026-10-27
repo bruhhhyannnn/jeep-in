@@ -1,5 +1,5 @@
-/** [longitude, latitude], the order Mapbox and GeoJSON use. */
-export type LngLat = [number, number];
+// LngLat is exported with the data model (types/entities).
+import type { LngLat } from "@jeep-in/core/model";
 
 export type CameraPadding = { top: number; right: number; bottom: number; left: number };
 

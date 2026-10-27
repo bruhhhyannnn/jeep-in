@@ -1,25 +1,7 @@
 import type { Jeepney } from "@/types";
 import { db, getAuthInstance } from "@/services/firebase/config";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-  type DocumentData,
-} from "firebase/firestore";
-import { optionalNum, str } from "@/api/normalize";
-
-export const normalizeJeepney = (id: string, d: DocumentData): Jeepney => ({
-  id,
-  plateNumber: str(d.plateNumber),
-  jeepneyNumber: str(d.jeepneyNumber),
-  organizationId: str(d.organizationId),
-  routeId: str(d.routeId),
-  assignedDriverId: typeof d.assignedDriverId === "string" ? d.assignedDriverId : null,
-  status: d.status ?? undefined,
-  seats: optionalNum(d.seats),
-});
+import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { normalizeJeepney } from "@jeep-in/core/documents";
 
 export const subscribeToJeepneys = (callback: (jeepneys: Jeepney[]) => void) => {
   return onSnapshot(collection(db, "jeepneys"), (snap) => {

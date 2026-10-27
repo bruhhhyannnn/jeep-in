@@ -1,0 +1,35 @@
+{
+  "name": "@jeep-in/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The JEEP-IN data model, Firestore document readers, and the fare, fleet, geo, format and search logic every app shares.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./documents": "./src/documents.ts",
+    "./fare": "./src/fare.ts",
+    "./fleet": "./src/fleet.ts",
+    "./format": "./src/format.ts",
+    "./geo": "./src/geo.ts",
+    "./model": "./src/model.ts",
+    "./normalize": "./src/normalize.ts",
+    "./search": "./src/search.ts",
+    "./strings": "./src/strings.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@turf/turf": "^7.4.0",
+    "dayjs": "^1.11.23"
+  },
+  "devDependencies": {
+    "@jeep-in/config": "*",
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^22.20.5",
+    "tsx": "^4.21.0",
+    "typescript": "~5.9.3"
+  }
+}

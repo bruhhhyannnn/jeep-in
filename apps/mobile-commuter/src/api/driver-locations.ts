@@ -1,24 +1,7 @@
 import type { DriverLocation } from "@/types";
 import { db } from "@/services/firebase/config";
-import { doc, collection, onSnapshot, setDoc, type DocumentData } from "firebase/firestore";
-import { num, optionalNum, optionalStr, toMillis } from "@/api/normalize";
-
-export const normalizeDriverLocation = (id: string, d: DocumentData): DriverLocation => {
-  const heading = optionalNum(d.heading);
-  const speed = optionalNum(d.speed);
-  return {
-    id,
-    driverId: typeof d.driverId === "string" ? d.driverId : id,
-    lat: num(d.lat, 0),
-    long: num(d.long, 0),
-    // GPS reports -1 when it has no heading or speed.
-    heading: heading != null && heading >= 0 ? heading : null,
-    speed: speed != null && speed >= 0 ? speed : null,
-    directionId: optionalStr(d.directionId),
-    isSharing: d.isSharing === true,
-    updatedAt: toMillis(d.updatedAt),
-  };
-};
+import { doc, collection, onSnapshot, setDoc } from "firebase/firestore";
+import { normalizeDriverLocation } from "@jeep-in/core/documents";
 
 /** `fromCache` is true while the phone can't reach Firestore. */
 export const subscribeToAllDriverLocations = (
