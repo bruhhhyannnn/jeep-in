@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from "@/hooks";
 import { minutesFor } from "@/lib/fleet";
+import { inSentence } from "@/lib/format";
 import { measureOnPath } from "@/lib/geo";
 import { router } from "@/lib/router";
 import { matchesStop, suggestionWords } from "@/lib/search";
@@ -153,7 +154,7 @@ export default function StopsTab() {
                 </ThemedText>
                 {direction && (
                   <ThemedText variant="label" tone="muted">
-                    {direction.label.toLowerCase()}
+                    {inSentence(direction.label)}
                   </ThemedText>
                 )}
               </View>

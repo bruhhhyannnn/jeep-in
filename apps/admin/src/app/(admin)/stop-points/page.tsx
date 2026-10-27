@@ -35,6 +35,7 @@ import {
   useAllRoutes,
   useOrganization,
 } from "@/hooks";
+import { inSentence } from "@jeep-in/core/format";
 import { directionLabel, stopPointSchema, type StopPointFormData } from "@/lib";
 import type { RouteDirection, StopPoint } from "@/types";
 
@@ -460,7 +461,7 @@ function StopPointPanel({
         </div>
         <p className="-mt-3 text-[13px] text-ink-muted">
           {errors.order?.message ??
-            `1 is the first stop${directionId ? ` ${directionLabel(directions, directionId).toLowerCase()}` : ""}. The other stops move to make room.`}
+            `1 is the first stop${directionId ? ` ${inSentence(directionLabel(directions, directionId))}` : ""}. The other stops move to make room.`}
         </p>
 
         <Input

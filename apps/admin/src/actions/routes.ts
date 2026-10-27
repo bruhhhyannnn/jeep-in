@@ -2,6 +2,7 @@
 
 import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { normalizeRoute, normalizeStopPoint } from "@jeep-in/core/documents";
+import { inSentence } from "@jeep-in/core/format";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { WorkingHoursFormData, RouteFormData, splitList } from "@/lib";
 import type { Route, RouteDirection } from "@/types";
@@ -101,7 +102,7 @@ export async function updateRoute(routeId: string, data: RouteFormData): Promise
       ).length;
       if (count) {
         throw new Error(
-          `${count} ${count === 1 ? "stop is" : "stops are"} still ${direction.label.toLowerCase()}. Move or remove ${count === 1 ? "it" : "them"} first.`,
+          `${count} ${count === 1 ? "stop is" : "stops are"} still ${inSentence(direction.label)}. Move or remove ${count === 1 ? "it" : "them"} first.`,
         );
       }
     }

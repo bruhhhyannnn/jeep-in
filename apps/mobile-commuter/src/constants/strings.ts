@@ -1,4 +1,5 @@
 import { commuterStrings } from "@jeep-in/core/strings";
+import { inSentence } from "@jeep-in/core/format";
 
 // Commuter copy is shared with the web app (packages/core); this adds the native
 // app's sign-in and driver screens.
@@ -139,7 +140,7 @@ export const STRINGS = {
     },
 
     strip: {
-      sharing: (direction: string) => `Sharing · ${direction.toLowerCase()}`,
+      sharing: (direction: string) => `Sharing · ${inSentence(direction)}`,
       starting: "Starting · not visible yet",
       off: "Not sharing · commuters can't see you",
       resting: "Resting · hidden from commuters",
@@ -209,7 +210,7 @@ export const STRINGS = {
       offDuty: "off duty",
       assignment: "Today's assignment",
       unitLine: (unit: string, seats: number | null, direction: string | null) =>
-        [`Unit ${unit}`, seats ? `${seats} seats` : null, direction?.toLowerCase()]
+        [`Unit ${unit}`, seats ? `${seats} seats` : null, direction ? inSentence(direction) : null]
           .filter(Boolean)
           .join(" · "),
       noAssignment: "No unit assigned yet",

@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { STRINGS } from "@/constants";
 import { useTransit } from "@/hooks";
 import { discountPercent, isPlaceholderMatrix, quoteFare, roundingLabel } from "@/lib/fare";
-import { formatClock, formatDate, formatKm, formatPeso } from "@/lib/format";
+import { formatClock, formatDate, formatKm, formatPeso, inSentence } from "@/lib/format";
 import { useOfflineCache } from "@/store";
 import { sendEmail } from "@/utils";
 import { Button, Card, Chip, Icon, IconButton, Sheet, ThemedText } from "@/components/ui";
@@ -147,7 +147,7 @@ export default function FareMatrixSheet() {
 
           <View className="flex-row items-baseline justify-between">
             <ThemedText variant="strong">
-              {direction ? `${t.table} · ${direction.label.toLowerCase()}` : t.table}
+              {direction ? `${t.table} · ${inSentence(direction.label)}` : t.table}
             </ThemedText>
             <ThemedText variant="label" tone="muted">
               {t.tableHint}

@@ -1,3 +1,5 @@
+import { inSentence } from "./format";
+
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 /**
@@ -85,7 +87,7 @@ export const commuterStrings = {
 
     home: {
       jeepsToward: (n: number, direction: string) =>
-        `${plural(n, "jeep")} ${direction.toLowerCase()}`,
+        `${plural(n, "jeep")} ${inSentence(direction)}`,
       soonestFirst: "Soonest arrival first",
       pickStopForTimes: "Pick your stop to see arrival times",
       pickStop: "Pick a stop",
@@ -99,7 +101,7 @@ export const commuterStrings = {
       nextStop: (stop: string) => `Next stop ${stop}`,
       atEnd: "Near the end of the route",
 
-      noJeepsTitle: (direction: string) => `No jeeps ${direction.toLowerCase()} right now`,
+      noJeepsTitle: (direction: string) => `No jeeps ${inSentence(direction)} right now`,
       beforeService: (start: string) => `Service usually starts around ${start}.`,
       afterService: (end: string, start: string) =>
         `Service usually ends around ${end}. First trip tomorrow is usually around ${start}.`,
@@ -115,7 +117,7 @@ export const commuterStrings = {
       offlineSince: (clock: string, ago: string) => `Positions are from ${clock}, ${ago}`,
       offlineNoPositions: "Jeep positions can't load right now",
       retry: "Retry",
-      lastSeenToward: (direction: string) => `Last seen ${direction.toLowerCase()}`,
+      lastSeenToward: (direction: string) => `Last seen ${inSentence(direction)}`,
       notUpdating: "Not updating — arrival times hidden",
       offlineWorks: "Fares, stops and the matrix still work",
       offlineWorksHint: "Saved on this phone — no signal needed",
@@ -131,7 +133,7 @@ export const commuterStrings = {
     },
 
     jeepney: {
-      unitToward: (unit: string, direction: string) => `Unit ${unit} · ${direction.toLowerCase()}`,
+      unitToward: (unit: string, direction: string) => `Unit ${unit} · ${inSentence(direction)}`,
       arrivesIn: "Arrives in",
       distance: "Distance",
       stopsAhead: "Stops ahead",
@@ -227,7 +229,7 @@ export const commuterStrings = {
     matrix: {
       title: "Approved fare matrix",
       source: "Source",
-      subtitle: (route: string, vehicleClass: string) => `${route} · ${vehicleClass.toLowerCase()}`,
+      subtitle: (route: string, vehicleClass: string) => `${route} · ${inSentence(vehicleClass)}`,
       orderNo: "Order / case no.",
       issuedBy: "Issuing office",
       route: "Route",
@@ -280,7 +282,7 @@ export const commuterStrings = {
         `It went past ${stop} before the alert time. Pick another jeep.`,
       lostTitle: (unit: string) => `${unit} stopped sharing`,
       lostBody: "Its position stopped updating, so the alert was cleared.",
-      liveTitle: (direction: string) => `A jeep is live ${direction.toLowerCase()}`,
+      liveTitle: (direction: string) => `A jeep is live ${inSentence(direction)}`,
       liveBody: (unit: string) =>
         `${unit} just started sharing. Open the map to see how far it is.`,
     },

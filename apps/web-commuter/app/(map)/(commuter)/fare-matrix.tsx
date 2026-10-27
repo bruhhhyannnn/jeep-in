@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { STRINGS } from "@/constants";
 import { useEscape, useSafeAreaInsets, useTransit, useWindowDimensions } from "@/hooks";
 import { discountPercent, isPlaceholderMatrix, quoteFare, roundingLabel } from "@/lib/fare";
-import { formatClock, formatDate, formatKm, formatPeso } from "@/lib/format";
+import { formatClock, formatDate, formatKm, formatPeso, inSentence } from "@/lib/format";
 import { router } from "@/lib/router";
 import { useOfflineCache } from "@/store";
 import { sendEmail } from "@/utils";
@@ -157,7 +157,7 @@ export default function FareMatrixSheet() {
 
           <View className="flex-row items-baseline justify-between">
             <ThemedText variant="strong">
-              {direction ? `${t.table} · ${direction.label.toLowerCase()}` : t.table}
+              {direction ? `${t.table} · ${inSentence(direction.label)}` : t.table}
             </ThemedText>
             <ThemedText variant="label" tone="muted">
               {t.tableHint}

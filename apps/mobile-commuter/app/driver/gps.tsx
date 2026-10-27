@@ -6,7 +6,7 @@ import { getAssignedJeepneyId, setDriverOvertime } from "@/api";
 import { useDriverProfile, useDriverRoute, useNow, useShift } from "@/hooks";
 import { reconnectFleet } from "@/hooks/useFleet";
 import { nearestStop } from "@/hooks/useTrip";
-import { formatAgo, formatClock } from "@/lib/format";
+import { formatAgo, formatClock, inSentence } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { startSharing, stopSharing } from "@/services/location/driverTracking";
 import { showWarning } from "@/services/ui/toasts";
@@ -120,7 +120,7 @@ export default function GpsTab() {
     if (!(await getAssignedJeepneyId())) showWarning(t.stillNoUnit);
   };
 
-  let header = direction ? `${name} · ${direction.label.toLowerCase()}` : name;
+  let header = direction ? `${name} · ${inSentence(direction.label)}` : name;
   let eyebrow = t.eyebrow;
   let body: React.ReactNode;
 

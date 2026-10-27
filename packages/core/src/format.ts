@@ -42,3 +42,11 @@ export const formatDate = (value: string | number) => {
 
 export const formatAlertTime = (ms: number, now = Date.now()) =>
   dayjs(ms).isSame(now, "day") ? formatClock(ms) : dayjs(ms).format("MMM D");
+
+/**
+ * A label used mid-sentence: only its first letter drops to lower case, so place
+ * names and acronyms stay ("Toward Paoay" → "toward Paoay", "Traditional PUJ" →
+ * "traditional PUJ"). A label that starts with an acronym is left as is.
+ */
+export const inSentence = (label: string) =>
+  /^\p{Lu}\p{Ll}/u.test(label) ? label.charAt(0).toLowerCase() + label.slice(1) : label;
