@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import { format } from 'date-fns';
-import { Bot, Clock, Route as RouteIcon } from 'lucide-react';
-import { Button, PageError } from '@/components/ui';
+import { useMemo, useState } from "react";
+import { format } from "date-fns";
+import { Bot, Clock, Route as RouteIcon } from "lucide-react";
+import { Button, PageError } from "@/components/ui";
 import {
   Notice,
   OrgPicker,
@@ -11,7 +11,7 @@ import {
   SearchField,
   ShiftHoursPanel,
   StatTile,
-} from '@/components/common';
+} from "@/components/common";
 import {
   FleetMap,
   SimulationNotice,
@@ -19,7 +19,7 @@ import {
   UnitRail,
   buildFleet,
   driverName,
-} from '@/components/fleet';
+} from "@/components/fleet";
 import {
   useDriverLocations,
   useDrivers,
@@ -29,13 +29,13 @@ import {
   useOrganization,
   useRoute,
   useStopPoints,
-} from '@/hooks';
-import { formatClock, isWithinHours, timeAgo } from '@/lib';
+} from "@/hooks";
+import { formatClock, isWithinHours, timeAgo } from "@/lib";
 
 export default function FleetOverviewPage() {
   const { orgId, isSuperAdmin, orgs } = useOrgScope();
   const { data: org } = useOrganization(orgId || undefined);
-  const routeId = org?.routeId ?? '';
+  const routeId = org?.routeId ?? "";
   const { data: route } = useRoute(routeId || undefined);
 
   const { data: drivers = [], isPending: loadingDrivers, error } = useDrivers(orgId);
@@ -44,7 +44,7 @@ export default function FleetOverviewPage() {
   const { locations, loading: loadingLocations, syncedAt } = useDriverLocations(orgId);
 
   const now = useNow(5000);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [shiftOpen, setShiftOpen] = useState(false);
   const [simulateOpen, setSimulateOpen] = useState(false);
@@ -55,25 +55,25 @@ export default function FleetOverviewPage() {
 
   const fleet = useMemo(
     () => buildFleet(jeepneys, drivers, locations, now),
-    [jeepneys, drivers, locations, now]
+    [jeepneys, drivers, locations, now],
   );
 
   const q = query.trim().toLowerCase();
   const visible = q
     ? fleet.filter((u) =>
         [u.jeepney?.plateNumber, u.jeepney?.jeepneyNumber, driverName(u.driver)]
-          .join(' ')
+          .join(" ")
           .toLowerCase()
-          .includes(q)
+          .includes(q),
       )
     : fleet;
 
-  const liveCount = fleet.filter((u) => u.state === 'live').length;
-  const staleCount = fleet.filter((u) => u.state === 'stale').length;
+  const liveCount = fleet.filter((u) => u.state === "live").length;
+  const staleCount = fleet.filter((u) => u.state === "stale").length;
   const withDriver = jeepneys.filter((j) => j.assignedDriverId).length;
   const activeDrivers = drivers.filter((d) => d.isActive).length;
   const loading = !!orgId && (loadingDrivers || loadingJeepneys);
-  const dash = (v: number) => (loading ? '—' : v);
+  const dash = (v: number) => (loading ? "—" : v);
 
   if (error) return <PageError message={error.message} />;
 
@@ -92,29 +92,29 @@ export default function FleetOverviewPage() {
   }
 
   const statusLine = inShift ? (
-    <span className="text-ink-muted flex items-center gap-1.5 text-[12px] font-medium">
+    <span className="flex items-center gap-1.5 text-[12px] font-medium text-ink-muted">
       <span className="relative flex h-2 w-2">
-        <span className="bg-live animate-pulse-ring absolute inset-0 rounded-full" />
-        <span className="bg-live relative h-2 w-2 rounded-full" />
+        <span className="absolute inset-0 animate-pulse-ring rounded-full bg-live" />
+        <span className="relative h-2 w-2 rounded-full bg-live" />
       </span>
-      {syncedAt ? `Live · updated ${timeAgo(new Date(syncedAt), now)} ago` : 'Connecting…'}
+      {syncedAt ? `Live · updated ${timeAgo(new Date(syncedAt), now)} ago` : "Connecting…"}
     </span>
   ) : (
-    <span className="text-ink-muted flex items-center gap-1.5 text-[12px] font-medium">
-      <span className="border-stale h-2 w-2 rounded-full border-[1.5px]" />
+    <span className="flex items-center gap-1.5 text-[12px] font-medium text-ink-muted">
+      <span className="h-2 w-2 rounded-full border-[1.5px] border-stale" />
       Opens {formatClock(route?.workingHours.start)}
     </span>
   );
 
   const emptyState = !inShift
     ? {
-        title: 'No jeepneys on the map yet',
-        description: 'Markers appear as drivers switch sharing on at the terminal.',
+        title: "No jeepneys on the map yet",
+        description: "Markers appear as drivers switch sharing on at the terminal.",
       }
     : !loadingLocations && fleet.every((u) => !u.location)
       ? {
-          title: 'No one is sharing right now',
-          description: 'Markers appear as soon as a driver switches sharing on.',
+          title: "No one is sharing right now",
+          description: "Markers appear as soon as a driver switches sharing on.",
         }
       : null;
 
@@ -124,8 +124,8 @@ export default function FleetOverviewPage() {
         title="Fleet overview"
         description={
           org
-            ? `${org.name}${route ? ` · ${route.name} · shift ${formatClock(route.workingHours.start)} – ${formatClock(route.workingHours.end)}` : ''}`
-            : 'Where every unit is right now.'
+            ? `${org.name}${route ? ` · ${route.name} · shift ${formatClock(route.workingHours.start)} – ${formatClock(route.workingHours.end)}` : ""}`
+            : "Where every unit is right now."
         }
         actions={
           <>
@@ -159,7 +159,7 @@ export default function FleetOverviewPage() {
         <Notice
           icon={<Clock size={17} />}
           title={`Outside shift hours — sharing opens at ${formatClock(route.workingHours.start)}`}
-          description={`An empty map right now is normal. ${format(new Date(now), 'EEE, MMM d · h:mm a')}`}
+          description={`An empty map right now is normal. ${format(new Date(now), "EEE, MMM d · h:mm a")}`}
           action={
             <Button variant="outline" size="sm" onClick={() => setShiftOpen(true)}>
               Change shift hours
@@ -170,27 +170,27 @@ export default function FleetOverviewPage() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile
-          value={inShift ? dash(liveCount) : '—'}
+          value={inShift ? dash(liveCount) : "—"}
           label="Sharing live"
           swatch={
-            <span className="bg-moment h-4 w-4 rounded-[5px] border-2 border-white shadow-sm" />
+            <span className="h-4 w-4 rounded-[5px] border-2 border-white bg-moment shadow-sm" />
           }
         />
         <StatTile
-          value={inShift ? dash(staleCount) : '—'}
+          value={inShift ? dash(staleCount) : "—"}
           label="Last known · no signal"
           swatch={
-            <span className="border-stale h-4 w-4 rounded-[5px] border-[1.5px] border-dashed" />
+            <span className="h-4 w-4 rounded-[5px] border-[1.5px] border-dashed border-stale" />
           }
         />
         <StatTile
           value={
             loading ? (
-              '—'
+              "—"
             ) : (
               <>
                 {withDriver}
-                <span className="text-ink-muted text-[17px] font-bold"> / {jeepneys.length}</span>
+                <span className="text-[17px] font-bold text-ink-muted"> / {jeepneys.length}</span>
               </>
             )
           }

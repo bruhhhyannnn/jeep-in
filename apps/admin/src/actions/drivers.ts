@@ -1,17 +1,17 @@
-'use server';
+"use server";
 
-import { Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { DriverCreateFormData, serializeDoc } from '@/lib';
-import { adminAuth, adminDb } from '@/lib/firebase-admin';
-import type { DriverProfile } from '@/types';
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { DriverCreateFormData, serializeDoc } from "@/lib";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import type { DriverProfile } from "@/types";
 
-const COL = 'drivers';
+const COL = "drivers";
 
 export async function getDrivers(organizationId: string): Promise<DriverProfile[]> {
   const snap = await adminDb
     .collection(COL)
-    .where('organizationId', '==', organizationId)
-    .orderBy('createdAt', 'desc')
+    .where("organizationId", "==", organizationId)
+    .orderBy("createdAt", "desc")
     .get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as DriverProfile), uid: d.id }));
 }
@@ -25,7 +25,7 @@ export async function getDriver(uid: string): Promise<DriverProfile | null> {
 export async function createDriver(
   data: DriverCreateFormData,
   organizationId: string,
-  routeId: string
+  routeId: string,
 ): Promise<{ uid: string; tempPassword: string }> {
   // 1. Create Firebase Auth user via Admin SDK
   const userRecord = await adminAuth.createUser({
@@ -37,18 +37,18 @@ export async function createDriver(
   const uid = userRecord.uid;
 
   // 2. Set custom claim: role = driver
-  await adminAuth.setCustomUserClaims(uid, { role: 'driver' });
+  await adminAuth.setCustomUserClaims(uid, { role: "driver" });
 
   const now = Timestamp.now();
 
   // 3. Create /users/{uid}
   await adminDb
-    .collection('users')
+    .collection("users")
     .doc(uid)
     .set({
       uid,
       email: data.email,
-      role: 'driver',
+      role: "driver",
       displayName: `${data.firstName} ${data.lastName}`,
       isActive: true,
       createdAt: now,
@@ -82,7 +82,7 @@ export async function deactivateDriver(uid: string): Promise<void> {
 
     // If assigned to a jeepney, clear that assignment too
     if (driver.assignedJeepneyId) {
-      await adminDb.collection('jeepneys').doc(driver.assignedJeepneyId).update({
+      await adminDb.collection("jeepneys").doc(driver.assignedJeepneyId).update({
         assignedDriverId: null,
         updatedAt: FieldValue.serverTimestamp(),
       });
@@ -112,7 +112,7 @@ export async function deleteDriver(uid: string): Promise<void> {
   if (snap.exists) {
     const driver = snap.data() as DriverProfile;
     if (driver.assignedJeepneyId) {
-      await adminDb.collection('jeepneys').doc(driver.assignedJeepneyId).update({
+      await adminDb.collection("jeepneys").doc(driver.assignedJeepneyId).update({
         assignedDriverId: null,
         updatedAt: FieldValue.serverTimestamp(),
       });
@@ -121,8 +121,8 @@ export async function deleteDriver(uid: string): Promise<void> {
 
   // Remove from Firestore
   await adminDb.collection(COL).doc(uid).delete();
-  await adminDb.collection('users').doc(uid).delete();
-  await adminDb.collection('driver_locations').doc(uid).delete();
+  await adminDb.collection("users").doc(uid).delete();
+  await adminDb.collection("driver_locations").doc(uid).delete();
 
   // Delete Firebase Auth account
   await adminAuth.deleteUser(uid);
@@ -134,7 +134,7 @@ export async function assignJeepney(driverUid: string, jeepneyId: string): Promi
   if (snap.exists) {
     const driver = snap.data() as DriverProfile;
     if (driver.assignedJeepneyId && driver.assignedJeepneyId !== jeepneyId) {
-      await adminDb.collection('jeepneys').doc(driver.assignedJeepneyId).update({
+      await adminDb.collection("jeepneys").doc(driver.assignedJeepneyId).update({
         assignedDriverId: null,
         updatedAt: FieldValue.serverTimestamp(),
       });
@@ -147,7 +147,7 @@ export async function assignJeepney(driverUid: string, jeepneyId: string): Promi
     updatedAt: FieldValue.serverTimestamp(),
   });
   // Assign jeepney → driver
-  await adminDb.collection('jeepneys').doc(jeepneyId).update({
+  await adminDb.collection("jeepneys").doc(jeepneyId).update({
     assignedDriverId: driverUid,
     updatedAt: FieldValue.serverTimestamp(),
   });
@@ -158,7 +158,7 @@ export async function unassignJeepney(driverUid: string, jeepneyId: string): Pro
     assignedJeepneyId: null,
     updatedAt: FieldValue.serverTimestamp(),
   });
-  await adminDb.collection('jeepneys').doc(jeepneyId).update({
+  await adminDb.collection("jeepneys").doc(jeepneyId).update({
     assignedDriverId: null,
     updatedAt: FieldValue.serverTimestamp(),
   });

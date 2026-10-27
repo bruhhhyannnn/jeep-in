@@ -20,10 +20,10 @@
  * The Mapbox token is MAPBOX_PUBLIC_KEY in .env.local (same public token as the apps).
  */
 
-import { join } from 'node:path';
-import { config } from 'dotenv';
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { join } from "node:path";
+import { config } from "dotenv";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import {
   MAX_BOTS,
   SIMULATION_TICK_S,
@@ -38,13 +38,13 @@ import {
   type Bot,
   type LngLat,
   type RoadPath,
-} from '../src/lib/fleet-simulation';
-import { LAOAG_PAOAY, PAOAY_LAOAG } from './seed-stop-points';
+} from "../src/lib/fleet-simulation";
+import { LAOAG_PAOAY, PAOAY_LAOAG } from "./seed-stop-points";
 
 // ─── CONFIGURE BEFORE RUNNING ───────────────────────────────────────────────
-const ROUTE_ID = 'q2JCd9VCVuwhlFWfLais'; // Laoag–Batac–Paoay
-const ORGANIZATION_ID = 'ITC';
-const SERVICE_ACCOUNT_PATH = './serviceAccountKey.json';
+const ROUTE_ID = "q2JCd9VCVuwhlFWfLais"; // Laoag–Batac–Paoay
+const ORGANIZATION_ID = "ITC";
+const SERVICE_ACCOUNT_PATH = "./serviceAccountKey.json";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
@@ -53,12 +53,12 @@ const option = (name: string, fallback: number) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? Number(args[i + 1]) : fallback;
 };
-const BOTS = Math.min(MAX_BOTS, Math.max(1, option('bots', 4)));
-const MINUTES = option('minutes', 60);
-const DRY_RUN = flag('dry-run');
-const FLAKY = flag('flaky');
+const BOTS = Math.min(MAX_BOTS, Math.max(1, option("bots", 4)));
+const MINUTES = option("minutes", 60);
+const DRY_RUN = flag("dry-run");
+const FLAKY = flag("flaky");
 
-config({ path: join(__dirname, '..', '.env.local'), quiet: true });
+config({ path: join(__dirname, "..", ".env.local"), quiet: true });
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN ?? process.env.MAPBOX_PUBLIC_KEY;
 
 if (!getApps().length) {
@@ -74,11 +74,11 @@ type Stop = { name: string; order: number; lng: number; lat: number };
 
 /** Stops per direction in order: live documents, or the seed lists while `order` isn't saved yet. */
 async function loadStops(): Promise<Record<string, Stop[]>> {
-  const snap = await db.collection('stop_points').where('routeId', '==', ROUTE_ID).get();
+  const snap = await db.collection("stop_points").where("routeId", "==", ROUTE_ID).get();
   const live = snap.docs.map((d) => d.data()).filter((s) => s.isActive !== false);
   const byDirection: Record<string, Stop[]> = {};
 
-  if (live.length && live.every((s) => typeof s.order === 'number')) {
+  if (live.length && live.every((s) => typeof s.order === "number")) {
     for (const s of live) {
       const direction = String(s.routeDirection ?? s.directionId);
       (byDirection[direction] ??= []).push({
@@ -89,8 +89,8 @@ async function loadStops(): Promise<Record<string, Stop[]>> {
       });
     }
   } else {
-    console.log('⚠️  Stops have no `order` yet — using the seed lists.');
-    console.log('   Run scripts/fix-commuter-data.ts --apply so the apps draw the same road.\n');
+    console.log("⚠️  Stops have no `order` yet — using the seed lists.");
+    console.log("   Run scripts/fix-commuter-data.ts --apply so the apps draw the same road.\n");
     for (const s of [...LAOAG_PAOAY, ...PAOAY_LAOAG]) {
       (byDirection[s.routeDirection] ??= []).push({
         name: s.name,
@@ -110,7 +110,7 @@ async function roadPath(directionId: string, stops: Stop[]): Promise<RoadPath> {
     message?: string;
   };
   const line = json.routes?.[0]?.geometry.coordinates;
-  if (!line) throw new Error(`No road for ${directionId}: ${json.message ?? 'no route'}`);
+  if (!line) throw new Error(`No road for ${directionId}: ${json.message ?? "no route"}`);
   return buildRoadPath({ directionId, line, stops });
 }
 
@@ -120,20 +120,20 @@ async function createJeepneys() {
   const batch = db.batch();
   for (let n = 1; n <= BOTS; n++) {
     batch.set(
-      db.collection('jeepneys').doc(botJeepneyId(n)),
+      db.collection("jeepneys").doc(botJeepneyId(n)),
       {
         plateNumber: `SIM-0${n}`,
         jeepneyNumber: `S0${n}`,
         organizationId: ORGANIZATION_ID,
         routeId: ROUTE_ID,
         assignedDriverId: botId(n),
-        status: 'On route',
+        status: "On route",
         isActive: true,
         isBot: true,
         createdAt: Timestamp.now(),
         updatedAt: FieldValue.serverTimestamp(),
       },
-      { merge: true }
+      { merge: true },
     );
   }
   await batch.commit();
@@ -146,7 +146,7 @@ async function writeLocations(bots: Bot[], paths: RoadPath[], now: number) {
     if (now < bot.offlineUntil) continue;
     const { n, directionId, ...position } = reading(bot, paths);
     batch.set(
-      db.collection('driver_locations').doc(botId(n)),
+      db.collection("driver_locations").doc(botId(n)),
       {
         driverId: botId(n),
         ...position,
@@ -155,7 +155,7 @@ async function writeLocations(bots: Bot[], paths: RoadPath[], now: number) {
         isBot: true,
         updatedAt: FieldValue.serverTimestamp(),
       },
-      { merge: true }
+      { merge: true },
     );
     writes += 1;
   }
@@ -166,7 +166,7 @@ async function writeLocations(bots: Bot[], paths: RoadPath[], now: number) {
 async function stopSharing() {
   const batch = db.batch();
   for (let n = 1; n <= MAX_BOTS; n++) {
-    const ref = db.collection('driver_locations').doc(botId(n));
+    const ref = db.collection("driver_locations").doc(botId(n));
     if ((await ref.get()).exists) batch.update(ref, { isSharing: false });
   }
   await batch.commit();
@@ -175,37 +175,39 @@ async function stopSharing() {
 async function cleanup() {
   const batch = db.batch();
   for (let n = 1; n <= MAX_BOTS; n++) {
-    batch.delete(db.collection('jeepneys').doc(botJeepneyId(n)));
-    batch.delete(db.collection('driver_locations').doc(botId(n)));
+    batch.delete(db.collection("jeepneys").doc(botJeepneyId(n)));
+    batch.delete(db.collection("driver_locations").doc(botId(n)));
   }
   await batch.commit();
   console.log(
-    `✅ Deleted jeepneys/${botJeepneyId(1)}…${botJeepneyId(MAX_BOTS)} and driver_locations/${botId(1)}…${botId(MAX_BOTS)}`
+    `✅ Deleted jeepneys/${botJeepneyId(1)}…${botJeepneyId(MAX_BOTS)} and driver_locations/${botId(1)}…${botId(MAX_BOTS)}`,
   );
 }
 
 // ─── Run ─────────────────────────────────────────────────────────────────────
 
 const status = (bots: Bot[], paths: RoadPath[], now: number) =>
-  bots.map((b) => describeBot(b, paths, now)).join(' | ');
+  bots.map((b) => describeBot(b, paths, now)).join(" | ");
 
 async function main() {
-  if (flag('cleanup')) return cleanup();
-  if (flag('stop')) {
+  if (flag("cleanup")) return cleanup();
+  if (flag("stop")) {
     await stopSharing();
-    console.log('✅ Sharing turned off for every bot.');
+    console.log("✅ Sharing turned off for every bot.");
     return;
   }
-  if (!MAPBOX_TOKEN) throw new Error('Add MAPBOX_PUBLIC_KEY (the public pk. token) to .env.local.');
+  if (!MAPBOX_TOKEN) throw new Error("Add MAPBOX_PUBLIC_KEY (the public pk. token) to .env.local.");
 
   const stops = await loadStops();
   const paths = await Promise.all(
     [LAOAG_PAOAY[0].routeDirection, PAOAY_LAOAG[0].routeDirection].map((d) =>
-      roadPath(d, stops[d] ?? [])
-    )
+      roadPath(d, stops[d] ?? []),
+    ),
   );
   paths.forEach((p) =>
-    console.log(`🛣️  ${p.directionId}: ${(p.length / 1000).toFixed(1)} km, ${p.stops.length} stops`)
+    console.log(
+      `🛣️  ${p.directionId}: ${(p.length / 1000).toFixed(1)} km, ${p.stops.length} stops`,
+    ),
   );
   const bots = placeBots(paths, BOTS);
   const ticks = Math.round((MINUTES * 60) / SIMULATION_TICK_S);
@@ -219,17 +221,17 @@ async function main() {
       bots.forEach((b) => reading(b, paths));
       if (t % 60 === 0)
         console.log(
-          `  +${String(Math.round((t * SIMULATION_TICK_S) / 60)).padStart(3)} min  ${status(bots, paths, now)}`
+          `  +${String(Math.round((t * SIMULATION_TICK_S) / 60)).padStart(3)} min  ${status(bots, paths, now)}`,
         );
     }
     console.log(
-      `\n📝 Dry run: ${ticks} ticks, would write ${ticks * BOTS} locations. Nothing was written.`
+      `\n📝 Dry run: ${ticks} ticks, would write ${ticks * BOTS} locations. Nothing was written.`,
     );
     return;
   }
 
   console.log(
-    `\n🚌 ${BOTS} bots for ${MINUTES} min — about ${Math.round((3600 / SIMULATION_TICK_S) * BOTS)} writes an hour. Ctrl+C to stop.\n`
+    `\n🚌 ${BOTS} bots for ${MINUTES} min — about ${Math.round((3600 / SIMULATION_TICK_S) * BOTS)} writes an hour. Ctrl+C to stop.\n`,
   );
   await createJeepneys();
 
@@ -241,8 +243,8 @@ async function main() {
     console.log(`\n✅ ${reason}: sharing turned off for every bot. Delete them with --cleanup.`);
     process.exit(0);
   };
-  process.on('SIGINT', () => void finish('Stopped'));
-  process.on('SIGTERM', () => void finish('Stopped'));
+  process.on("SIGINT", () => void finish("Stopped"));
+  process.on("SIGTERM", () => void finish("Stopped"));
 
   let written = 0;
   for (let t = 0; t < ticks && !stopping; t++) {
@@ -258,12 +260,12 @@ async function main() {
     await new Promise((r) => setTimeout(r, SIMULATION_TICK_S * 1000));
   }
   console.log(`\n${written} locations written.`);
-  await finish('Time limit reached');
+  await finish("Time limit reached");
 }
 
 main()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error('❌ Simulation failed:', err);
+    console.error("❌ Simulation failed:", err);
     process.exit(1);
   });

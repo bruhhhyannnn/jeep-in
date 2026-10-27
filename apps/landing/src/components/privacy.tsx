@@ -37,7 +37,8 @@ export function Privacy() {
           <Eyebrow>Privacy and safety</Eyebrow>
           <SectionTitle>Jeeps are tracked. People are not.</SectionTitle>
           <p className="mt-2 text-[17px] leading-[1.6] text-pretty text-muted">
-            JEEP-IN only needs to know where the jeepneys are. Everything else stays on your phone or off the road.
+            JEEP-IN only needs to know where the jeepneys are. Everything else stays on your phone
+            or off the road.
           </p>
         </div>
         <ul className="flex flex-col gap-3.5">
@@ -63,7 +64,9 @@ export function Privacy() {
               </span>
               <div>
                 <h3 className="text-[17px] font-extrabold text-ink">{item.title}</h3>
-                <p className="mt-1 text-[15px] leading-[1.55] text-pretty text-muted">{item.body}</p>
+                <p className="mt-1 text-[15px] leading-[1.55] text-pretty text-muted">
+                  {item.body}
+                </p>
               </div>
             </li>
           ))}

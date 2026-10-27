@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Select } from '@/components/ui';
-import { useOrgScope } from '@/hooks';
+import { Select } from "@/components/ui";
+import { useOrgScope } from "@/hooks";
 
 /** Super admins choose which organization the page shows. Hidden for admins. */
 export function OrgPicker({ className }: { className?: string }) {
@@ -15,8 +15,8 @@ export function OrgPicker({ className }: { className?: string }) {
       options={orgs.map((o) => ({ value: o.id, label: `${o.shortName} · ${o.name}` }))}
       value={orgId}
       onChange={(e) => setOrgId(e.target.value)}
-      placeholder={orgs.length ? 'Choose organization' : 'No organizations yet'}
-      className={className ?? 'max-w-[260px]'}
+      placeholder={orgs.length ? "Choose organization" : "No organizations yet"}
+      className={className ?? "max-w-[260px]"}
     />
   );
 }

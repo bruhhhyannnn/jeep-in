@@ -1,14 +1,14 @@
-'use server';
+"use server";
 
-import { Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { adminAuth, adminDb } from '@/lib/firebase-admin';
-import { serializeDoc, type OrganizationFormData } from '@/lib';
-import type { Organization } from '@/types';
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { serializeDoc, type OrganizationFormData } from "@/lib";
+import type { Organization } from "@/types";
 
-const COL = 'organizations';
+const COL = "organizations";
 
 export async function getOrganizations(): Promise<Organization[]> {
-  const snap = await adminDb.collection(COL).orderBy('name', 'asc').get();
+  const snap = await adminDb.collection(COL).orderBy("name", "asc").get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as Organization), id: d.id }));
 }
 
@@ -45,28 +45,28 @@ export async function deleteOrganization(id: string): Promise<void> {
   const batch = adminDb.batch();
 
   // Jeepneys
-  const jeepneysSnap = await adminDb.collection('jeepneys').where('organizationId', '==', id).get();
+  const jeepneysSnap = await adminDb.collection("jeepneys").where("organizationId", "==", id).get();
   jeepneysSnap.docs.forEach((d) => batch.delete(d.ref));
 
   // Audit logs
-  const logsSnap = await adminDb.collection('audit_logs').where('organizationId', '==', id).get();
+  const logsSnap = await adminDb.collection("audit_logs").where("organizationId", "==", id).get();
   logsSnap.docs.forEach((d) => batch.delete(d.ref));
 
   // Admins — collect UIDs for Auth deletion
-  const adminsSnap = await adminDb.collection('admins').where('organizationId', '==', id).get();
+  const adminsSnap = await adminDb.collection("admins").where("organizationId", "==", id).get();
   const adminUids = adminsSnap.docs.map((d) => d.id);
   adminsSnap.docs.forEach((d) => {
     batch.delete(d.ref);
-    batch.delete(adminDb.collection('users').doc(d.id));
+    batch.delete(adminDb.collection("users").doc(d.id));
   });
 
   // Drivers — collect UIDs for Auth deletion
-  const driversSnap = await adminDb.collection('drivers').where('organizationId', '==', id).get();
+  const driversSnap = await adminDb.collection("drivers").where("organizationId", "==", id).get();
   const driverUids = driversSnap.docs.map((d) => d.id);
   driversSnap.docs.forEach((d) => {
     batch.delete(d.ref);
-    batch.delete(adminDb.collection('users').doc(d.id));
-    batch.delete(adminDb.collection('driver_locations').doc(d.id));
+    batch.delete(adminDb.collection("users").doc(d.id));
+    batch.delete(adminDb.collection("driver_locations").doc(d.id));
   });
 
   // Organization itself

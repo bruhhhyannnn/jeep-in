@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib';
+import { cn } from "@/lib";
 
 interface FilterChip<T extends string> {
   value: T;
@@ -23,7 +23,7 @@ export function FilterChips<T extends string>({
   className,
 }: FilterChipsProps<T>) {
   return (
-    <div role="tablist" className={cn('flex flex-wrap items-center gap-2', className)}>
+    <div role="tablist" className={cn("flex flex-wrap items-center gap-2", className)}>
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -34,15 +34,15 @@ export function FilterChips<T extends string>({
             aria-selected={active}
             onClick={() => onChange(opt.value)}
             className={cn(
-              'inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition-colors duration-150',
+              "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition-colors duration-150",
               active
-                ? 'bg-action text-on-action'
-                : 'border-line bg-card text-ink-muted hover:text-ink hover:border-line-strong border-[1.5px]'
+                ? "bg-action text-on-action"
+                : "border-[1.5px] border-line bg-card text-ink-muted hover:border-line-strong hover:text-ink",
             )}
           >
             {opt.label}
             {opt.count !== undefined && (
-              <span className={cn('font-data text-[12px]', active ? 'opacity-80' : 'opacity-70')}>
+              <span className={cn("font-data text-[12px]", active ? "opacity-80" : "opacity-70")}>
                 {opt.count}
               </span>
             )}

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useForm, type UseFormReturn } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import { Button, Input, SidePanel, Spinner, StatusChip } from '@/components/ui';
-import { useRoute, useUpdateWorkingHours, useNow } from '@/hooks';
-import { formatClock, isWithinHours, workingHoursSchema, type WorkingHoursFormData } from '@/lib';
+import { useEffect } from "react";
+import { useForm, type UseFormReturn } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import { Button, Input, SidePanel, Spinner, StatusChip } from "@/components/ui";
+import { useRoute, useUpdateWorkingHours, useNow } from "@/hooks";
+import { formatClock, isWithinHours, workingHoursSchema, type WorkingHoursFormData } from "@/lib";
 
 function useShiftHoursForm(routeId: string, onSaved?: () => void) {
   const { data: route, isPending } = useRoute(routeId || undefined);
@@ -28,13 +28,13 @@ function useShiftHoursForm(routeId: string, onSaved?: () => void) {
       {
         onSuccess: () => {
           toast.success(
-            `Shift hours saved · ${formatClock(data.start)} – ${formatClock(data.end)}`
+            `Shift hours saved · ${formatClock(data.start)} – ${formatClock(data.end)}`,
           );
           reset(data);
           onSaved?.();
         },
         onError: (e) => toast.error(e.message),
-      }
+      },
     );
   });
 
@@ -61,16 +61,16 @@ function ShiftHoursFields({
   return (
     <div className="space-y-5">
       {routeHours && (
-        <StatusChip tone={isOpen ? 'live' : 'pending'} dot>
+        <StatusChip tone={isOpen ? "live" : "pending"} dot>
           {isOpen
             ? `Open now · until ${formatClock(routeHours.end)}`
             : `Closed now · opens ${formatClock(routeHours.start)}`}
         </StatusChip>
       )}
 
-      <div className="border-line rounded-tile border-[1.5px] p-4">
+      <div className="rounded-tile border-[1.5px] border-line p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-          <p className="text-ink w-24 shrink-0 pt-3 text-[14px] font-bold">Every day</p>
+          <p className="w-24 shrink-0 pt-3 text-[14px] font-bold text-ink">Every day</p>
           <div className="grid flex-1 grid-cols-[1fr_auto_1fr] items-start gap-2.5">
             <Input
               type="time"
@@ -78,24 +78,24 @@ function ShiftHoursFields({
               className="font-data"
               error={!!errors.start}
               hint={errors.start?.message}
-              {...register('start')}
+              {...register("start")}
             />
-            <span className="text-ink-muted pt-3 text-[14px]">to</span>
+            <span className="pt-3 text-[14px] text-ink-muted">to</span>
             <Input
               type="time"
               aria-label="Sharing closes at"
               className="font-data"
               error={!!errors.end}
               hint={errors.end?.message}
-              {...register('end')}
+              {...register("end")}
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-sunken rounded-tile p-4">
-        <p className="text-ink text-[14px] font-bold">What these hours do</p>
-        <p className="text-ink-muted mt-1 text-[13px] leading-relaxed">
+      <div className="rounded-tile bg-sunken p-4">
+        <p className="text-[14px] font-bold text-ink">What these hours do</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">
           The fleet overview uses them to tell a quiet map from a problem: outside these hours an
           empty map is normal. Switching a driver&apos;s sharing off on its own outside these hours
           is handled by the driver app and arrives in a future update.
@@ -120,10 +120,10 @@ export function ShiftHoursForm({ routeId }: { routeId: string }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="border-line bg-card rounded-card max-w-[560px] border-[1.5px] p-5 shadow-sm sm:p-6"
+      className="max-w-[560px] rounded-card border-[1.5px] border-line bg-card p-5 shadow-sm sm:p-6"
     >
-      <p className="eyebrow">{route?.name ?? 'Route'}</p>
-      <h2 className="text-heading text-ink mt-1 mb-4">When sharing is allowed</h2>
+      <p className="eyebrow">{route?.name ?? "Route"}</p>
+      <h2 className="mt-1 mb-4 text-heading text-ink">When sharing is allowed</h2>
       <ShiftHoursFields form={form} routeHours={route?.workingHours} />
       <div className="mt-6 flex justify-end">
         <Button
@@ -150,7 +150,7 @@ export function ShiftHoursPanel({
   routeId: string;
 }) {
   const { route, isPending, form, onSubmit, isSaving } = useShiftHoursForm(routeId, onClose);
-  const formId = 'shift-hours-panel-form';
+  const formId = "shift-hours-panel-form";
   const { reset } = form;
 
   // Drop unsaved edits each time the panel opens.
@@ -169,7 +169,7 @@ export function ShiftHoursPanel({
       subtitle={
         route
           ? `${route.name} · drivers should only share their location inside these hours.`
-          : 'Drivers should only share their location inside these hours.'
+          : "Drivers should only share their location inside these hours."
       }
       footer={
         <>
@@ -189,7 +189,7 @@ export function ShiftHoursPanel({
       }
     >
       {!routeId ? (
-        <p className="text-ink-muted text-[14px]">
+        <p className="text-[14px] text-ink-muted">
           This organization has no route yet, so there are no shift hours to set.
         </p>
       ) : isPending ? (

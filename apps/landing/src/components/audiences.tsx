@@ -6,7 +6,10 @@ function SharingDial() {
   return (
     <>
       <div className="relative flex size-[124px] flex-col items-center justify-center gap-0.5 rounded-full bg-primary shadow-[0_0_0_10px_rgba(22,112,224,.16),0_12px_28px_rgba(22,112,224,.3)]">
-        <span aria-hidden className="pointer-events-none absolute inset-0 animate-ring rounded-full border-[3px] border-primary" />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 animate-ring rounded-full border-[3px] border-primary"
+        />
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 animate-ring rounded-full border-[3px] border-primary [animation-delay:1.2s]"
@@ -102,7 +105,9 @@ export function Audiences() {
               key={a.label}
               className="flex flex-col overflow-hidden rounded-[28px] border-[1.5px] border-line transition duration-200 ease-out hover:-translate-y-[3px] hover:border-line-strong hover:shadow-[0_18px_40px_rgba(17,48,90,.12)]"
             >
-              <div className="flex h-[200px] items-center justify-center gap-[18px] bg-sky p-6">{a.visual}</div>
+              <div className="flex h-[200px] items-center justify-center gap-[18px] bg-sky p-6">
+                {a.visual}
+              </div>
               <div className="flex flex-col gap-3.5 px-[26px] pt-[26px] pb-7">
                 <p className="text-xs font-bold tracking-[.1em] text-subtle uppercase">{a.label}</p>
                 <h3 className="text-[23px] leading-[1.2] font-extrabold text-ink">{a.title}</h3>

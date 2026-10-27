@@ -31,7 +31,10 @@ export function HeroPhone() {
         className="absolute top-1/2 left-1/2 aspect-square w-[min(520px,110%)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,198,46,.35),rgba(255,198,46,0)_62%)]"
       />
       <div className="relative h-[620px] w-[300px] rounded-[46px] bg-ink p-3 shadow-[0_40px_80px_rgba(17,48,90,.28),0_8px_20px_rgba(17,48,90,.16)]">
-        <div onClick={() => setSelected(null)} className="relative size-full overflow-hidden rounded-[36px] bg-map">
+        <div
+          onClick={() => setSelected(null)}
+          className="relative size-full overflow-hidden rounded-[36px] bg-map"
+        >
           <svg viewBox="0 0 276 596" className="absolute inset-0 size-full">
             <path
               d="M-10 180 H290M-10 330 H290M-10 470 H290M70 -10 V610M200 -10 V610"
@@ -61,7 +64,13 @@ export function HeroPhone() {
             <circle cx={96} cy={214} r={9} className="fill-white stroke-ink" strokeWidth={4} />
             <circle cx={96} cy={214} r={3.5} className="fill-ink" />
             <circle cx={156} cy={330} r={26} className="fill-primary" fillOpacity={0.16} />
-            <circle cx={156} cy={330} r={9} className="fill-primary stroke-white" strokeWidth={3.5} />
+            <circle
+              cx={156}
+              cy={330}
+              r={9}
+              className="fill-primary stroke-white"
+              strokeWidth={3.5}
+            />
             <JeepLayer config={heroMap} route={route} selected={selected} onSelect={setSelected} />
           </svg>
 
@@ -86,14 +95,18 @@ export function HeroPhone() {
             <span className="text-[13px] font-medium text-subtle">Where are you going?</span>
           </div>
           <div className="absolute top-[172px] left-[116px] w-[136px] rounded-xl bg-ink px-[11px] py-[7px] whitespace-nowrap shadow-[0_8px_18px_rgba(0,0,0,.2)]">
-            <p className="text-[8.5px] font-bold tracking-[.08em] text-accent uppercase">Nearest stop · 240 m</p>
+            <p className="text-[8.5px] font-bold tracking-[.08em] text-accent uppercase">
+              Nearest stop · 240 m
+            </p>
             <p className="text-xs font-bold text-white">Batac City Plaza</p>
             <span aria-hidden className="absolute bottom-3 -left-1 size-2.5 rotate-45 bg-ink" />
           </div>
 
           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 rounded-t-[26px] bg-white px-4 pt-2.5 pb-3 shadow-[0_-8px_24px_rgba(17,48,90,.10)]">
             <span aria-hidden className="h-1 w-10 self-center rounded-full bg-line" />
-            <p className="text-[11px] font-bold tracking-[.06em] text-subtle uppercase">Next jeeps to Batac City Plaza</p>
+            <p className="text-[11px] font-bold tracking-[.06em] text-subtle uppercase">
+              Next jeeps to Batac City Plaza
+            </p>
             <div className="flex items-center gap-3">
               <div className="flex size-14 flex-none flex-col items-center justify-center rounded-2xl bg-accent text-ink">
                 <span className="text-2xl leading-none font-black italic">4</span>

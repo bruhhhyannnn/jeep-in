@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
+import { useEffect } from "react";
+import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import {
   getSimulationRoads,
   getSimulationStatus,
@@ -7,7 +7,7 @@ import {
   startSimulation,
   stopSimulation,
   writeSimulatedLocations,
-} from '@/actions';
+} from "@/actions";
 import {
   SIMULATION_TICK_S,
   buildRoadPath,
@@ -16,8 +16,8 @@ import {
   step,
   type Bot,
   type RoadPath,
-} from '@/lib/fleet-simulation';
-import { useSimulationStore } from '@/store';
+} from "@/lib/fleet-simulation";
+import { useSimulationStore } from "@/store";
 
 /** Writes failing this many times in a row stop the run (e.g. the session expired). */
 const MAX_FAILED_WRITES = 3;
@@ -32,12 +32,12 @@ let queryClient: QueryClient | null = null;
 
 /** Closing or reloading the tab takes the bots off the map. */
 function onPageHide() {
-  void fetch('/api/simulation/stop', { method: 'POST', keepalive: true });
+  void fetch("/api/simulation/stop", { method: "POST", keepalive: true });
 }
 
 function invalidate() {
-  queryClient?.invalidateQueries({ queryKey: ['simulation-status'] });
-  queryClient?.invalidateQueries({ queryKey: ['jeepneys'] });
+  queryClient?.invalidateQueries({ queryKey: ["simulation-status"] });
+  queryClient?.invalidateQueries({ queryKey: ["jeepneys"] });
 }
 
 async function tick() {
@@ -54,7 +54,7 @@ async function tick() {
     store.set({ lastWriteAt: Date.now(), error: null });
   } catch (err) {
     failedWrites += 1;
-    store.set({ error: err instanceof Error ? err.message : 'Could not write positions' });
+    store.set({ error: err instanceof Error ? err.message : "Could not write positions" });
     if (failedWrites >= MAX_FAILED_WRITES) await stopRun();
   } finally {
     writing = false;
@@ -85,14 +85,14 @@ async function startRun(options: {
       routeName: options.routeName,
       endsAt: Date.now() + options.minutes * 60 * 1000,
     });
-    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener("pagehide", onPageHide);
     await tick();
     timer = setInterval(() => void tick(), SIMULATION_TICK_S * 1000);
     invalidate();
   } catch (err) {
     store.set({
       starting: false,
-      error: err instanceof Error ? err.message : 'Could not start the simulation',
+      error: err instanceof Error ? err.message : "Could not start the simulation",
     });
     throw err;
   }
@@ -101,7 +101,7 @@ async function startRun(options: {
 async function stopRun() {
   if (timer) clearInterval(timer);
   timer = null;
-  window.removeEventListener('pagehide', onPageHide);
+  window.removeEventListener("pagehide", onPageHide);
   useSimulationStore.getState().set({ running: false, endsAt: null });
   try {
     await stopSimulation();
@@ -130,7 +130,7 @@ export function useFleetSimulation(enabled: boolean) {
 
   // Bots left on the map by a run in another tab or a crashed one.
   const status = useQuery({
-    queryKey: ['simulation-status'],
+    queryKey: ["simulation-status"],
     queryFn: getSimulationStatus,
     enabled,
     refetchInterval: state.running ? false : 30_000,

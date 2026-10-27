@@ -16,14 +16,14 @@ npm run lint
 
 ## Where things live
 
-| Path | What |
-| --- | --- |
-| `src/lib/site.ts` | Contact details, the Formspree endpoint, and the pilot settings below |
-| `src/app/globals.css` | Design tokens (colors, shadows, animations) from the hi-fi design system |
-| `src/app/page.tsx` | Section order |
-| `src/components/` | One file per section; `jeep-layer.tsx` runs the moving jeeps on both maps |
-| `src/assets/` | Logo icon and banner |
-| `src/app/icon.png`, `apple-icon.png`, `opengraph-image.png` | Favicon, home-screen icon and link preview image |
+| Path                                                        | What                                                                      |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `src/lib/site.ts`                                           | Contact details, the Formspree endpoint, and the pilot settings below     |
+| `src/app/globals.css`                                       | Design tokens (colors, shadows, animations) from the hi-fi design system  |
+| `src/app/page.tsx`                                          | Section order                                                             |
+| `src/components/`                                           | One file per section; `jeep-layer.tsx` runs the moving jeeps on both maps |
+| `src/assets/`                                               | Logo icon and banner                                                      |
+| `src/app/icon.png`, `apple-icon.png`, `opengraph-image.png` | Favicon, home-screen icon and link preview image                          |
 
 ### Pilot settings
 

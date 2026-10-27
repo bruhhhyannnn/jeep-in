@@ -1,4 +1,4 @@
-import { cn } from '@/lib';
+import { cn } from "@/lib";
 
 interface StatTileProps {
   value: React.ReactNode;
@@ -10,12 +10,12 @@ interface StatTileProps {
 
 export function StatTile({ value, label, swatch, className }: StatTileProps) {
   return (
-    <div className={cn('border-line bg-card rounded-card border-[1.5px] p-4 shadow-sm', className)}>
+    <div className={cn("rounded-card border-[1.5px] border-line bg-card p-4 shadow-sm", className)}>
       <div className="flex items-center justify-between gap-2">
-        <p className="text-ink text-[26px] leading-none font-extrabold tabular-nums">{value}</p>
+        <p className="text-[26px] leading-none font-extrabold text-ink tabular-nums">{value}</p>
         {swatch}
       </div>
-      <p className="text-ink-muted mt-2 text-[13px] font-medium">{label}</p>
+      <p className="mt-2 text-[13px] font-medium text-ink-muted">{label}</p>
     </div>
   );
 }

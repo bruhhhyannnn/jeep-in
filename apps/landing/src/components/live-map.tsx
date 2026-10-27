@@ -14,7 +14,12 @@ const legend: { icon: ReactNode; title: string; body: string }[] = [
     body: "The blue dot. Only your phone knows where it is.",
   },
   {
-    icon: <JeepBadge unit="J14" className="size-9 rounded-[10px] border-[3px] border-white text-[9px]" />,
+    icon: (
+      <JeepBadge
+        unit="J14"
+        className="size-9 rounded-[10px] border-[3px] border-white text-[9px]"
+      />
+    ),
     title: "Jeepneys",
     body: "Yellow squares with the unit number. The only thing that moves.",
   },
@@ -30,7 +35,15 @@ const legend: { icon: ReactNode; title: string; body: string }[] = [
   },
   {
     icon: (
-      <svg aria-hidden width="36" height="36" viewBox="0 0 36 36" fill="none" strokeLinecap="round" className="flex-none">
+      <svg
+        aria-hidden
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+        fill="none"
+        strokeLinecap="round"
+        className="flex-none"
+      >
         <path d="M4 7 H32" className="stroke-white" strokeWidth="4.5" />
         <path d="M5 18 H31" className="stroke-white" strokeWidth="9" />
         <path d="M5 18 H31" className="stroke-accent" strokeWidth="5" />
@@ -49,7 +62,9 @@ export function LiveMap() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="flex max-w-[600px] flex-col gap-3">
             <Eyebrow tone="accent">Live map</Eyebrow>
-            <SectionTitle className="text-white">Four things on the map. Nothing else.</SectionTitle>
+            <SectionTitle className="text-white">
+              Four things on the map. Nothing else.
+            </SectionTitle>
           </div>
           <p className="max-w-[380px] text-base leading-[1.6] text-pretty text-mist">
             A map you can read at a glance from the roadside, in bright sun or at night.
@@ -59,7 +74,10 @@ export function LiveMap() {
         <RouteMap />
 
         <p className="-mt-[18px] flex items-center gap-2.5 text-sm font-semibold text-line">
-          <span aria-hidden className="size-2.5 flex-none rounded-full bg-accent shadow-[0_0_0_4px_rgba(255,198,46,.25)]" />
+          <span
+            aria-hidden
+            className="size-2.5 flex-none rounded-full bg-accent shadow-[0_0_0_4px_rgba(255,198,46,.25)]"
+          />
           Tap a jeep to see how long until it reaches your stop.
         </p>
 

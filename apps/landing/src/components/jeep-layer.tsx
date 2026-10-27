@@ -28,7 +28,15 @@ export type JeepMapConfig = {
   hint: string;
 };
 
-type Unit = { p: number; d: 1 | -1; wait: number; at: string | null; atEnd: boolean; x: number; y: number };
+type Unit = {
+  p: number;
+  d: 1 | -1;
+  wait: number;
+  at: string | null;
+  atEnd: boolean;
+  x: number;
+  y: number;
+};
 
 type Sim = {
   length: number;
@@ -40,7 +48,10 @@ type Sim = {
 
 type Nodes = {
   units: Record<string, SVGGElement | null>;
-  dwell: Record<string, { g?: SVGGElement | null; rect?: SVGRectElement | null; text?: SVGTextElement | null }>;
+  dwell: Record<
+    string,
+    { g?: SVGGElement | null; rect?: SVGRectElement | null; text?: SVGTextElement | null }
+  >;
   approach: { g?: SVGGElement | null; under?: SVGPathElement | null; over?: SVGPathElement | null };
   pop: {
     g?: SVGGElement | null;
@@ -77,7 +88,10 @@ function createSim(cfg: JeepMapConfig, path: SVGPathElement): Sim | null {
       end: Boolean(s.terminal),
     })),
     units: Object.fromEntries(
-      Object.entries(cfg.start).map(([u, [p, d]]) => [u, { p, d, wait: 0, at: null, atEnd: false, x: 0, y: 0 }]),
+      Object.entries(cfg.start).map(([u, [p, d]]) => [
+        u,
+        { p, d, wait: 0, at: null, atEnd: false, x: 0, y: 0 },
+      ]),
     ),
   };
 }
@@ -198,11 +212,17 @@ function step(
 
   if (approach.g) approach.g.style.display = showApproach ? "" : "none";
   setText(pop.min, String(min));
-  setText(pop.eyebrow, j.at ? `${selected} · STOPPED AT ${j.at.toUpperCase()}` : `${selected} · ${toward}`);
+  setText(
+    pop.eyebrow,
+    j.at ? `${selected} · STOPPED AT ${j.at.toUpperCase()}` : `${selected} · ${toward}`,
+  );
   setText(pop.main, main);
   setText(pop.sub, sub);
 
-  const w = Math.max(180, Math.ceil(74 + Math.max(textWidth(pop.eyebrow), textWidth(pop.main), textWidth(pop.sub)) + 16));
+  const w = Math.max(
+    180,
+    Math.ceil(74 + Math.max(textWidth(pop.eyebrow), textWidth(pop.main), textWidth(pop.sub)) + 16),
+  );
   pop.box?.setAttribute("width", String(w));
   const s = cfg.scale;
   const sw = w * s;
@@ -248,7 +268,8 @@ export function JeepLayer({
   });
 
   useEffect(() => {
-    const moving = pilot.animateJeeps && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const moving =
+      pilot.animateJeeps && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let visible = true;
     const svg = route.current?.ownerSVGElement;
     const io = new IntersectionObserver(([entry]) => {
@@ -281,23 +302,37 @@ export function JeepLayer({
   return (
     <g>
       {selected && (
-        <g ref={(el) => { nodes.current.approach.g = el; }}>
+        <g
+          ref={(el) => {
+            nodes.current.approach.g = el;
+          }}
+        >
           <path
-            ref={(el) => { nodes.current.approach.under = el; }}
+            ref={(el) => {
+              nodes.current.approach.under = el;
+            }}
             className="fill-none stroke-ink"
             strokeWidth={14 * s}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            ref={(el) => { nodes.current.approach.over = el; }}
+            ref={(el) => {
+              nodes.current.approach.over = el;
+            }}
             className="fill-none stroke-accent"
             strokeWidth={7 * s}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <circle cx={sx} cy={sy} r={21 * s} className="fill-ink" fillOpacity={0.16} />
-          <circle cx={sx} cy={sy} r={12 * s} className="fill-ink stroke-white" strokeWidth={3.5 * s} />
+          <circle
+            cx={sx}
+            cy={sy}
+            r={12 * s}
+            className="fill-ink stroke-white"
+            strokeWidth={3.5 * s}
+          />
           <circle cx={sx} cy={sy} r={4 * s} className="fill-white" />
         </g>
       )}
@@ -310,7 +345,9 @@ export function JeepLayer({
         return (
           <g
             key={unit}
-            ref={(el) => { nodes.current.units[unit] = el; }}
+            ref={(el) => {
+              nodes.current.units[unit] = el;
+            }}
             role="button"
             tabIndex={0}
             aria-label={`Jeep ${unit}: show minutes to ${cfg.yourStop.name}`}
@@ -332,11 +369,23 @@ export function JeepLayer({
                 <>
                   <circle r={24} className="fill-none stroke-accent" strokeWidth={4}>
                     <animate attributeName="r" values="24;46" dur="1.6s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values=".9;0" dur="1.6s" repeatCount="indefinite" />
+                    <animate
+                      attributeName="opacity"
+                      values=".9;0"
+                      dur="1.6s"
+                      repeatCount="indefinite"
+                    />
                   </circle>
                   <g transform="translate(0 -44)">
                     <rect x={-40} y={-14} width={80} height={26} rx={13} className="fill-accent" />
-                    <text x={0} y={4} textAnchor="middle" fontSize={12} fontWeight={800} className="fill-ink">
+                    <text
+                      x={0}
+                      y={4}
+                      textAnchor="middle"
+                      fontSize={12}
+                      fontWeight={800}
+                      className="fill-ink"
+                    >
                       Tap me
                     </text>
                   </g>
@@ -372,13 +421,17 @@ export function JeepLayer({
                 {unit}
               </text>
               <g
-                ref={(el) => { (nodes.current.dwell[unit] ??= {}).g = el; }}
+                ref={(el) => {
+                  (nodes.current.dwell[unit] ??= {}).g = el;
+                }}
                 transform={`translate(0 ${o + 22})`}
                 className="pointer-events-none"
                 style={{ display: "none" }}
               >
                 <rect
-                  ref={(el) => { (nodes.current.dwell[unit] ??= {}).rect = el; }}
+                  ref={(el) => {
+                    (nodes.current.dwell[unit] ??= {}).rect = el;
+                  }}
                   x={-60}
                   y={-13}
                   width={120}
@@ -388,7 +441,9 @@ export function JeepLayer({
                   strokeWidth={2}
                 />
                 <text
-                  ref={(el) => { (nodes.current.dwell[unit] ??= {}).text = el; }}
+                  ref={(el) => {
+                    (nodes.current.dwell[unit] ??= {}).text = el;
+                  }}
                   y={4.5}
                   textAnchor="middle"
                   fontSize={11.5}
@@ -402,9 +457,16 @@ export function JeepLayer({
       })}
 
       {selected && (
-        <g ref={(el) => { nodes.current.pop.g = el; }} className="pointer-events-none">
+        <g
+          ref={(el) => {
+            nodes.current.pop.g = el;
+          }}
+          className="pointer-events-none"
+        >
           <rect
-            ref={(el) => { nodes.current.pop.box = el; }}
+            ref={(el) => {
+              nodes.current.pop.box = el;
+            }}
             width={214}
             height={74}
             rx={16}
@@ -413,7 +475,9 @@ export function JeepLayer({
           />
           <rect x={12} y={12} width={50} height={50} rx={12} className="fill-accent" />
           <text
-            ref={(el) => { nodes.current.pop.min = el; }}
+            ref={(el) => {
+              nodes.current.pop.min = el;
+            }}
             x={37}
             y={42}
             textAnchor="middle"
@@ -422,11 +486,20 @@ export function JeepLayer({
             fontStyle="italic"
             className="fill-ink"
           />
-          <text x={37} y={55} textAnchor="middle" fontSize={9} fontWeight={700} className="fill-ink">
+          <text
+            x={37}
+            y={55}
+            textAnchor="middle"
+            fontSize={9}
+            fontWeight={700}
+            className="fill-ink"
+          >
             min
           </text>
           <text
-            ref={(el) => { nodes.current.pop.eyebrow = el; }}
+            ref={(el) => {
+              nodes.current.pop.eyebrow = el;
+            }}
             x={74}
             y={28}
             fontSize={9.5}
@@ -435,7 +508,9 @@ export function JeepLayer({
             className="fill-subtle"
           />
           <text
-            ref={(el) => { nodes.current.pop.main = el; }}
+            ref={(el) => {
+              nodes.current.pop.main = el;
+            }}
             x={74}
             y={46}
             fontSize={14}
@@ -443,7 +518,9 @@ export function JeepLayer({
             className="fill-ink"
           />
           <text
-            ref={(el) => { nodes.current.pop.sub = el; }}
+            ref={(el) => {
+              nodes.current.pop.sub = el;
+            }}
             x={74}
             y={62}
             fontSize={11}

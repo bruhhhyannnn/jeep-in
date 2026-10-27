@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -16,9 +16,9 @@ import {
   PanelActionRow,
   Select,
   SidePanel,
-} from '@/components/ui';
-import { PageHeader, SearchField } from '@/components/common';
-import { useAuthStore } from '@/store';
+} from "@/components/ui";
+import { PageHeader, SearchField } from "@/components/common";
+import { useAuthStore } from "@/store";
 import {
   useFareGuide,
   useCreateFareEntry,
@@ -26,28 +26,28 @@ import {
   useDeleteFareEntry,
   useAllRoutes,
   useOrganization,
-} from '@/hooks';
-import { fareGuideSchema, type FareGuideFormData } from '@/lib';
-import type { FareGuide } from '@/types';
+} from "@/hooks";
+import { fareGuideSchema, type FareGuideFormData } from "@/lib";
+import type { FareGuide } from "@/types";
 
 const peso = (n: number) => `₱${Number(n).toFixed(2)}`;
 
 export default function FareGuidePage() {
   const { userProfile } = useAuthStore();
-  const isSuperAdmin = userProfile?.role === 'super_admin';
-  const orgId = userProfile?.organizationId ?? '';
+  const isSuperAdmin = userProfile?.role === "super_admin";
+  const orgId = userProfile?.organizationId ?? "";
   const { data: org } = useOrganization(isSuperAdmin ? undefined : orgId);
 
-  const [query, setQuery] = useState('');
-  const [filterRouteId, setFilterRouteId] = useState('');
+  const [query, setQuery] = useState("");
+  const [filterRouteId, setFilterRouteId] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<FareGuide | null>(null);
 
   const { data: routes = [] } = useAllRoutes();
-  const routeName = (id: string) => routes.find((r) => r.id === id)?.name ?? '—';
+  const routeName = (id: string) => routes.find((r) => r.id === id)?.name ?? "—";
 
-  const effectiveRouteId = isSuperAdmin ? filterRouteId : (org?.routeId ?? '');
+  const effectiveRouteId = isSuperAdmin ? filterRouteId : (org?.routeId ?? "");
   const { data: fareGuide = [], isPending, error } = useFareGuide(effectiveRouteId || undefined);
   const deleteFare = useDeleteFareEntry();
 
@@ -63,40 +63,40 @@ export default function FareGuidePage() {
 
   const columns: ColumnDef<FareGuide, unknown>[] = [
     {
-      accessorKey: 'stopPointName',
-      header: 'Stop',
+      accessorKey: "stopPointName",
+      header: "Stop",
       cell: ({ row: { original: f } }) => (
         <div>
-          <p className="text-ink font-semibold">{f.stopPointName}</p>
+          <p className="font-semibold text-ink">{f.stopPointName}</p>
           {isSuperAdmin && !filterRouteId && (
-            <p className="text-ink-muted text-[12px]">{routeName(f.routeId)}</p>
+            <p className="text-[12px] text-ink-muted">{routeName(f.routeId)}</p>
           )}
         </div>
       ),
     },
     {
-      accessorKey: 'distanceKm',
-      header: 'Distance',
+      accessorKey: "distanceKm",
+      header: "Distance",
       cell: ({ getValue }) => (
         <span className="font-data text-ink-muted">{Number(getValue()).toFixed(1)} km</span>
       ),
     },
     {
-      accessorKey: 'regularFare',
-      header: 'Regular',
+      accessorKey: "regularFare",
+      header: "Regular",
       cell: ({ getValue }) => (
-        <span className="font-data text-ink font-bold">{peso(Number(getValue()))}</span>
+        <span className="font-data font-bold text-ink">{peso(Number(getValue()))}</span>
       ),
     },
     {
-      accessorKey: 'discountedFare',
-      header: 'Discounted',
+      accessorKey: "discountedFare",
+      header: "Discounted",
       cell: ({ getValue }) => (
-        <span className="font-data text-live-ink font-bold">{peso(Number(getValue()))}</span>
+        <span className="font-data font-bold text-live-ink">{peso(Number(getValue()))}</span>
       ),
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: f } }) => (
@@ -118,14 +118,14 @@ export default function FareGuidePage() {
 
   if (error) return <PageError message={error.message} />;
 
-  const scopeName = effectiveRouteId ? routeName(effectiveRouteId) : 'all routes';
+  const scopeName = effectiveRouteId ? routeName(effectiveRouteId) : "all routes";
 
   return (
     <>
       <div className="space-y-5">
         <PageHeader
           title="Fare guide"
-          description={`${fareGuide.length} ${fareGuide.length === 1 ? 'fare' : 'fares'} on ${scopeName} · regular and discounted`}
+          description={`${fareGuide.length} ${fareGuide.length === 1 ? "fare" : "fares"} on ${scopeName} · regular and discounted`}
           actions={
             <>
               {isSuperAdmin && (
@@ -133,7 +133,7 @@ export default function FareGuidePage() {
                   appearance="pill"
                   aria-label="Route"
                   options={[
-                    { value: '', label: 'All routes' },
+                    { value: "", label: "All routes" },
                     ...routes.map((r) => ({ value: r.id, label: r.name })),
                   ]}
                   value={filterRouteId}
@@ -153,8 +153,8 @@ export default function FareGuidePage() {
           columns={columns}
           data={filtered}
           loading={isPending}
-          emptyMessage={q ? 'No fares match' : 'No fares yet'}
-          emptyHint={q ? undefined : 'Add the fare from the start of the route to each stop.'}
+          emptyMessage={q ? "No fares match" : "No fares yet"}
+          emptyHint={q ? undefined : "Add the fare from the start of the route to each stop."}
           onRowClick={(f) => openPanel(f.id)}
           pageSize={20}
         />
@@ -173,7 +173,7 @@ export default function FareGuidePage() {
       <ConfirmDialog
         isOpen={!!deleting}
         onClose={() => setDeleting(null)}
-        title={`Remove the fare to ${deleting?.stopPointName ?? 'this stop'}?`}
+        title={`Remove the fare to ${deleting?.stopPointName ?? "this stop"}?`}
         message="Commuters stop seeing it in the fare guide. This can't be undone."
         cancelLabel="Keep the fare"
         confirmLabel="Remove fare"
@@ -183,7 +183,7 @@ export default function FareGuidePage() {
           deleting &&
           deleteFare.mutate(deleting.id, {
             onSuccess: () => {
-              toast.success('Fare removed');
+              toast.success("Fare removed");
               setDeleting(null);
               setPanelOpen(false);
             },
@@ -216,7 +216,7 @@ function FarePanel({
   const isEdit = !!fare;
   const createFare = useCreateFareEntry();
   const updateFare = useUpdateFareEntry();
-  const formId = 'fare-form';
+  const formId = "fare-form";
 
   const {
     register,
@@ -228,8 +228,8 @@ function FarePanel({
   useEffect(() => {
     if (!isOpen) return;
     reset({
-      routeId: fare?.routeId ?? lockedRouteId ?? '',
-      stopPointName: fare?.stopPointName ?? '',
+      routeId: fare?.routeId ?? lockedRouteId ?? "",
+      stopPointName: fare?.stopPointName ?? "",
       distanceKm: fare?.distanceKm ?? 0,
       regularFare: fare?.regularFare ?? 0,
       discountedFare: fare?.discountedFare ?? 0,
@@ -241,7 +241,7 @@ function FarePanel({
   const onSubmit = handleSubmit((data) => {
     const done = {
       onSuccess: () => {
-        toast.success(isEdit ? 'Fare saved' : `Fare to ${data.stopPointName} added`);
+        toast.success(isEdit ? "Fare saved" : `Fare to ${data.stopPointName} added`);
         onClose();
       },
       onError: (e: Error) => toast.error(e.message),
@@ -255,7 +255,7 @@ function FarePanel({
       isOpen={isOpen}
       onClose={onClose}
       busy={isSaving}
-      title={fare ? `Fare to ${fare.stopPointName}` : 'Add a fare'}
+      title={fare ? `Fare to ${fare.stopPointName}` : "Add a fare"}
       subtitle="Measured from the start of the route."
       footer={
         <>
@@ -263,7 +263,7 @@ function FarePanel({
             Cancel
           </Button>
           <Button type="submit" form={formId} isLoading={isSaving} loadingText="Saving…">
-            {isEdit ? 'Save changes' : 'Save this fare'}
+            {isEdit ? "Save changes" : "Save this fare"}
           </Button>
         </>
       }
@@ -276,11 +276,11 @@ function FarePanel({
               options={routes.map((r) => ({ value: r.id, label: r.name }))}
               placeholder="Choose a route"
               error={!!errors.routeId}
-              {...register('routeId')}
+              {...register("routeId")}
             />
           </Field>
         ) : (
-          <input type="hidden" {...register('routeId')} />
+          <input type="hidden" {...register("routeId")} />
         )}
 
         <Input
@@ -289,7 +289,7 @@ function FarePanel({
           placeholder="Batac Public Market"
           error={!!errors.stopPointName}
           hint={errors.stopPointName?.message}
-          {...register('stopPointName')}
+          {...register("stopPointName")}
         />
 
         <Input
@@ -302,7 +302,7 @@ function FarePanel({
           className="font-data"
           error={!!errors.distanceKm}
           hint={errors.distanceKm?.message}
-          {...register('distanceKm')}
+          {...register("distanceKm")}
         />
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -316,7 +316,7 @@ function FarePanel({
             className="font-data"
             error={!!errors.regularFare}
             hint={errors.regularFare?.message}
-            {...register('regularFare')}
+            {...register("regularFare")}
           />
           <Input
             id="fare-discounted"
@@ -328,7 +328,7 @@ function FarePanel({
             className="font-data"
             error={!!errors.discountedFare}
             hint={errors.discountedFare?.message}
-            {...register('discountedFare')}
+            {...register("discountedFare")}
           />
         </div>
 

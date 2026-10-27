@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { Plus, Route as RouteIcon } from 'lucide-react';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState, useEffect, useRef } from "react";
+import { Plus, Route as RouteIcon } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -23,9 +23,9 @@ import {
   StatusChip,
   Switch,
   useMap,
-} from '@/components/ui';
-import { Notice, PageHeader, SearchField } from '@/components/common';
-import { useAuthStore } from '@/store';
+} from "@/components/ui";
+import { Notice, PageHeader, SearchField } from "@/components/common";
+import { useAuthStore } from "@/store";
 import {
   useStopPoints,
   useCreateStopPoint,
@@ -33,23 +33,23 @@ import {
   useDeleteStopPoint,
   useAllRoutes,
   useOrganization,
-} from '@/hooks';
-import { formatDirection, stopPointSchema, type StopPointFormData } from '@/lib';
-import type { StopPoint } from '@/types';
+} from "@/hooks";
+import { formatDirection, stopPointSchema, type StopPointFormData } from "@/lib";
+import type { StopPoint } from "@/types";
 
 const DEFAULT_CENTER: [number, number] = [120.551474, 18.058174];
 const DEFAULT_ZOOM = 12;
 
 export default function StopPointsPage() {
   const { userProfile } = useAuthStore();
-  const isSuperAdmin = userProfile?.role === 'super_admin';
-  const orgId = userProfile?.organizationId ?? '';
+  const isSuperAdmin = userProfile?.role === "super_admin";
+  const orgId = userProfile?.organizationId ?? "";
 
   const { data: org } = useOrganization(isSuperAdmin ? undefined : orgId);
-  const adminRouteId = org?.routeId ?? '';
+  const adminRouteId = org?.routeId ?? "";
 
   const { data: allRoutes = [] } = useAllRoutes();
-  const [selectedRouteId, setSelectedRouteId] = useState('');
+  const [selectedRouteId, setSelectedRouteId] = useState("");
 
   useEffect(() => {
     if (isSuperAdmin && !selectedRouteId && allRoutes.length > 0) {
@@ -61,8 +61,8 @@ export default function StopPointsPage() {
   const currentRoute = allRoutes.find((r) => r.id === routeId);
   const directions = currentRoute?.directions ?? [];
 
-  const [query, setQuery] = useState('');
-  const [selectedDirection, setSelectedDirection] = useState('');
+  const [query, setQuery] = useState("");
+  const [selectedDirection, setSelectedDirection] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<StopPoint | null>(null);
@@ -72,7 +72,7 @@ export default function StopPointsPage() {
 
   const q = query.trim().toLowerCase();
   const filtered = stopPoints
-    .filter((s) => !q || `${s.name} ${s.address ?? ''}`.toLowerCase().includes(q))
+    .filter((s) => !q || `${s.name} ${s.address ?? ""}`.toLowerCase().includes(q))
     .filter((s) => !selectedDirection || s.routeDirection === selectedDirection);
 
   const openPanel = (id: string | null) => {
@@ -82,40 +82,40 @@ export default function StopPointsPage() {
 
   const columns: ColumnDef<StopPoint, unknown>[] = [
     {
-      id: 'name',
-      header: 'Stop',
+      id: "name",
+      header: "Stop",
       accessorFn: (s) => s.name,
       cell: ({ row: { original: s } }) => (
         <div className="flex items-center gap-3">
-          <span className="border-ink-mark bg-card h-3.5 w-3.5 shrink-0 rounded-full border-[3px]" />
+          <span className="h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-ink-mark bg-card" />
           <div className="min-w-0">
-            <p className="text-ink truncate font-semibold">{s.name}</p>
-            {s.address && <p className="text-ink-muted truncate text-[12px]">{s.address}</p>}
+            <p className="truncate font-semibold text-ink">{s.name}</p>
+            {s.address && <p className="truncate text-[12px] text-ink-muted">{s.address}</p>}
           </div>
         </div>
       ),
     },
     {
-      id: 'direction',
-      header: 'Direction',
+      id: "direction",
+      header: "Direction",
       accessorFn: (s) => s.routeDirection,
       cell: ({ row: { original: s } }) => (
         <StatusChip tone="info">{formatDirection(s.routeDirection)}</StatusChip>
       ),
     },
     {
-      id: 'latLng',
-      header: 'Coordinates',
+      id: "latLng",
+      header: "Coordinates",
       accessorFn: (s) => `${s.latitude}, ${s.longitude}`,
       cell: ({ row: { original: s } }) => (
-        <span className="font-data text-ink-muted text-[12px]">
+        <span className="font-data text-[12px] text-ink-muted">
           {s.latitude.toFixed(5)}, {s.longitude.toFixed(5)}
         </span>
       ),
     },
     {
-      id: 'status',
-      header: 'Status',
+      id: "status",
+      header: "Status",
       accessorFn: (s) => s.isActive,
       cell: ({ row: { original: s } }) =>
         s.isActive ? (
@@ -127,7 +127,7 @@ export default function StopPointsPage() {
         ),
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: s } }) => (
@@ -156,8 +156,8 @@ export default function StopPointsPage() {
           title="Stop points"
           description={
             currentRoute
-              ? `${stopPoints.length} ${stopPoints.length === 1 ? 'stop' : 'stops'} on ${currentRoute.name}`
-              : 'Where commuters wait for a jeepney.'
+              ? `${stopPoints.length} ${stopPoints.length === 1 ? "stop" : "stops"} on ${currentRoute.name}`
+              : "Where commuters wait for a jeepney."
           }
           actions={
             <>
@@ -169,7 +169,7 @@ export default function StopPointsPage() {
                   value={selectedRouteId}
                   onChange={(e) => {
                     setSelectedRouteId(e.target.value);
-                    setSelectedDirection('');
+                    setSelectedDirection("");
                   }}
                   placeholder="Choose a route"
                   className="max-w-[240px]"
@@ -180,7 +180,7 @@ export default function StopPointsPage() {
                   appearance="pill"
                   aria-label="Direction"
                   options={[
-                    { value: '', label: 'Both directions' },
+                    { value: "", label: "Both directions" },
                     ...directions.map((d) => ({ value: d, label: formatDirection(d) })),
                   ]}
                   value={selectedDirection}
@@ -203,7 +203,7 @@ export default function StopPointsPage() {
           <Notice
             icon={<RouteIcon size={17} />}
             tone="info"
-            title={isSuperAdmin ? 'No routes yet' : 'Your organization has no route yet'}
+            title={isSuperAdmin ? "No routes yet" : "Your organization has no route yet"}
             description="Stops belong to a route. Once there is one, add its stops here."
           />
         ) : (
@@ -211,9 +211,9 @@ export default function StopPointsPage() {
             columns={columns}
             data={filtered}
             loading={!!routeId && isPending}
-            emptyMessage={q || selectedDirection ? 'No stops match' : 'No stops on this route yet'}
+            emptyMessage={q || selectedDirection ? "No stops match" : "No stops on this route yet"}
             emptyHint={
-              q || selectedDirection ? undefined : 'Add the first stop and place it on the map.'
+              q || selectedDirection ? undefined : "Add the first stop and place it on the map."
             }
             onRowClick={(s) => openPanel(s.id)}
             pageSize={15}
@@ -234,7 +234,7 @@ export default function StopPointsPage() {
       <ConfirmDialog
         isOpen={!!deleting}
         onClose={() => setDeleting(null)}
-        title={`Remove ${deleting?.name ?? 'this stop'}?`}
+        title={`Remove ${deleting?.name ?? "this stop"}?`}
         message="It disappears from the route and from commuters' maps. This can't be undone."
         cancelLabel="Keep the stop"
         confirmLabel="Remove stop"
@@ -266,11 +266,11 @@ function MapClickHandler({ onPick }: { onPick: (lng: number, lat: number) => voi
     if (!map || !isLoaded) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handler = (e: any) => cbRef.current(e.lngLat.lng, e.lngLat.lat);
-    map.on('click', handler);
-    map.getCanvas().style.cursor = 'crosshair';
+    map.on("click", handler);
+    map.getCanvas().style.cursor = "crosshair";
     return () => {
-      map.off('click', handler);
-      map.getCanvas().style.cursor = '';
+      map.off("click", handler);
+      map.getCanvas().style.cursor = "";
     };
   }, [map, isLoaded]);
 
@@ -298,7 +298,7 @@ function StopPointPanel({
   const isEdit = !!stop;
   const createStopPoint = useCreateStopPoint();
   const updateStopPoint = useUpdateStopPoint();
-  const formId = 'stop-point-form';
+  const formId = "stop-point-form";
 
   const {
     register,
@@ -319,29 +319,29 @@ function StopPointPanel({
       stop
         ? {
             name: stop.name,
-            address: stop.address ?? '',
+            address: stop.address ?? "",
             routeDirection: stop.routeDirection,
             latitude: stop.latitude,
             longitude: stop.longitude,
             isActive: stop.isActive,
           }
         : {
-            name: '',
-            address: '',
-            routeDirection: directions.length === 1 ? directions[0] : '',
+            name: "",
+            address: "",
+            routeDirection: directions.length === 1 ? directions[0] : "",
             isActive: true,
-          }
+          },
     );
     // Directions is compared by value; the array itself is rebuilt on every render.
-  }, [isOpen, stop, directions.join('|'), reset]);
+  }, [isOpen, stop, directions.join("|"), reset]);
 
-  const lat = watch('latitude');
-  const lng = watch('longitude');
-  const hasPin = typeof lat === 'number' && !isNaN(lat) && typeof lng === 'number' && !isNaN(lng);
+  const lat = watch("latitude");
+  const lng = watch("longitude");
+  const hasPin = typeof lat === "number" && !isNaN(lat) && typeof lng === "number" && !isNaN(lng);
 
   const handlePick = (pickedLng: number, pickedLat: number) => {
-    setValue('longitude', pickedLng, { shouldValidate: true, shouldDirty: true });
-    setValue('latitude', pickedLat, { shouldValidate: true, shouldDirty: true });
+    setValue("longitude", pickedLng, { shouldValidate: true, shouldDirty: true });
+    setValue("latitude", pickedLat, { shouldValidate: true, shouldDirty: true });
   };
 
   const mapCenter: [number, number] = stop ? [stop.longitude, stop.latitude] : DEFAULT_CENTER;
@@ -366,13 +366,13 @@ function StopPointPanel({
       onClose={onClose}
       busy={isSaving}
       width="lg"
-      title={stop ? stop.name : 'Add a stop'}
+      title={stop ? stop.name : "Add a stop"}
       subtitle={
         stop
-          ? `${formatDirection(stop.routeDirection)}${routeName ? ` · ${routeName}` : ''}`
+          ? `${formatDirection(stop.routeDirection)}${routeName ? ` · ${routeName}` : ""}`
           : routeName
             ? `A new stop on ${routeName}.`
-            : 'A new stop on this route.'
+            : "A new stop on this route."
       }
       footer={
         <>
@@ -380,7 +380,7 @@ function StopPointPanel({
             Cancel
           </Button>
           <Button type="submit" form={formId} isLoading={isSaving} loadingText="Saving…">
-            {isEdit ? 'Save changes' : 'Save this stop'}
+            {isEdit ? "Save changes" : "Save this stop"}
           </Button>
         </>
       }
@@ -392,40 +392,40 @@ function StopPointPanel({
           placeholder="Batac Public Market"
           error={!!errors.name}
           hint={errors.name?.message}
-          {...register('name')}
+          {...register("name")}
         />
         <Input
           id="stop-address"
           label="Address (optional)"
           placeholder="National Highway, Batac City"
-          {...register('address')}
+          {...register("address")}
         />
         <Field label="Direction" htmlFor="stop-direction" error={errors.routeDirection?.message}>
           <Select
             id="stop-direction"
             options={directions.map((d) => ({ value: d, label: formatDirection(d) }))}
             placeholder={
-              directions.length === 0 ? 'This route has no directions yet' : 'Choose a direction'
+              directions.length === 0 ? "This route has no directions yet" : "Choose a direction"
             }
             disabled={directions.length === 0}
             error={!!errors.routeDirection}
-            {...register('routeDirection')}
+            {...register("routeDirection")}
           />
         </Field>
 
         {/* Hidden inputs so RHF registers lat/lng for validation */}
-        <input type="hidden" {...register('latitude')} />
-        <input type="hidden" {...register('longitude')} />
+        <input type="hidden" {...register("latitude")} />
+        <input type="hidden" {...register("longitude")} />
 
         <div>
-          <p className="text-label text-ink-muted mb-1.5">
+          <p className="mb-1.5 text-label text-ink-muted">
             Location — click the map to place the stop
           </p>
           <div
             className={
               errors.latitude || errors.longitude
-                ? 'border-danger rounded-tile h-64 overflow-hidden border-[1.5px]'
-                : 'border-line-strong rounded-tile h-64 overflow-hidden border-[1.5px]'
+                ? "h-64 overflow-hidden rounded-tile border-[1.5px] border-danger"
+                : "h-64 overflow-hidden rounded-tile border-[1.5px] border-line-strong"
             }
           >
             {isOpen && (
@@ -440,7 +440,7 @@ function StopPointPanel({
                     onDragEnd={({ lng: dLng, lat: dLat }) => handlePick(dLng, dLat)}
                   >
                     <MarkerContent>
-                      <span className="border-ink-mark bg-card block h-5 w-5 rounded-full border-4 shadow-md" />
+                      <span className="block h-5 w-5 rounded-full border-4 border-ink-mark bg-card shadow-md" />
                     </MarkerContent>
                   </MapMarker>
                 )}
@@ -448,18 +448,18 @@ function StopPointPanel({
             )}
           </div>
           {hasPin ? (
-            <p className="text-ink-muted mt-1.5 text-[13px]">
+            <p className="mt-1.5 text-[13px] text-ink-muted">
               <span className="font-data text-ink">
                 {lat.toFixed(6)}, {lng.toFixed(6)}
-              </span>{' '}
+              </span>{" "}
               · drag the pin to fine-tune
             </p>
           ) : (
             <p
               className={
                 errors.latitude || errors.longitude
-                  ? 'text-danger-ink mt-1.5 text-[13px]'
-                  : 'text-ink-muted mt-1.5 text-[13px]'
+                  ? "mt-1.5 text-[13px] text-danger-ink"
+                  : "mt-1.5 text-[13px] text-ink-muted"
               }
             >
               Click anywhere on the map to place the stop.
@@ -467,10 +467,10 @@ function StopPointPanel({
           )}
         </div>
 
-        <div className="border-line rounded-tile flex items-center justify-between gap-4 border-[1.5px] p-4">
+        <div className="flex items-center justify-between gap-4 rounded-tile border-[1.5px] border-line p-4">
           <div>
-            <p className="text-ink text-[14px] font-bold">Show to commuters</p>
-            <p className="text-ink-muted mt-0.5 text-[13px]">
+            <p className="text-[14px] font-bold text-ink">Show to commuters</p>
+            <p className="mt-0.5 text-[13px] text-ink-muted">
               Hidden stops stay saved but off the map.
             </p>
           </div>

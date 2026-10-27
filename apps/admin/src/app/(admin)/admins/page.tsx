@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Check, Copy, Plus, RefreshCw } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState, useEffect } from "react";
+import { Check, Copy, Plus, RefreshCw } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -20,8 +20,8 @@ import {
   Select,
   SidePanel,
   StatusChip,
-} from '@/components/ui';
-import { Avatar, FilterChips, PageHeader, SearchField } from '@/components/common';
+} from "@/components/ui";
+import { Avatar, FilterChips, PageHeader, SearchField } from "@/components/common";
 import {
   useAdmins,
   useCreateAdmin,
@@ -30,18 +30,18 @@ import {
   useDeleteAdmin,
   useReassignAdminOrg,
   useOrganizations,
-} from '@/hooks';
-import { adminCreateSchema, generatePassword, toDate, type AdminCreateFormData } from '@/lib';
-import type { AdminProfile, Organization } from '@/types';
+} from "@/hooks";
+import { adminCreateSchema, generatePassword, toDate, type AdminCreateFormData } from "@/lib";
+import type { AdminProfile, Organization } from "@/types";
 
-type AdminFilter = 'all' | 'active' | 'inactive';
-type ConfirmKind = 'deactivate' | 'reactivate' | 'delete';
+type AdminFilter = "all" | "active" | "inactive";
+type ConfirmKind = "deactivate" | "reactivate" | "delete";
 
 const fullName = (a: AdminProfile) => `${a.firstName} ${a.lastName}`;
 
 export default function AdminsPage() {
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<AdminFilter>('all');
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<AdminFilter>("all");
   const [addOpen, setAddOpen] = useState(false);
   const [editUid, setEditUid] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<{ kind: ConfirmKind; admin: AdminProfile } | null>(null);
@@ -58,36 +58,36 @@ export default function AdminsPage() {
 
   const q = query.trim().toLowerCase();
   const filtered = admins
-    .filter((a) => (filter === 'active' ? a.isActive : filter === 'inactive' ? !a.isActive : true))
+    .filter((a) => (filter === "active" ? a.isActive : filter === "inactive" ? !a.isActive : true))
     .filter((a) => !q || `${fullName(a)} ${a.email} ${a.organizationId}`.toLowerCase().includes(q));
 
   const columns: ColumnDef<AdminProfile, unknown>[] = [
     {
-      id: 'name',
-      header: 'Admin',
+      id: "name",
+      header: "Admin",
       accessorFn: (a) => fullName(a),
       cell: ({ row: { original: a } }) => (
         <div className="flex items-center gap-3">
           <Avatar name={fullName(a)} size="md" />
           <div className="min-w-0">
-            <p className="text-ink truncate font-semibold">{fullName(a)}</p>
-            <p className="text-ink-muted truncate text-[12px]">{a.email}</p>
+            <p className="truncate font-semibold text-ink">{fullName(a)}</p>
+            <p className="truncate text-[12px] text-ink-muted">{a.email}</p>
           </div>
         </div>
       ),
     },
     {
-      accessorKey: 'organizationId',
-      header: 'Organization',
+      accessorKey: "organizationId",
+      header: "Organization",
       cell: ({ row: { original: a } }) => {
         const org = orgById.get(a.organizationId);
         return (
           <div className="flex items-center gap-2">
-            <span className="font-data bg-action-soft text-action rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+            <span className="rounded-full bg-action-soft px-2.5 py-0.5 font-data text-[11px] font-bold text-action">
               {org?.shortName ?? a.organizationId}
             </span>
             {org && (
-              <span className="text-ink-muted hidden truncate text-[13px] xl:inline">
+              <span className="hidden truncate text-[13px] text-ink-muted xl:inline">
                 {org.name}
               </span>
             )}
@@ -96,8 +96,8 @@ export default function AdminsPage() {
       },
     },
     {
-      id: 'status',
-      header: 'Status',
+      id: "status",
+      header: "Status",
       accessorFn: (a) => a.isActive,
       cell: ({ row: { original: a } }) =>
         a.isActive ? (
@@ -109,18 +109,18 @@ export default function AdminsPage() {
         ),
     },
     {
-      id: 'created',
-      header: 'Added',
+      id: "created",
+      header: "Added",
       accessorFn: (a) => toDate(a.createdAt)?.getTime() ?? 0,
       cell: ({ row: { original: a } }) => {
         const d = toDate(a.createdAt);
         return (
-          <span className="text-ink-muted text-[13px]">{d ? format(d, 'MMM d, yyyy') : '—'}</span>
+          <span className="text-[13px] text-ink-muted">{d ? format(d, "MMM d, yyyy") : "—"}</span>
         );
       },
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: a } }) => (
@@ -147,7 +147,7 @@ export default function AdminsPage() {
       <div className="space-y-5">
         <PageHeader
           title="Admin accounts"
-          description={`${counts.all} ${counts.all === 1 ? 'admin' : 'admins'} · each one manages a single organization`}
+          description={`${counts.all} ${counts.all === 1 ? "admin" : "admins"} · each one manages a single organization`}
           actions={
             <>
               <SearchField
@@ -166,9 +166,9 @@ export default function AdminsPage() {
           value={filter}
           onChange={setFilter}
           options={[
-            { value: 'all', label: 'All', count: counts.all },
-            { value: 'active', label: 'Active', count: counts.active },
-            { value: 'inactive', label: 'Inactive', count: counts.inactive },
+            { value: "all", label: "All", count: counts.all },
+            { value: "active", label: "Active", count: counts.active },
+            { value: "inactive", label: "Inactive", count: counts.inactive },
           ]}
         />
 
@@ -176,8 +176,8 @@ export default function AdminsPage() {
           columns={columns}
           data={filtered}
           loading={isPending}
-          emptyMessage={q || filter !== 'all' ? 'No admins match' : 'No admin accounts yet'}
-          emptyHint={q || filter !== 'all' ? undefined : 'Add an admin for each organization.'}
+          emptyMessage={q || filter !== "all" ? "No admins match" : "No admin accounts yet"}
+          emptyHint={q || filter !== "all" ? undefined : "Add an admin for each organization."}
           onRowClick={(a) => setEditUid(a.uid)}
           pageSize={20}
         />
@@ -213,7 +213,7 @@ function AdminCreatePanel({
 }) {
   const createAdmin = useCreateAdmin();
   const [copied, setCopied] = useState(false);
-  const formId = 'admin-create-form';
+  const formId = "admin-create-form";
 
   const {
     register,
@@ -227,16 +227,16 @@ function AdminCreatePanel({
   useEffect(() => {
     if (isOpen) {
       reset({
-        firstName: '',
-        lastName: '',
-        email: '',
+        firstName: "",
+        lastName: "",
+        email: "",
         password: generatePassword(),
-        organizationId: '',
+        organizationId: "",
       });
     }
   }, [isOpen, reset]);
 
-  const password = watch('password') ?? '';
+  const password = watch("password") ?? "";
   const isSaving = isSubmitting || createAdmin.isPending;
 
   const copyPassword = async () => {
@@ -245,7 +245,7 @@ function AdminCreatePanel({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Could not copy. Select the password and copy it yourself.');
+      toast.error("Could not copy. Select the password and copy it yourself.");
     }
   };
 
@@ -285,7 +285,7 @@ function AdminCreatePanel({
             autoComplete="off"
             error={!!errors.firstName}
             hint={errors.firstName?.message}
-            {...register('firstName')}
+            {...register("firstName")}
           />
           <Input
             id="admin-last"
@@ -293,7 +293,7 @@ function AdminCreatePanel({
             autoComplete="off"
             error={!!errors.lastName}
             hint={errors.lastName?.message}
-            {...register('lastName')}
+            {...register("lastName")}
           />
         </div>
         <Input
@@ -304,7 +304,7 @@ function AdminCreatePanel({
           placeholder="name@email.com"
           error={!!errors.email}
           hint={errors.email?.message}
-          {...register('email')}
+          {...register("email")}
         />
         <Field label="Organization" htmlFor="admin-org" error={errors.organizationId?.message}>
           <Select
@@ -312,7 +312,7 @@ function AdminCreatePanel({
             options={orgs.map((o) => ({ value: o.id, label: `${o.shortName} · ${o.name}` }))}
             placeholder="Choose an organization"
             error={!!errors.organizationId}
-            {...register('organizationId')}
+            {...register("organizationId")}
           />
         </Field>
         <Field
@@ -327,23 +327,23 @@ function AdminCreatePanel({
                 id="admin-password"
                 autoComplete="off"
                 spellCheck={false}
-                className="font-data border-line-strong bg-sunken text-ink focus:border-action focus:ring-action/15 rounded-input h-12 w-full border-[1.5px] pr-24 pl-4 text-[15px] focus:ring-[3px] focus:outline-none"
-                {...register('password')}
+                className="h-12 w-full rounded-input border-[1.5px] border-line-strong bg-sunken pr-24 pl-4 font-data text-[15px] text-ink focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
+                {...register("password")}
               />
               <button
                 type="button"
                 onClick={copyPassword}
-                className="text-action hover:bg-action-soft absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold"
+                className="absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-action hover:bg-action-soft"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied' : 'Copy'}
+                {copied ? "Copied" : "Copy"}
               </button>
             </div>
             <Button
               variant="outline"
               className="h-12"
               startIcon={<RefreshCw size={15} />}
-              onClick={() => setValue('password', generatePassword(), { shouldValidate: true })}
+              onClick={() => setValue("password", generatePassword(), { shouldValidate: true })}
             >
               Make a new one
             </Button>
@@ -367,7 +367,7 @@ function AdminEditPanel({
   onAction: (kind: ConfirmKind, admin: AdminProfile) => void;
 }) {
   const reassignOrg = useReassignAdminOrg();
-  const [orgId, setOrgId] = useState('');
+  const [orgId, setOrgId] = useState("");
   const [copied, setCopied] = useState(false);
   const [shown, setShown] = useState<AdminProfile | null>(admin);
 
@@ -376,7 +376,7 @@ function AdminEditPanel({
   }, [admin]);
 
   useEffect(() => {
-    setOrgId(admin?.organizationId ?? '');
+    setOrgId(admin?.organizationId ?? "");
   }, [admin?.uid, admin?.organizationId]);
 
   const a = admin ?? shown;
@@ -390,11 +390,11 @@ function AdminEditPanel({
       { uid: a.uid, organizationId: orgId },
       {
         onSuccess: () => {
-          toast.success('Organization updated');
+          toast.success("Organization updated");
           onClose();
         },
         onError: (e) => toast.error(e.message),
-      }
+      },
     );
 
   const copyEmail = async () => {
@@ -403,7 +403,7 @@ function AdminEditPanel({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Could not copy the email');
+      toast.error("Could not copy the email");
     }
   };
 
@@ -413,7 +413,7 @@ function AdminEditPanel({
       onClose={onClose}
       busy={reassignOrg.isPending}
       title={fullName(a)}
-      subtitle={`${a.email} · ${a.isActive ? 'active' : 'inactive'}`}
+      subtitle={`${a.email} · ${a.isActive ? "active" : "inactive"}`}
       footer={
         <>
           <Button variant="outline" onClick={onClose} disabled={reassignOrg.isPending}>
@@ -439,13 +439,13 @@ function AdminEditPanel({
                 type="button"
                 onClick={copyEmail}
                 aria-label="Copy email"
-                className="text-action hover:bg-action-soft flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-action hover:bg-action-soft"
               >
                 {copied ? <Check size={15} /> : <Copy size={15} />}
               </button>
             </span>
           </PanelValue>
-          <PanelValue label="Added">{added ? format(added, 'MMM d, yyyy') : '—'}</PanelValue>
+          <PanelValue label="Added">{added ? format(added, "MMM d, yyyy") : "—"}</PanelValue>
         </div>
 
         <Field
@@ -467,7 +467,7 @@ function AdminEditPanel({
             title="Pause their access"
             description="Signs them out now. The account stays."
             action={
-              <Button variant="outline" size="sm" onClick={() => onAction('deactivate', a)}>
+              <Button variant="outline" size="sm" onClick={() => onAction("deactivate", a)}>
                 Deactivate
               </Button>
             }
@@ -477,7 +477,7 @@ function AdminEditPanel({
             title="Give access back"
             description="Lets them sign in to the dashboard again."
             action={
-              <Button variant="outline" size="sm" onClick={() => onAction('reactivate', a)}>
+              <Button variant="outline" size="sm" onClick={() => onAction("reactivate", a)}>
                 Reactivate
               </Button>
             }
@@ -489,7 +489,7 @@ function AdminEditPanel({
           title="Delete the account"
           description="Removes their sign-in for good."
           action={
-            <Button variant="danger-outline" size="sm" onClick={() => onAction('delete', a)}>
+            <Button variant="danger-outline" size="sm" onClick={() => onAction("delete", a)}>
               Delete admin
             </Button>
           }
@@ -524,7 +524,7 @@ function AdminConfirm({
   const name = fullName(admin);
   const onError = (e: Error) => toast.error(e.message);
 
-  if (kind === 'deactivate') {
+  if (kind === "deactivate") {
     return (
       <ConfirmDialog
         isOpen={!!confirm}
@@ -547,15 +547,15 @@ function AdminConfirm({
       >
         <ConfirmFacts
           items={[
-            { label: 'Kept', text: 'The account and everything they set up.' },
-            { label: 'Removed', text: 'Their current session.' },
+            { label: "Kept", text: "The account and everything they set up." },
+            { label: "Removed", text: "Their current session." },
           ]}
         />
       </ConfirmDialog>
     );
   }
 
-  if (kind === 'reactivate') {
+  if (kind === "reactivate") {
     return (
       <ConfirmDialog
         isOpen={!!confirm}

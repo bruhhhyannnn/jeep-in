@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef } from 'react';
-import { cn } from '@/lib';
+import React, { useEffect, useRef } from "react";
+import { cn } from "@/lib";
 
 interface DropdownProps {
   isOpen: boolean;
@@ -19,19 +19,19 @@ export function Dropdown({ isOpen, onClose, children, className }: DropdownProps
       if (
         ref.current &&
         !ref.current.contains(e.target as Node) &&
-        !(e.target as HTMLElement).closest('.dropdown-toggle')
+        !(e.target as HTMLElement).closest(".dropdown-toggle")
       ) {
         onClose();
       }
     };
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('mousedown', handle);
-    document.addEventListener('keydown', handleKey);
+    document.addEventListener("mousedown", handle);
+    document.addEventListener("keydown", handleKey);
     return () => {
-      document.removeEventListener('mousedown', handle);
-      document.removeEventListener('keydown', handleKey);
+      document.removeEventListener("mousedown", handle);
+      document.removeEventListener("keydown", handleKey);
     };
   }, [isOpen, onClose]);
 
@@ -41,8 +41,8 @@ export function Dropdown({ isOpen, onClose, children, className }: DropdownProps
     <div
       ref={ref}
       className={cn(
-        'border-line bg-card animate-in fade-in-0 zoom-in-95 rounded-card absolute right-0 z-40 mt-2 border p-2 shadow-lg duration-150',
-        className
+        "absolute right-0 z-40 mt-2 animate-in rounded-card border border-line bg-card p-2 shadow-lg duration-150 fade-in-0 zoom-in-95",
+        className,
       )}
     >
       {children}
@@ -64,8 +64,8 @@ export function DropdownItem({
       type="button"
       onClick={onClick}
       className={cn(
-        'text-ink hover:bg-sunken flex h-11 w-full cursor-pointer items-center gap-3 rounded-full px-4 text-left text-[14px] font-semibold transition-colors',
-        className
+        "flex h-11 w-full cursor-pointer items-center gap-3 rounded-full px-4 text-left text-[14px] font-semibold text-ink transition-colors hover:bg-sunken",
+        className,
       )}
     >
       {children}

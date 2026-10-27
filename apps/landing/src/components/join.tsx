@@ -11,7 +11,8 @@ function contactProblem(value: string) {
   if (!value) return "Add a mobile number or email so we can reach you.";
   const digits = value.replace(/\D/g, "").length;
   const isPhone = /^\+?[\d\s()-]+$/.test(value) && digits >= 10 && digits <= 13;
-  if (!isEmail(value) && !isPhone) return "Enter a mobile number like 0917 123 4567, or an email address.";
+  if (!isEmail(value) && !isPhone)
+    return "Enter a mobile number like 0917 123 4567, or an email address.";
   return null;
 }
 
@@ -20,18 +21,20 @@ function PrivacyNotice() {
     <div className="mt-1.5 flex flex-col gap-2 rounded-2xl bg-sky p-4 text-[13px] leading-[1.55] text-slate-700">
       <p className="text-sm font-extrabold text-ink">Privacy notice</p>
       <p>
-        <strong>What we collect:</strong> the role you pick and the mobile number or email you type here. Nothing else.
+        <strong>What we collect:</strong> the role you pick and the mobile number or email you type
+        here. Nothing else.
       </p>
       <p>
-        <strong>Why:</strong> to contact you about the JEEP-IN pilot on your route. We don’t sell or share it, and we
-        don’t send ads.
+        <strong>Why:</strong> to contact you about the JEEP-IN pilot on your route. We don’t sell or
+        share it, and we don’t send ads.
       </p>
       <p>
-        <strong>How long:</strong> until the pilot ends, then it’s deleted. Ask anytime and we’ll delete it sooner.
+        <strong>How long:</strong> until the pilot ends, then it’s deleted. Ask anytime and we’ll
+        delete it sooner.
       </p>
       <p>
-        <strong>Your rights:</strong> under the Data Privacy Act of 2012 (RA 10173) you can see, correct or remove your
-        data. Email <a href={`mailto:${site.email}`}>{site.email}</a>.
+        <strong>Your rights:</strong> under the Data Privacy Act of 2012 (RA 10173) you can see,
+        correct or remove your data. Email <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
     </div>
   );
@@ -100,7 +103,8 @@ function JoinForm() {
         <p className="text-[26px] leading-[1.2] font-black text-ink">You’re on the list</p>
         <p className="text-base leading-[1.6] text-muted">
           We’ll reach you at <strong className="text-ink">{contact}</strong> as a{" "}
-          {role === "LGU or partner" ? "partner" : role.toLowerCase()} when the pilot opens on your route.
+          {role === "LGU or partner" ? "partner" : role.toLowerCase()} when the pilot opens on your
+          route.
         </p>
         <button
           type="button"
@@ -155,12 +159,19 @@ function JoinForm() {
           placeholder="09XX XXX XXXX or you@email.com"
           aria-invalid={problem !== null}
           aria-describedby={problem ? "join-problem" : undefined}
-          className="h-[54px] rounded-2xl border-[1.5px] border-line-strong bg-white px-[18px] text-base font-medium text-ink outline-none transition focus:border-primary focus:shadow-[0_0_0_4px_rgba(22,112,224,.18)]"
+          className="h-[54px] rounded-2xl border-[1.5px] border-line-strong bg-white px-[18px] text-base font-medium text-ink transition outline-none focus:border-primary focus:shadow-[0_0_0_4px_rgba(22,112,224,.18)]"
         />
       </label>
 
       {/* Honeypot: people never see or fill this, bots usually do. */}
-      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
+      <input
+        type="text"
+        name="_gotcha"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+        className="hidden"
+      />
 
       {problem && (
         <p id="join-problem" role="alert" className="text-sm font-semibold text-danger">
@@ -213,7 +224,9 @@ export function Join() {
           <h2 className="text-[clamp(34px,4.6vw,56px)] leading-[1.04] font-black tracking-[-.035em] text-balance text-white">
             {pilotCopy.joinTitle}
           </h2>
-          <p className="max-w-[460px] text-lg leading-[1.6] text-pretty text-on-primary">{pilotCopy.joinSub}</p>
+          <p className="max-w-[460px] text-lg leading-[1.6] text-pretty text-on-primary">
+            {pilotCopy.joinSub}
+          </p>
         </div>
         <div className="rounded-[28px] bg-white p-[clamp(22px,3vw,32px)] shadow-[0_30px_60px_rgba(11,27,51,.25)]">
           <JoinForm />

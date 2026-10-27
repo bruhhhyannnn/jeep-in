@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '@/lib';
-import { fieldClasses } from './input';
+import React, { forwardRef } from "react";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib";
+import { fieldClasses } from "./input";
 
 /* ─── Label ─── */
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
@@ -11,12 +11,12 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
 
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ children, required: _required, className, ...props }, ref) => (
-    <label ref={ref} className={cn('text-label text-ink-muted mb-1.5 block', className)} {...props}>
+    <label ref={ref} className={cn("mb-1.5 block text-label text-ink-muted", className)} {...props}>
       {children}
     </label>
-  )
+  ),
 );
-Label.displayName = 'Label';
+Label.displayName = "Label";
 
 /* ─── Select ─── */
 interface SelectOption {
@@ -31,33 +31,33 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: boolean;
   hint?: string;
   /** `pill` is the compact toolbar style used for filters and scope pickers. */
-  appearance?: 'field' | 'pill';
+  appearance?: "field" | "pill";
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {
       options,
-      placeholder = 'Select an option',
+      placeholder = "Select an option",
       error,
       hint,
       className,
-      appearance = 'field',
+      appearance = "field",
       ...props
     },
-    ref
+    ref,
   ) => (
-    <div className={cn(appearance === 'pill' && 'shrink-0')}>
+    <div className={cn(appearance === "pill" && "shrink-0")}>
       <div className="relative">
         <select
           ref={ref}
           aria-invalid={error || undefined}
           className={cn(
-            appearance === 'field'
-              ? cn(fieldClasses, 'cursor-pointer appearance-none pr-11')
-              : 'border-line-strong bg-card text-ink focus:border-action focus:ring-action/15 h-10 w-full cursor-pointer appearance-none rounded-full border-[1.5px] pr-10 pl-4 text-[13px] font-semibold shadow-sm focus:ring-[3px] focus:outline-none',
-            error ? 'border-danger' : appearance === 'field' && 'border-line-strong',
-            className
+            appearance === "field"
+              ? cn(fieldClasses, "cursor-pointer appearance-none pr-11")
+              : "h-10 w-full cursor-pointer appearance-none rounded-full border-[1.5px] border-line-strong bg-card pr-10 pl-4 text-[13px] font-semibold text-ink shadow-sm focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none",
+            error ? "border-danger" : appearance === "field" && "border-line-strong",
+            className,
           )}
           {...props}
         >
@@ -71,22 +71,22 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         <ChevronDown
-          size={appearance === 'pill' ? 15 : 17}
+          size={appearance === "pill" ? 15 : 17}
           className={cn(
-            'text-ink-muted pointer-events-none absolute top-1/2 -translate-y-1/2',
-            appearance === 'pill' ? 'right-3.5' : 'right-4'
+            "pointer-events-none absolute top-1/2 -translate-y-1/2 text-ink-muted",
+            appearance === "pill" ? "right-3.5" : "right-4",
           )}
         />
       </div>
       {hint && (
-        <p className={cn('mt-1.5 text-[13px]', error ? 'text-danger-ink' : 'text-ink-muted')}>
+        <p className={cn("mt-1.5 text-[13px]", error ? "text-danger-ink" : "text-ink-muted")}>
           {hint}
         </p>
       )}
     </div>
-  )
+  ),
 );
-Select.displayName = 'Select';
+Select.displayName = "Select";
 
 /* ─── Textarea ─── */
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -101,21 +101,21 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         ref={ref}
         className={cn(
           fieldClasses,
-          'h-auto min-h-24 py-3 leading-relaxed',
-          error ? 'border-danger' : 'border-line-strong',
-          className
+          "h-auto min-h-24 py-3 leading-relaxed",
+          error ? "border-danger" : "border-line-strong",
+          className,
         )}
         {...props}
       />
       {hint && (
-        <p className={cn('mt-1.5 text-[13px]', error ? 'text-danger-ink' : 'text-ink-muted')}>
+        <p className={cn("mt-1.5 text-[13px]", error ? "text-danger-ink" : "text-ink-muted")}>
           {hint}
         </p>
       )}
     </div>
-  )
+  ),
 );
-Textarea.displayName = 'Textarea';
+Textarea.displayName = "Textarea";
 
 /* ─── Switch ─── */
 interface SwitchProps {
@@ -123,7 +123,7 @@ interface SwitchProps {
   onCheckedChange: (checked: boolean) => void;
   id?: string;
   disabled?: boolean;
-  'aria-label'?: string;
+  "aria-label"?: string;
 }
 
 export function Switch({ checked, onCheckedChange, id, disabled, ...rest }: SwitchProps) {
@@ -133,19 +133,19 @@ export function Switch({ checked, onCheckedChange, id, disabled, ...rest }: Swit
       type="button"
       role="switch"
       aria-checked={checked}
-      aria-label={rest['aria-label']}
+      aria-label={rest["aria-label"]}
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        'relative inline-flex h-[26px] w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200',
-        checked ? 'bg-action' : 'bg-line-strong',
-        disabled && 'cursor-not-allowed opacity-50'
+        "relative inline-flex h-[26px] w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200",
+        checked ? "bg-action" : "bg-line-strong",
+        disabled && "cursor-not-allowed opacity-50",
       )}
     >
       <span
         className={cn(
-          'bg-card absolute left-[3px] h-5 w-5 rounded-full shadow-sm transition-transform duration-200 ease-(--ease-calm)',
-          checked && 'translate-x-[18px]'
+          "absolute left-[3px] h-5 w-5 rounded-full bg-card shadow-sm transition-transform duration-200 ease-(--ease-calm)",
+          checked && "translate-x-[18px]",
         )}
       />
     </button>
@@ -173,7 +173,7 @@ export function Field({
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {(error || hint) && (
-        <p className={cn('mt-1.5 text-[13px]', error ? 'text-danger-ink' : 'text-ink-muted')}>
+        <p className={cn("mt-1.5 text-[13px]", error ? "text-danger-ink" : "text-ink-muted")}>
           {error ?? hint}
         </p>
       )}

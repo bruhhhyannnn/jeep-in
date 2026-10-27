@@ -1,12 +1,12 @@
-'use server';
+"use server";
 
-import { Timestamp } from 'firebase-admin/firestore';
-import type { Query } from 'firebase-admin/firestore';
-import { adminDb } from '@/lib/firebase-admin';
-import { serializeDoc } from '@/lib';
-import type { AuditLog } from '@/types';
+import { Timestamp } from "firebase-admin/firestore";
+import type { Query } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
+import { serializeDoc } from "@/lib";
+import type { AuditLog } from "@/types";
 
-const COL = 'audit_logs';
+const COL = "audit_logs";
 const PER_PAGE = 20;
 
 export interface AuditLogFilters {
@@ -19,23 +19,23 @@ export interface AuditLogFilters {
 
 export async function getAuditLogs(
   filters: AuditLogFilters = {},
-  page = 1
+  page = 1,
 ): Promise<{ data: AuditLog[]; total: number; hasMore: boolean }> {
-  let q: Query = adminDb.collection(COL).orderBy('createdAt', 'desc');
+  let q: Query = adminDb.collection(COL).orderBy("createdAt", "desc");
 
   if (filters.organizationId) {
-    q = q.where('organizationId', '==', filters.organizationId);
+    q = q.where("organizationId", "==", filters.organizationId);
   }
   if (filters.actorRole) {
-    q = q.where('actorRole', '==', filters.actorRole);
+    q = q.where("actorRole", "==", filters.actorRole);
   }
   if (filters.dateFrom) {
-    q = q.where('createdAt', '>=', Timestamp.fromDate(new Date(filters.dateFrom)));
+    q = q.where("createdAt", ">=", Timestamp.fromDate(new Date(filters.dateFrom)));
   }
   if (filters.dateTo) {
     const to = new Date(filters.dateTo);
     to.setHours(23, 59, 59, 999);
-    q = q.where('createdAt', '<=', Timestamp.fromDate(to));
+    q = q.where("createdAt", "<=", Timestamp.fromDate(to));
   }
 
   const allSnap = await q.get();
@@ -49,7 +49,7 @@ export async function getAuditLogs(
         log.actorName?.toLowerCase().includes(term) ||
         log.action?.toLowerCase().includes(term) ||
         log.targetName?.toLowerCase().includes(term) ||
-        log.details?.toLowerCase().includes(term)
+        log.details?.toLowerCase().includes(term),
     );
   }
 

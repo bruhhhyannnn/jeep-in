@@ -8,7 +8,10 @@ export function Hero() {
       <Container className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,440px),1fr))] items-center gap-[clamp(40px,6vw,72px)] py-[clamp(48px,7vw,96px)]">
         <div className="flex flex-col gap-6">
           <p className="flex items-center gap-2 self-start rounded-full border border-line bg-white py-[7px] pr-[13px] pl-[9px] text-[13px] font-semibold text-ink">
-            <span aria-hidden className="size-2.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(22,112,224,.16)]" />
+            <span
+              aria-hidden
+              className="size-2.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(22,112,224,.16)]"
+            />
             {pilotCopy.eyebrow}
           </p>
           <h1 className="text-[clamp(40px,6.2vw,72px)] leading-[1.02] font-black tracking-[-.035em] text-balance text-ink">
@@ -47,7 +50,9 @@ export function Hero() {
                 <path d="M6 3.5v17l14-8.5z" />
               </svg>
               <p className="flex flex-col leading-[1.1]">
-                <span className="text-[10px] font-semibold tracking-[.04em] uppercase">Coming soon to</span>
+                <span className="text-[10px] font-semibold tracking-[.04em] uppercase">
+                  Coming soon to
+                </span>
                 <span className="text-[15px] font-extrabold text-muted">Google Play</span>
               </p>
             </div>

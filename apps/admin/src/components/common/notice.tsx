@@ -1,12 +1,12 @@
-import { cn } from '@/lib';
+import { cn } from "@/lib";
 
-type NoticeTone = 'pending' | 'live' | 'error' | 'info';
+type NoticeTone = "pending" | "live" | "error" | "info";
 
 const iconTone: Record<NoticeTone, string> = {
-  pending: 'bg-pending-soft text-pending-ink',
-  live: 'bg-live-soft text-live-ink',
-  error: 'bg-danger-soft text-danger-ink',
-  info: 'bg-action-soft text-action',
+  pending: "bg-pending-soft text-pending-ink",
+  live: "bg-live-soft text-live-ink",
+  error: "bg-danger-soft text-danger-ink",
+  info: "bg-action-soft text-action",
 };
 
 /** A dashed callout: one icon, one fact, an optional action. */
@@ -15,7 +15,7 @@ export function Notice({
   title,
   description,
   action,
-  tone = 'pending',
+  tone = "pending",
   dashed = true,
   className,
 }: {
@@ -30,24 +30,24 @@ export function Notice({
   return (
     <div
       className={cn(
-        'bg-card rounded-card flex flex-col gap-3 border-[1.5px] p-4 sm:flex-row sm:items-center',
-        dashed ? 'border-line-strong border-dashed' : 'border-line',
-        className
+        "flex flex-col gap-3 rounded-card border-[1.5px] bg-card p-4 sm:flex-row sm:items-center",
+        dashed ? "border-dashed border-line-strong" : "border-line",
+        className,
       )}
     >
       <div className="flex min-w-0 flex-1 items-start gap-3">
         <span
           className={cn(
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-            iconTone[tone]
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+            iconTone[tone],
           )}
         >
           {icon}
         </span>
         <div className="min-w-0 pt-0.5">
-          <p className="text-ink text-[15px] leading-snug font-bold">{title}</p>
+          <p className="text-[15px] leading-snug font-bold text-ink">{title}</p>
           {description && (
-            <p className="text-ink-muted mt-0.5 text-[13px] leading-snug">{description}</p>
+            <p className="mt-0.5 text-[13px] leading-snug text-ink-muted">{description}</p>
           )}
         </div>
       </div>

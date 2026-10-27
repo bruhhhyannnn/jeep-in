@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib';
-import type { DriverLocation } from '@/types';
+import { useEffect, useState } from "react";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib";
+import type { DriverLocation } from "@/types";
 
 /**
  * Realtime hook — uses Firestore onSnapshot for live GPS updates.
@@ -25,7 +25,7 @@ export function useDriverLocations(organizationId: string) {
     if (!organizationId) return;
 
     // Query only drivers sharing location
-    const q = query(collection(db, 'driver_locations'), where('isSharing', '==', true));
+    const q = query(collection(db, "driver_locations"), where("isSharing", "==", true));
 
     const unsubscribe = onSnapshot(
       q,
@@ -43,10 +43,10 @@ export function useDriverLocations(organizationId: string) {
         setLoading(false);
       },
       (err) => {
-        console.error('[useDriverLocations]', err);
+        console.error("[useDriverLocations]", err);
         setError(err.message);
         setLoading(false);
-      }
+      },
     );
 
     return () => unsubscribe();
@@ -66,7 +66,7 @@ export function useAllDriverLocations() {
   const [syncedAt, setSyncedAt] = useState<number | null>(null);
 
   useEffect(() => {
-    const q = query(collection(db, 'driver_locations'), where('isSharing', '==', true));
+    const q = query(collection(db, "driver_locations"), where("isSharing", "==", true));
 
     const unsubscribe = onSnapshot(
       q,
@@ -79,7 +79,7 @@ export function useAllDriverLocations() {
               latitude: raw.latitude ?? raw.lat,
               longitude: raw.longitude ?? raw.long,
             } as DriverLocation;
-          })
+          }),
         );
         setSyncedAt(Date.now());
         setLoading(false);
@@ -87,7 +87,7 @@ export function useAllDriverLocations() {
       (err) => {
         setError(err.message);
         setLoading(false);
-      }
+      },
     );
 
     return () => unsubscribe();

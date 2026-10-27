@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from '@/components/auth';
-import { ThemeProvider } from '@/components/theme-provider';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "@/components/auth";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             retry: 1,
           },
         },
-      })
+      }),
   );
 
   return (
@@ -27,8 +27,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           position="bottom-left"
           toastOptions={{
             style: {
-              borderRadius: '10px',
-              fontSize: '14px',
+              borderRadius: "10px",
+              fontSize: "14px",
             },
           }}
         />

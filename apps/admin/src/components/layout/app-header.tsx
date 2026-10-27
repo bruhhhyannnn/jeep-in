@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Menu } from 'lucide-react';
-import { useSidebarStore } from '@/store';
-import { LogoMark } from '@/components/common';
+import Link from "next/link";
+import { Menu } from "lucide-react";
+import { useSidebarStore } from "@/store";
+import { LogoMark } from "@/components/common";
 
 /** Below 1024px the sidebar becomes a drawer; this bar opens it. */
 export function AppHeader() {
   const toggleMobileSidebar = useSidebarStore((s) => s.toggleMobileSidebar);
 
   return (
-    <header className="bg-inverse sticky top-0 z-30 flex h-14 items-center gap-3 px-4 text-white lg:hidden">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 bg-inverse px-4 text-white lg:hidden">
       <button
         type="button"
         onClick={toggleMobileSidebar}

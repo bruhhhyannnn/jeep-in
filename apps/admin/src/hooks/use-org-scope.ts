@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useAuthStore, useScopeStore } from '@/store';
-import { useOrganizations } from './use-organizations';
+import { useEffect } from "react";
+import { useAuthStore, useScopeStore } from "@/store";
+import { useOrganizations } from "./use-organizations";
 
 /**
  * The organization the current page is scoped to.
@@ -9,7 +9,7 @@ import { useOrganizations } from './use-organizations';
  */
 export function useOrgScope() {
   const { userProfile } = useAuthStore();
-  const isSuperAdmin = userProfile?.role === 'super_admin';
+  const isSuperAdmin = userProfile?.role === "super_admin";
 
   const { data: orgs = [] } = useOrganizations();
   const { orgId: selectedOrgId, setOrgId } = useScopeStore();
@@ -20,7 +20,7 @@ export function useOrgScope() {
     }
   }, [isSuperAdmin, orgs, selectedOrgId, setOrgId]);
 
-  const orgId = isSuperAdmin ? selectedOrgId : (userProfile?.organizationId ?? '');
+  const orgId = isSuperAdmin ? selectedOrgId : (userProfile?.organizationId ?? "");
 
   return { orgId, isSuperAdmin, orgs, setOrgId };
 }

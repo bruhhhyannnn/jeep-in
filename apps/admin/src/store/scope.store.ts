@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 /** The organization a super admin is currently looking at, shared across pages. */
 interface ScopeState {
@@ -7,7 +7,7 @@ interface ScopeState {
 }
 
 export const useScopeStore = create<ScopeState>((set) => ({
-  orgId: '',
+  orgId: "",
   setOrgId(orgId) {
     set({ orgId });
   },

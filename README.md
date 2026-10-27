@@ -4,12 +4,12 @@ Live jeepney tracking for Ilocos Norte: commuters see jeeps, stops and fares; dr
 
 ## Apps
 
-| Folder                 | Package                    | What                                                   | Stack                   |
-| ---------------------- | -------------------------- | ------------------------------------------------------ | ----------------------- |
-| `apps/mobile-commuter` | `@jeep-in/mobile-commuter` | Commuter app (Android / iOS)                           | Expo 54, React Native   |
-| `apps/web-commuter`    | `@jeep-in/web-commuter`    | Commuter app as an installable web app (PWA)           | Vite, React             |
-| `apps/admin`           | `@jeep-in/admin`           | Admin and super admin dashboard (UI changes with role) | Next.js 16              |
-| `apps/landing`         | `@jeep-in/landing`         | Public landing page                                    | Next.js 16              |
+| Folder                 | Package                    | What                                                   | Stack                 |
+| ---------------------- | -------------------------- | ------------------------------------------------------ | --------------------- |
+| `apps/mobile-commuter` | `@jeep-in/mobile-commuter` | Commuter app (Android / iOS)                           | Expo 54, React Native |
+| `apps/web-commuter`    | `@jeep-in/web-commuter`    | Commuter app as an installable web app (PWA)           | Vite, React           |
+| `apps/admin`           | `@jeep-in/admin`           | Admin and super admin dashboard (UI changes with role) | Next.js 16            |
+| `apps/landing`         | `@jeep-in/landing`         | Public landing page                                    | Next.js 16            |
 
 Planned: `apps/mobile-driver` (driver app) and `apps/web-driver` (driver PWA for testing).
 
@@ -34,12 +34,12 @@ npm run start -w @jeep-in/mobile-commuter   # Expo
 
 Each app keeps its own env file (never committed); see its `.env.example` / `.env.local.example`:
 
-| App               | File                                                        |
-| ----------------- | ----------------------------------------------------------- |
-| `mobile-commuter` | `apps/mobile-commuter/.env.local` (`EXPO_PUBLIC_*`)         |
-| `web-commuter`    | `apps/web-commuter/.env.local` (`VITE_*`)                   |
+| App               | File                                                                    |
+| ----------------- | ----------------------------------------------------------------------- |
+| `mobile-commuter` | `apps/mobile-commuter/.env.local` (`EXPO_PUBLIC_*`)                     |
+| `web-commuter`    | `apps/web-commuter/.env.local` (`VITE_*`)                               |
 | `admin`           | `apps/admin/.env.local` and `apps/admin/scripts/serviceAccountKey.json` |
-| `landing`         | none yet                                                    |
+| `landing`         | none yet                                                                |
 
 ## Checks
 

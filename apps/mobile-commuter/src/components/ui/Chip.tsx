@@ -3,14 +3,7 @@ import { cn } from "@/lib/utils";
 import ThemedText, { type TextTone } from "@/components/ui/ThemedText";
 
 export type ChipTone =
-  | "live"
-  | "pending"
-  | "stale"
-  | "error"
-  | "selected"
-  | "neutral"
-  | "fresh"
-  | "onInverse";
+  "live" | "pending" | "stale" | "error" | "selected" | "neutral" | "fresh" | "onInverse";
 
 const containers: Record<ChipTone, string> = {
   live: "bg-live-tint",

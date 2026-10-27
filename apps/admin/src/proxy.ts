@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Middleware runs on the Edge runtime — Firebase Admin SDK is NOT available here.
@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * Role-specific page protection is handled in the layout via the AuthProvider.
  */
 
-const PUBLIC_PATHS = ['/signin', '/unauthorized', '/api/auth'];
+const PUBLIC_PATHS = ["/signin", "/unauthorized", "/api/auth"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,17 +19,17 @@ export function proxy(request: NextRequest) {
   }
 
   // Allow Next.js internals
-  if (pathname.startsWith('/_next') || pathname.startsWith('/favicon')) {
+  if (pathname.startsWith("/_next") || pathname.startsWith("/favicon")) {
     return NextResponse.next();
   }
 
   // Check for session cookie presence (existence check only — full verification in layouts)
-  const session = request.cookies.get('jeep-in-session');
+  const session = request.cookies.get("jeep-in-session");
 
   if (!session?.value) {
     const url = request.nextUrl.clone();
-    url.pathname = '/signin';
-    url.searchParams.set('from', pathname);
+    url.pathname = "/signin";
+    url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
 
@@ -37,5 +37,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

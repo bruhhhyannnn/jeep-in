@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Plus, X } from 'lucide-react';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState, useEffect } from "react";
+import { Plus, X } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -18,14 +18,14 @@ import {
   SidePanel,
   StatusChip,
   Switch,
-} from '@/components/ui';
-import { PageHeader, SearchField } from '@/components/common';
-import { useAllRoutes, useCreateRoute, useUpdateRoute, useDeleteRoute } from '@/hooks';
-import { formatClock, formatDirection, routeSchema, type RouteFormData } from '@/lib';
-import type { Route } from '@/types';
+} from "@/components/ui";
+import { PageHeader, SearchField } from "@/components/common";
+import { useAllRoutes, useCreateRoute, useUpdateRoute, useDeleteRoute } from "@/hooks";
+import { formatClock, formatDirection, routeSchema, type RouteFormData } from "@/lib";
+import type { Route } from "@/types";
 
 export default function RoutesPage() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<Route | null>(null);
@@ -44,21 +44,21 @@ export default function RoutesPage() {
 
   const columns: ColumnDef<Route, unknown>[] = [
     {
-      id: 'name',
-      header: 'Route',
+      id: "name",
+      header: "Route",
       accessorFn: (r) => r.name,
       cell: ({ row: { original: r } }) => (
         <div className="min-w-0">
-          <p className="text-ink font-semibold">{r.name}</p>
+          <p className="font-semibold text-ink">{r.name}</p>
           {r.description && (
-            <p className="text-ink-muted line-clamp-1 max-w-[320px] text-[12px]">{r.description}</p>
+            <p className="line-clamp-1 max-w-[320px] text-[12px] text-ink-muted">{r.description}</p>
           )}
         </div>
       ),
     },
     {
-      id: 'directions',
-      header: 'Directions',
+      id: "directions",
+      header: "Directions",
       enableSorting: false,
       cell: ({ row: { original: r } }) => (
         <div className="flex flex-wrap gap-1.5">
@@ -75,18 +75,18 @@ export default function RoutesPage() {
       ),
     },
     {
-      id: 'workingHours',
-      header: 'Shift hours',
+      id: "workingHours",
+      header: "Shift hours",
       accessorFn: (r) => r.workingHours.start,
       cell: ({ row: { original: r } }) => (
-        <span className="font-data text-ink-muted text-[13px] whitespace-nowrap">
+        <span className="font-data text-[13px] whitespace-nowrap text-ink-muted">
           {formatClock(r.workingHours.start)} – {formatClock(r.workingHours.end)}
         </span>
       ),
     },
     {
-      id: 'status',
-      header: 'Status',
+      id: "status",
+      header: "Status",
       accessorFn: (r) => r.isActive,
       cell: ({ row: { original: r } }) =>
         r.isActive ? (
@@ -98,7 +98,7 @@ export default function RoutesPage() {
         ),
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: r } }) => (
@@ -125,7 +125,7 @@ export default function RoutesPage() {
       <div className="space-y-5">
         <PageHeader
           title="Routes"
-          description={`${routes.length} ${routes.length === 1 ? 'route' : 'routes'} · ${active} active`}
+          description={`${routes.length} ${routes.length === 1 ? "route" : "routes"} · ${active} active`}
           actions={
             <>
               <SearchField value={query} onChange={setQuery} placeholder="Search routes" />
@@ -140,8 +140,8 @@ export default function RoutesPage() {
           columns={columns}
           data={filtered}
           loading={isPending}
-          emptyMessage={q ? 'No routes match' : 'No routes yet'}
-          emptyHint={q ? undefined : 'Add a route, then its stops and fares.'}
+          emptyMessage={q ? "No routes match" : "No routes yet"}
+          emptyHint={q ? undefined : "Add a route, then its stops and fares."}
           onRowClick={(r) => openPanel(r.id)}
         />
       </div>
@@ -156,7 +156,7 @@ export default function RoutesPage() {
       <ConfirmDialog
         isOpen={!!deleting}
         onClose={() => setDeleting(null)}
-        title={`Delete ${deleting?.name ?? 'this route'}?`}
+        title={`Delete ${deleting?.name ?? "this route"}?`}
         message="Its stops, fares and drivers are deleted with it. This can't be undone."
         cancelLabel="Keep the route"
         confirmLabel="Delete route"
@@ -177,12 +177,12 @@ export default function RoutesPage() {
         <ConfirmFacts
           items={[
             {
-              label: 'Deleted',
-              text: 'Its stop points, fare guide, and the drivers on it (including their sign-ins).',
+              label: "Deleted",
+              text: "Its stop points, fare guide, and the drivers on it (including their sign-ins).",
             },
             {
-              label: 'Kept',
-              text: 'Organizations that use it — they are left without a route until you assign one.',
+              label: "Kept",
+              text: "Organizations that use it — they are left without a route until you assign one.",
             },
           ]}
         />
@@ -206,9 +206,9 @@ function RoutePanel({
   const isEdit = !!route;
   const createRoute = useCreateRoute();
   const updateRoute = useUpdateRoute();
-  const formId = 'route-form';
+  const formId = "route-form";
 
-  const [dirInput, setDirInput] = useState('');
+  const [dirInput, setDirInput] = useState("");
   const [directions, setDirections] = useState<string[]>([]);
 
   const {
@@ -223,7 +223,7 @@ function RoutePanel({
     defaultValues: {
       isActive: true,
       directions: [],
-      workingHours: { start: '06:00', end: '20:00' },
+      workingHours: { start: "06:00", end: "20:00" },
     },
   });
 
@@ -231,39 +231,39 @@ function RoutePanel({
     if (!isOpen) return;
     const dirs = route?.directions ?? [];
     setDirections(dirs);
-    setDirInput('');
+    setDirInput("");
     reset(
       route
         ? {
             name: route.name,
-            description: route.description ?? '',
+            description: route.description ?? "",
             directions: dirs,
             isActive: route.isActive,
             workingHours: route.workingHours,
           }
         : {
-            name: '',
-            description: '',
+            name: "",
+            description: "",
             directions: [],
             isActive: true,
-            workingHours: { start: '06:00', end: '20:00' },
-          }
+            workingHours: { start: "06:00", end: "20:00" },
+          },
     );
   }, [isOpen, route, reset]);
 
   const addDirection = () => {
-    const val = dirInput.trim().toLowerCase().replace(/\s+/g, '_');
+    const val = dirInput.trim().toLowerCase().replace(/\s+/g, "_");
     if (!val || directions.includes(val)) return;
     const next = [...directions, val];
     setDirections(next);
-    setValue('directions', next, { shouldValidate: true, shouldDirty: true });
-    setDirInput('');
+    setValue("directions", next, { shouldValidate: true, shouldDirty: true });
+    setDirInput("");
   };
 
   const removeDirection = (index: number) => {
     const next = directions.filter((_, i) => i !== index);
     setDirections(next);
-    setValue('directions', next, { shouldValidate: true, shouldDirty: true });
+    setValue("directions", next, { shouldValidate: true, shouldDirty: true });
   };
 
   const isSaving = isSubmitting || createRoute.isPending || updateRoute.isPending;
@@ -285,11 +285,11 @@ function RoutePanel({
       isOpen={isOpen}
       onClose={onClose}
       busy={isSaving}
-      title={route ? route.name : 'Add a route'}
+      title={route ? route.name : "Add a route"}
       subtitle={
         route
-          ? 'Directions, shift hours and status.'
-          : 'A line jeepneys run, in one or both directions.'
+          ? "Directions, shift hours and status."
+          : "A line jeepneys run, in one or both directions."
       }
       footer={
         <>
@@ -297,7 +297,7 @@ function RoutePanel({
             Cancel
           </Button>
           <Button type="submit" form={formId} isLoading={isSaving} loadingText="Saving…">
-            {isEdit ? 'Save changes' : 'Save this route'}
+            {isEdit ? "Save changes" : "Save this route"}
           </Button>
         </>
       }
@@ -309,13 +309,13 @@ function RoutePanel({
           placeholder="Laoag – Batac – Paoay"
           error={!!errors.name}
           hint={errors.name?.message}
-          {...register('name')}
+          {...register("name")}
         />
         <Input
           id="route-description"
           label="Description (optional)"
           placeholder="Main line through Laoag, Batac and Paoay"
-          {...register('description')}
+          {...register("description")}
         />
 
         <Field
@@ -324,7 +324,7 @@ function RoutePanel({
           error={
             errors.directions
               ? ((errors.directions as { message?: string }).message ??
-                'Add at least one direction')
+                "Add at least one direction")
               : undefined
           }
           hint="Type both ends with an underscore, e.g. laoag_paoay, then press Enter."
@@ -335,13 +335,13 @@ function RoutePanel({
               value={dirInput}
               onChange={(e) => setDirInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   addDirection();
                 }
               }}
               placeholder="laoag_paoay"
-              className="font-data border-line-strong bg-card text-ink placeholder:text-ink-meta focus:border-action focus:ring-action/15 rounded-input h-12 min-w-0 flex-1 border-[1.5px] px-4 text-[14px] focus:ring-[3px] focus:outline-none"
+              className="h-12 min-w-0 flex-1 rounded-input border-[1.5px] border-line-strong bg-card px-4 font-data text-[14px] text-ink placeholder:text-ink-meta focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
             />
             <Button variant="outline" className="h-12" onClick={addDirection}>
               Add
@@ -353,14 +353,14 @@ function RoutePanel({
             {directions.map((dir, i) => (
               <span
                 key={dir}
-                className="bg-action-soft text-action inline-flex h-8 items-center gap-1.5 rounded-full pr-1.5 pl-3 text-[13px] font-semibold"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-action-soft pr-1.5 pl-3 text-[13px] font-semibold text-action"
               >
                 {formatDirection(dir)}
                 <button
                   type="button"
                   onClick={() => removeDirection(i)}
                   aria-label={`Remove ${formatDirection(dir)}`}
-                  className="hover:bg-action/15 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
+                  className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full hover:bg-action/15"
                 >
                   <X size={13} />
                 </button>
@@ -377,7 +377,7 @@ function RoutePanel({
             className="font-data"
             error={!!errors.workingHours?.start}
             hint={errors.workingHours?.start?.message}
-            {...register('workingHours.start')}
+            {...register("workingHours.start")}
           />
           <Input
             id="route-end"
@@ -386,14 +386,14 @@ function RoutePanel({
             className="font-data"
             error={!!errors.workingHours?.end}
             hint={errors.workingHours?.end?.message}
-            {...register('workingHours.end')}
+            {...register("workingHours.end")}
           />
         </div>
 
-        <div className="border-line rounded-tile flex items-center justify-between gap-4 border-[1.5px] p-4">
+        <div className="flex items-center justify-between gap-4 rounded-tile border-[1.5px] border-line p-4">
           <div>
-            <p className="text-ink text-[14px] font-bold">Active</p>
-            <p className="text-ink-muted mt-0.5 text-[13px]">
+            <p className="text-[14px] font-bold text-ink">Active</p>
+            <p className="mt-0.5 text-[13px] text-ink-muted">
               Turn off to mark the route inactive.
             </p>
           </div>

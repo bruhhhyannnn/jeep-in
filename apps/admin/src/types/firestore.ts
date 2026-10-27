@@ -1,7 +1,7 @@
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from "firebase/firestore";
 
 /* ─── Role ─── */
-export type UserRole = 'super_admin' | 'admin' | 'driver' | 'commuter';
+export type UserRole = "super_admin" | "admin" | "driver" | "commuter";
 
 /* ─── Organization ─── */
 export interface Organization {

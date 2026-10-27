@@ -1,16 +1,16 @@
-'use server';
+"use server";
 
-import { Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { adminDb } from '@/lib/firebase-admin';
-import { FareGuideFormData, serializeDoc } from '@/lib';
-import type { FareGuide } from '@/types';
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
+import { FareGuideFormData, serializeDoc } from "@/lib";
+import type { FareGuide } from "@/types";
 
-const COL = 'fare_guide';
+const COL = "fare_guide";
 
 export async function getFareGuide(routeId?: string): Promise<FareGuide[]> {
   const q = routeId
-    ? adminDb.collection(COL).where('routeId', '==', routeId).orderBy('distanceKm', 'asc')
-    : adminDb.collection(COL).orderBy('distanceKm', 'asc');
+    ? adminDb.collection(COL).where("routeId", "==", routeId).orderBy("distanceKm", "asc")
+    : adminDb.collection(COL).orderBy("distanceKm", "asc");
 
   const snap = await q.get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as FareGuide), id: d.id }));

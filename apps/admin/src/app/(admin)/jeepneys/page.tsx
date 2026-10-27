@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -16,8 +16,8 @@ import {
   PanelActionRow,
   SidePanel,
   StatusChip,
-} from '@/components/ui';
-import { Avatar, OrgPicker, PageHeader, SearchField, UnitTile } from '@/components/common';
+} from "@/components/ui";
+import { Avatar, OrgPicker, PageHeader, SearchField, UnitTile } from "@/components/common";
 import {
   useCreateJeepney,
   useDeleteJeepney,
@@ -27,25 +27,25 @@ import {
   useOrganization,
   useRoute,
   useUpdateJeepney,
-} from '@/hooks';
-import { jeepneySchema, toDate, type JeepneyFormData } from '@/lib';
-import type { DriverProfile, Jeepney } from '@/types';
+} from "@/hooks";
+import { jeepneySchema, toDate, type JeepneyFormData } from "@/lib";
+import type { DriverProfile, Jeepney } from "@/types";
 
 const fullName = (d: DriverProfile) => `${d.firstName} ${d.lastName}`;
 
 export default function JeepneysPage() {
   const { orgId } = useOrgScope();
   const { data: org } = useOrganization(orgId || undefined);
-  const routeId = org?.routeId ?? '';
+  const routeId = org?.routeId ?? "";
   const { data: route } = useRoute(routeId || undefined);
 
   const { data: jeepneys = [], isPending, error } = useJeepneys(orgId);
   const { data: drivers = [] } = useDrivers(orgId);
   const driverById = new Map(drivers.map((d) => [d.uid, d]));
 
-  const [query, setQuery] = useState('');
-  const [panel, setPanel] = useState<{ mode: 'add' } | { mode: 'edit'; id: string }>({
-    mode: 'add',
+  const [query, setQuery] = useState("");
+  const [panel, setPanel] = useState<{ mode: "add" } | { mode: "edit"; id: string }>({
+    mode: "add",
   });
   const [panelOpen, setPanelOpen] = useState(false);
   const openPanel = (next: typeof panel) => {
@@ -55,7 +55,7 @@ export default function JeepneysPage() {
   const [deleting, setDeleting] = useState<Jeepney | null>(null);
   const deleteJeepney = useDeleteJeepney();
 
-  const editing = panel.mode === 'edit' ? (jeepneys.find((j) => j.id === panel.id) ?? null) : null;
+  const editing = panel.mode === "edit" ? (jeepneys.find((j) => j.id === panel.id) ?? null) : null;
   const withDriver = jeepneys.filter((j) => j.assignedDriverId).length;
   const inactive = jeepneys.filter((j) => !j.isActive).length;
 
@@ -66,33 +66,33 @@ export default function JeepneysPage() {
 
   const columns: ColumnDef<Jeepney, unknown>[] = [
     {
-      id: 'unit',
-      header: 'Unit',
+      id: "unit",
+      header: "Unit",
       accessorFn: (j) => j.jeepneyNumber,
-      sortingFn: 'alphanumeric',
+      sortingFn: "alphanumeric",
       cell: ({ row: { original: j } }) => (
         <div className="flex items-center gap-3">
           <UnitTile number={j.jeepneyNumber} />
           <div>
-            <p className="font-data text-ink text-[14px] font-bold">{j.plateNumber}</p>
-            <p className="text-ink-muted text-[12px]">Unit J{j.jeepneyNumber}</p>
+            <p className="font-data text-[14px] font-bold text-ink">{j.plateNumber}</p>
+            <p className="text-[12px] text-ink-muted">Unit J{j.jeepneyNumber}</p>
           </div>
         </div>
       ),
     },
     {
-      id: 'driver',
-      header: 'Assigned driver',
+      id: "driver",
+      header: "Assigned driver",
       accessorFn: (j) => {
         const d = j.assignedDriverId ? driverById.get(j.assignedDriverId) : undefined;
-        return d ? fullName(d) : '';
+        return d ? fullName(d) : "";
       },
       cell: ({ row: { original: j } }) => {
         const d = j.assignedDriverId ? driverById.get(j.assignedDriverId) : undefined;
         return d ? (
           <div className="flex items-center gap-2.5">
             <Avatar name={fullName(d)} />
-            <span className="text-ink font-semibold">{fullName(d)}</span>
+            <span className="font-semibold text-ink">{fullName(d)}</span>
           </div>
         ) : (
           <span className="text-ink-muted italic">No driver</span>
@@ -100,8 +100,8 @@ export default function JeepneysPage() {
       },
     },
     {
-      id: 'status',
-      header: 'Condition',
+      id: "status",
+      header: "Condition",
       accessorFn: (j) => j.isActive,
       cell: ({ row: { original: j } }) =>
         j.isActive ? (
@@ -113,20 +113,20 @@ export default function JeepneysPage() {
         ),
     },
     {
-      id: 'created',
-      header: 'Added',
+      id: "created",
+      header: "Added",
       accessorFn: (j) => toDate(j.createdAt)?.getTime() ?? 0,
       cell: ({ row: { original: j } }) => {
         const date = toDate(j.createdAt);
         return (
-          <span className="text-ink-muted text-[13px]">
-            {date ? format(date, 'MMM d, yyyy') : '—'}
+          <span className="text-[13px] text-ink-muted">
+            {date ? format(date, "MMM d, yyyy") : "—"}
           </span>
         );
       },
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: j } }) => (
@@ -136,7 +136,7 @@ export default function JeepneysPage() {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              openPanel({ mode: 'edit', id: j.id });
+              openPanel({ mode: "edit", id: j.id });
             }}
           >
             Edit
@@ -157,14 +157,14 @@ export default function JeepneysPage() {
       <div className="space-y-5">
         <PageHeader
           title="Jeepney units"
-          description={`${jeepneys.length} ${jeepneys.length === 1 ? 'unit' : 'units'} · ${withDriver} with a driver${inactive ? ` · ${inactive} inactive` : ''}`}
+          description={`${jeepneys.length} ${jeepneys.length === 1 ? "unit" : "units"} · ${withDriver} with a driver${inactive ? ` · ${inactive} inactive` : ""}`}
           actions={
             <>
               <OrgPicker />
               <SearchField value={query} onChange={setQuery} placeholder="Search plate or unit" />
               <Button
                 startIcon={<Plus size={17} />}
-                onClick={() => openPanel({ mode: 'add' })}
+                onClick={() => openPanel({ mode: "add" })}
                 disabled={!orgId}
               >
                 Add unit
@@ -177,9 +177,9 @@ export default function JeepneysPage() {
           columns={columns}
           data={filtered}
           loading={!!orgId && isPending}
-          emptyMessage={q ? 'No units match your search' : 'No jeepney units yet'}
-          emptyHint={q ? undefined : 'Add a unit, then give it a driver on Assignments.'}
-          onRowClick={(j) => openPanel({ mode: 'edit', id: j.id })}
+          emptyMessage={q ? "No units match your search" : "No jeepney units yet"}
+          emptyHint={q ? undefined : "Add a unit, then give it a driver on Assignments."}
+          onRowClick={(j) => openPanel({ mode: "edit", id: j.id })}
           pageSize={20}
         />
       </div>
@@ -190,7 +190,7 @@ export default function JeepneysPage() {
         driver={editing?.assignedDriverId ? driverById.get(editing.assignedDriverId) : undefined}
         orgId={orgId}
         routeId={routeId}
-        scopeLine={org ? `${org.name}${route ? ` · ${route.name}` : ''}` : ''}
+        scopeLine={org ? `${org.name}${route ? ` · ${route.name}` : ""}` : ""}
         onClose={() => setPanelOpen(false)}
         onDelete={(j) => setDeleting(j)}
       />
@@ -198,11 +198,11 @@ export default function JeepneysPage() {
       <ConfirmDialog
         isOpen={!!deleting}
         onClose={() => setDeleting(null)}
-        title={`Delete ${deleting?.plateNumber ?? 'this unit'}?`}
+        title={`Delete ${deleting?.plateNumber ?? "this unit"}?`}
         message={
           deletingDriver
             ? `${fullName(deletingDriver)} drives it today and will be left without a unit. The record is removed for good.`
-            : 'The record is removed for good. It disappears from every list and from the map.'
+            : "The record is removed for good. It disappears from every list and from the map."
         }
         cancelLabel="Never mind"
         confirmLabel="Delete unit"
@@ -247,7 +247,7 @@ function JeepneyPanel({
   const isEdit = !!unit;
   const createJeepney = useCreateJeepney();
   const updateJeepney = useUpdateJeepney();
-  const formId = 'jeepney-form';
+  const formId = "jeepney-form";
 
   const {
     register,
@@ -261,7 +261,7 @@ function JeepneyPanel({
     reset(
       unit
         ? { plateNumber: unit.plateNumber, jeepneyNumber: unit.jeepneyNumber }
-        : { plateNumber: '', jeepneyNumber: '' }
+        : { plateNumber: "", jeepneyNumber: "" },
     );
   }, [isOpen, unit, reset]);
 
@@ -284,13 +284,13 @@ function JeepneyPanel({
       isOpen={isOpen}
       onClose={onClose}
       busy={isSaving}
-      title={unit ? unit.plateNumber : 'Add a jeepney unit'}
+      title={unit ? unit.plateNumber : "Add a jeepney unit"}
       subtitle={
         unit
-          ? `Unit J${unit.jeepneyNumber} · ${driver ? `${fullName(driver)} drives it today` : 'no driver yet'}`
+          ? `Unit J${unit.jeepneyNumber} · ${driver ? `${fullName(driver)} drives it today` : "no driver yet"}`
           : scopeLine
             ? `Joins the ${scopeLine} fleet.`
-            : 'Jeepney units · new record'
+            : "Jeepney units · new record"
       }
       footer={
         <>
@@ -304,7 +304,7 @@ function JeepneyPanel({
             isLoading={isSaving}
             loadingText="Saving…"
           >
-            {isEdit ? 'Save changes' : 'Save this unit'}
+            {isEdit ? "Save changes" : "Save this unit"}
           </Button>
         </>
       }
@@ -318,8 +318,8 @@ function JeepneyPanel({
             className="font-data"
             autoComplete="off"
             error={!!errors.jeepneyNumber}
-            hint={errors.jeepneyNumber?.message ?? 'Up to 2 characters. Shown as J14.'}
-            {...register('jeepneyNumber')}
+            hint={errors.jeepneyNumber?.message ?? "Up to 2 characters. Shown as J14."}
+            {...register("jeepneyNumber")}
           />
           <Input
             id="plateNumber"
@@ -328,14 +328,14 @@ function JeepneyPanel({
             className="font-data"
             autoComplete="off"
             error={!!errors.plateNumber}
-            hint={errors.plateNumber?.message ?? 'Up to 8 characters.'}
-            {...register('plateNumber')}
+            hint={errors.plateNumber?.message ?? "Up to 8 characters."}
+            {...register("plateNumber")}
           />
         </div>
 
-        <div className="bg-sunken rounded-tile p-4">
-          <p className="text-ink text-[14px] font-bold">Drivers are assigned separately</p>
-          <p className="text-ink-muted mt-1 text-[13px] leading-snug">
+        <div className="rounded-tile bg-sunken p-4">
+          <p className="text-[14px] font-bold text-ink">Drivers are assigned separately</p>
+          <p className="mt-1 text-[13px] leading-snug text-ink-muted">
             Use Assignments to choose who drives this unit. Changes there take effect right away.
           </p>
         </div>

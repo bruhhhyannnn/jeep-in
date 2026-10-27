@@ -45,7 +45,12 @@ export function SiteFooter() {
               <a href={`mailto:${site.email}`} className={linkClass}>
                 {site.email}
               </a>
-              <a href={site.facebook} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <a
+                href={site.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass}
+              >
                 Facebook · JEEP-IN
               </a>
               <p>CCIS, Mariano Marcos State University</p>

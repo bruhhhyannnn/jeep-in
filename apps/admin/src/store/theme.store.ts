@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 /** Appearance setting: light, dark, or match the computer ("Auto"). */
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = "light" | "dark" | "system";
 
 interface ThemeState {
   theme: Theme;
@@ -12,11 +12,11 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: 'light',
+      theme: "light",
       setTheme(theme) {
         set({ theme });
       },
     }),
-    { name: 'jeep-in-theme' }
-  )
+    { name: "jeep-in-theme" },
+  ),
 );

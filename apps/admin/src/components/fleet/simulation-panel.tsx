@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { Bot } from 'lucide-react';
-import { Button, PanelActionRow, SidePanel } from '@/components/ui';
-import { FilterChips, Notice } from '@/components/common';
-import { useFleetSimulation, useNow } from '@/hooks';
-import { SIMULATION_TICK_S } from '@/lib/fleet-simulation';
-import { timeAgo } from '@/lib';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Bot } from "lucide-react";
+import { Button, PanelActionRow, SidePanel } from "@/components/ui";
+import { FilterChips, Notice } from "@/components/common";
+import { useFleetSimulation, useNow } from "@/hooks";
+import { SIMULATION_TICK_S } from "@/lib/fleet-simulation";
+import { timeAgo } from "@/lib";
 
-const BOT_OPTIONS = ['3', '4', '5'] as const;
-const MINUTE_OPTIONS = ['15', '30', '60'] as const;
+const BOT_OPTIONS = ["3", "4", "5"] as const;
+const MINUTE_OPTIONS = ["15", "30", "60"] as const;
 
 /**
  * "Simulate jeeps": bot units that drive the organization's route like real drivers, so
@@ -30,8 +30,8 @@ export function SimulationPanel({
   routeName: string;
 }) {
   const sim = useFleetSimulation(true);
-  const [bots, setBots] = useState<(typeof BOT_OPTIONS)[number]>('4');
-  const [minutes, setMinutes] = useState<(typeof MINUTE_OPTIONS)[number]>('30');
+  const [bots, setBots] = useState<(typeof BOT_OPTIONS)[number]>("4");
+  const [minutes, setMinutes] = useState<(typeof MINUTE_OPTIONS)[number]>("30");
   const writesPerHour = Math.round((3600 / SIMULATION_TICK_S) * Number(bots));
 
   const start = async () => {
@@ -46,16 +46,16 @@ export function SimulationPanel({
       toast.success(`${bots} simulated jeeps are on the road`);
       onClose();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not start the simulation');
+      toast.error(e instanceof Error ? e.message : "Could not start the simulation");
     }
   };
 
   const remove = async () => {
     try {
       await sim.remove();
-      toast.success('Simulated units removed');
+      toast.success("Simulated units removed");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not remove the simulated units');
+      toast.error(e instanceof Error ? e.message : "Could not remove the simulated units");
     }
   };
 
@@ -89,7 +89,7 @@ export function SimulationPanel({
       }
     >
       <div className="space-y-6">
-        <p className="text-ink-muted text-[14px] leading-relaxed">
+        <p className="text-[14px] leading-relaxed text-ink-muted">
           Bot units drive this route like drivers sharing from the app: they follow the road, pause
           at stops and turn around at the terminal. They show up here and in the commuter apps as
           SIM-01, SIM-02… with a simulated driver. Keep this tab open — closing it takes them off
@@ -97,7 +97,7 @@ export function SimulationPanel({
         </p>
 
         <div>
-          <p className="text-label text-ink-muted mb-2">Jeeps</p>
+          <p className="mb-2 text-label text-ink-muted">Jeeps</p>
           <FilterChips
             options={BOT_OPTIONS.map((v) => ({ value: v, label: `${v} jeeps` }))}
             value={bots}
@@ -106,13 +106,13 @@ export function SimulationPanel({
         </div>
 
         <div>
-          <p className="text-label text-ink-muted mb-2">Run for</p>
+          <p className="mb-2 text-label text-ink-muted">Run for</p>
           <FilterChips
             options={MINUTE_OPTIONS.map((v) => ({ value: v, label: `${v} min` }))}
             value={minutes}
             onChange={setMinutes}
           />
-          <p className="text-ink-muted mt-2 text-[13px]">
+          <p className="mt-2 text-[13px] text-ink-muted">
             About {writesPerHour.toLocaleString()} Firestore writes an hour. The free plan allows
             20,000 a day.
           </p>
@@ -145,12 +145,12 @@ export function SimulationNotice() {
     return (
       <Notice
         icon={<Bot size={17} />}
-        tone={sim.error ? 'error' : 'live'}
+        tone={sim.error ? "error" : "live"}
         dashed={false}
-        title={`Simulating ${sim.botCount} jeeps${sim.routeName ? ` on ${sim.routeName}` : ''}`}
+        title={`Simulating ${sim.botCount} jeeps${sim.routeName ? ` on ${sim.routeName}` : ""}`}
         description={
           sim.error ??
-          `Updated ${sim.lastWriteAt ? `${timeAgo(new Date(sim.lastWriteAt), now)} ago` : 'just now'} · stops by itself in ${minutesLeft} min · keep this tab open`
+          `Updated ${sim.lastWriteAt ? `${timeAgo(new Date(sim.lastWriteAt), now)} ago` : "just now"} · stops by itself in ${minutesLeft} min · keep this tab open`
         }
         action={
           <Button variant="outline" size="sm" onClick={() => void sim.stop()}>

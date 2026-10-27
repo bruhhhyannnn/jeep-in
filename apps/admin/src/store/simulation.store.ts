@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 /** The bot simulation running in this browser tab (see src/hooks/use-fleet-simulation.ts). */
 interface SimulationState {
@@ -13,7 +13,7 @@ interface SimulationState {
   /** Last time positions reached Firestore. */
   lastWriteAt: number | null;
   error: string | null;
-  set: (patch: Partial<Omit<SimulationState, 'set'>>) => void;
+  set: (patch: Partial<Omit<SimulationState, "set">>) => void;
 }
 
 export const useSimulationStore = create<SimulationState>((set) => ({

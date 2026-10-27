@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Check, Copy, KeyRound, Plus, RefreshCw } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import toast from 'react-hot-toast';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useEffect, useState } from "react";
+import { Check, Copy, KeyRound, Plus, RefreshCw } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import toast from "react-hot-toast";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   ConfirmDialog,
@@ -20,7 +20,7 @@ import {
   Select,
   SidePanel,
   StatusChip,
-} from '@/components/ui';
+} from "@/components/ui";
 import {
   Avatar,
   FilterChips,
@@ -29,7 +29,7 @@ import {
   PageHeader,
   SearchField,
   UnitTile,
-} from '@/components/common';
+} from "@/components/common";
 import {
   useAssignJeepney,
   useCreateDriver,
@@ -42,32 +42,32 @@ import {
   useReactivateDriver,
   useUnassignJeepney,
   useNow,
-} from '@/hooks';
+} from "@/hooks";
 import {
   driverCreateSchema,
   generatePassword,
   timeAgo,
   toDate,
   type DriverCreateFormData,
-} from '@/lib';
-import type { DriverProfile, Jeepney } from '@/types';
+} from "@/lib";
+import type { DriverProfile, Jeepney } from "@/types";
 
-type DriverFilter = 'all' | 'active' | 'inactive' | 'temp';
-type ConfirmKind = 'deactivate' | 'reactivate' | 'delete';
+type DriverFilter = "all" | "active" | "inactive" | "temp";
+type ConfirmKind = "deactivate" | "reactivate" | "delete";
 
 const fullName = (d: DriverProfile) => `${d.firstName} ${d.lastName}`;
 
 export default function DriversPage() {
   const { orgId } = useOrgScope();
   const { data: org } = useOrganization(orgId || undefined);
-  const routeId = org?.routeId ?? '';
+  const routeId = org?.routeId ?? "";
 
   const { data: drivers = [], isPending, error } = useDrivers(orgId);
   const { data: jeepneys = [] } = useJeepneys(orgId);
   const jeepneyById = new Map(jeepneys.map((j) => [j.id, j]));
 
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<DriverFilter>('all');
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<DriverFilter>("all");
   const [addOpen, setAddOpen] = useState(false);
   const [editUid, setEditUid] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<{ kind: ConfirmKind; driver: DriverProfile } | null>(null);
@@ -84,42 +84,42 @@ export default function DriversPage() {
   const q = query.trim().toLowerCase();
   const filtered = drivers
     .filter((d) =>
-      filter === 'active'
+      filter === "active"
         ? d.isActive
-        : filter === 'inactive'
+        : filter === "inactive"
           ? !d.isActive
-          : filter === 'temp'
+          : filter === "temp"
             ? d.mustChangePassword
-            : true
+            : true,
     )
     .filter((d) => !q || `${fullName(d)} ${d.email}`.toLowerCase().includes(q));
 
   const columns: ColumnDef<DriverProfile, unknown>[] = [
     {
-      id: 'name',
-      header: 'Driver',
+      id: "name",
+      header: "Driver",
       accessorFn: (d) => fullName(d),
       cell: ({ row: { original: d } }) => (
         <div className="flex items-center gap-3">
           <Avatar name={fullName(d)} size="md" />
           <div className="min-w-0">
-            <p className="text-ink truncate font-semibold">{fullName(d)}</p>
-            <p className="text-ink-muted truncate text-[12px]">{d.email}</p>
+            <p className="truncate font-semibold text-ink">{fullName(d)}</p>
+            <p className="truncate text-[12px] text-ink-muted">{d.email}</p>
           </div>
         </div>
       ),
     },
     {
-      id: 'unit',
-      header: 'Unit today',
+      id: "unit",
+      header: "Unit today",
       accessorFn: (d) =>
-        d.assignedJeepneyId ? jeepneyById.get(d.assignedJeepneyId)?.plateNumber : '',
+        d.assignedJeepneyId ? jeepneyById.get(d.assignedJeepneyId)?.plateNumber : "",
       cell: ({ row: { original: d } }) => {
         const j = d.assignedJeepneyId ? jeepneyById.get(d.assignedJeepneyId) : undefined;
         return j ? (
           <div className="flex items-center gap-2.5">
             <UnitTile number={j.jeepneyNumber} size="sm" />
-            <span className="font-data text-ink text-[13px] font-semibold">{j.plateNumber}</span>
+            <span className="font-data text-[13px] font-semibold text-ink">{j.plateNumber}</span>
           </div>
         ) : (
           <span className="text-ink-muted">—</span>
@@ -127,8 +127,8 @@ export default function DriversPage() {
       },
     },
     {
-      id: 'signin',
-      header: 'Sign-in',
+      id: "signin",
+      header: "Sign-in",
       accessorFn: (d) => d.mustChangePassword,
       cell: ({ row: { original: d } }) =>
         d.mustChangePassword ? (
@@ -138,21 +138,21 @@ export default function DriversPage() {
         ),
     },
     {
-      id: 'created',
-      header: 'Added',
+      id: "created",
+      header: "Added",
       accessorFn: (d) => toDate(d.createdAt)?.getTime() ?? 0,
       cell: ({ row: { original: d } }) => {
         const date = toDate(d.createdAt);
         return (
-          <span className="text-ink-muted text-[13px]">
-            {date ? format(date, 'MMM d, yyyy') : '—'}
+          <span className="text-[13px] text-ink-muted">
+            {date ? format(date, "MMM d, yyyy") : "—"}
           </span>
         );
       },
     },
     {
-      id: 'status',
-      header: 'Status',
+      id: "status",
+      header: "Status",
       accessorFn: (d) => d.isActive,
       cell: ({ row: { original: d } }) =>
         d.isActive ? (
@@ -164,7 +164,7 @@ export default function DriversPage() {
         ),
     },
     {
-      id: 'edit',
+      id: "edit",
       header: () => <span className="sr-only">Edit</span>,
       enableSorting: false,
       cell: ({ row: { original: d } }) => (
@@ -191,7 +191,7 @@ export default function DriversPage() {
       <div className="space-y-5">
         <PageHeader
           title="Drivers"
-          description={`${counts.all} ${counts.all === 1 ? 'record' : 'records'} · ${counts.active} active, ${counts.inactive} inactive`}
+          description={`${counts.all} ${counts.all === 1 ? "record" : "records"} · ${counts.active} active, ${counts.inactive} inactive`}
           actions={
             <>
               <OrgPicker />
@@ -211,10 +211,10 @@ export default function DriversPage() {
           value={filter}
           onChange={setFilter}
           options={[
-            { value: 'all', label: 'All', count: counts.all },
-            { value: 'active', label: 'Active', count: counts.active },
-            { value: 'inactive', label: 'Inactive', count: counts.inactive },
-            { value: 'temp', label: 'Temporary password', count: counts.temp },
+            { value: "all", label: "All", count: counts.all },
+            { value: "active", label: "Active", count: counts.active },
+            { value: "inactive", label: "Inactive", count: counts.inactive },
+            { value: "temp", label: "Temporary password", count: counts.temp },
           ]}
         />
 
@@ -222,11 +222,11 @@ export default function DriversPage() {
           columns={columns}
           data={filtered}
           loading={!!orgId && isPending}
-          emptyMessage={q || filter !== 'all' ? 'No drivers match' : 'No drivers yet'}
+          emptyMessage={q || filter !== "all" ? "No drivers match" : "No drivers yet"}
           emptyHint={
-            q || filter !== 'all'
-              ? 'Try another name or filter.'
-              : 'Add a driver, then give them a unit on Assignments.'
+            q || filter !== "all"
+              ? "Try another name or filter."
+              : "Add a driver, then give them a unit on Assignments."
           }
           onRowClick={(d) => setEditUid(d.uid)}
           pageSize={20}
@@ -271,7 +271,7 @@ function DriverCreatePanel({
 }) {
   const createDriver = useCreateDriver();
   const [copied, setCopied] = useState(false);
-  const formId = 'driver-create-form';
+  const formId = "driver-create-form";
 
   const {
     register,
@@ -283,10 +283,10 @@ function DriverCreatePanel({
   } = useForm<DriverCreateFormData>({ resolver: zodResolver(driverCreateSchema) });
 
   useEffect(() => {
-    if (isOpen) reset({ firstName: '', lastName: '', email: '', password: generatePassword() });
+    if (isOpen) reset({ firstName: "", lastName: "", email: "", password: generatePassword() });
   }, [isOpen, reset]);
 
-  const password = watch('password') ?? '';
+  const password = watch("password") ?? "";
   const isSaving = isSubmitting || createDriver.isPending;
 
   const copyPassword = async () => {
@@ -295,7 +295,7 @@ function DriverCreatePanel({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Could not copy. Select the password and copy it yourself.');
+      toast.error("Could not copy. Select the password and copy it yourself.");
     }
   };
 
@@ -308,7 +308,7 @@ function DriverCreatePanel({
           onClose();
         },
         onError: (e) => toast.error(e.message),
-      }
+      },
     );
   });
 
@@ -346,7 +346,7 @@ function DriverCreatePanel({
             autoComplete="off"
             error={!!errors.firstName}
             hint={errors.firstName?.message}
-            {...register('firstName')}
+            {...register("firstName")}
           />
           <Input
             id="lastName"
@@ -354,7 +354,7 @@ function DriverCreatePanel({
             autoComplete="off"
             error={!!errors.lastName}
             hint={errors.lastName?.message}
-            {...register('lastName')}
+            {...register("lastName")}
           />
         </div>
         <Input
@@ -365,7 +365,7 @@ function DriverCreatePanel({
           placeholder="name@email.com"
           error={!!errors.email}
           hint={errors.email?.message ?? "This is what they type on the driver app's sign-in."}
-          {...register('email')}
+          {...register("email")}
         />
 
         <Field
@@ -380,23 +380,23 @@ function DriverCreatePanel({
                 id="password"
                 autoComplete="off"
                 spellCheck={false}
-                className="font-data border-line-strong bg-sunken text-ink focus:border-action focus:ring-action/15 rounded-input h-12 w-full border-[1.5px] pr-24 pl-4 text-[15px] focus:ring-[3px] focus:outline-none"
-                {...register('password')}
+                className="h-12 w-full rounded-input border-[1.5px] border-line-strong bg-sunken pr-24 pl-4 font-data text-[15px] text-ink focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
+                {...register("password")}
               />
               <button
                 type="button"
                 onClick={copyPassword}
-                className="text-action hover:bg-action-soft absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold"
+                className="absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-action hover:bg-action-soft"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied' : 'Copy'}
+                {copied ? "Copied" : "Copy"}
               </button>
             </div>
             <Button
               variant="outline"
               className="h-12"
               startIcon={<RefreshCw size={15} />}
-              onClick={() => setValue('password', generatePassword(), { shouldValidate: true })}
+              onClick={() => setValue("password", generatePassword(), { shouldValidate: true })}
             >
               Make a new one
             </Button>
@@ -422,7 +422,7 @@ function DriverEditPanel({
   const assign = useAssignJeepney();
   const unassign = useUnassignJeepney();
   const now = useNow(30_000);
-  const [unitId, setUnitId] = useState('');
+  const [unitId, setUnitId] = useState("");
   const [copied, setCopied] = useState(false);
 
   // Keep the last driver around while the panel animates closed.
@@ -432,7 +432,7 @@ function DriverEditPanel({
   }, [driver]);
 
   useEffect(() => {
-    setUnitId(driver?.assignedJeepneyId ?? '');
+    setUnitId(driver?.assignedJeepneyId ?? "");
   }, [driver?.uid, driver?.assignedJeepneyId]);
 
   const d = driver ?? shown;
@@ -442,15 +442,15 @@ function DriverEditPanel({
   const lastShared = toDate(d.lastLocationUpdate);
   const added = toDate(d.createdAt);
   const isSaving = assign.isPending || unassign.isPending;
-  const dirty = unitId !== (d.assignedJeepneyId ?? '');
+  const dirty = unitId !== (d.assignedJeepneyId ?? "");
 
   const unitOptions = [
-    { value: '', label: 'No unit' },
+    { value: "", label: "No unit" },
     ...[...jeepneys]
       .sort((a, b) => a.jeepneyNumber.localeCompare(b.jeepneyNumber, undefined, { numeric: true }))
       .map((j) => ({
         value: j.id,
-        label: `J${j.jeepneyNumber} · ${j.plateNumber}${j.assignedDriverId && j.assignedDriverId !== d.uid ? ' (has a driver)' : ''}`,
+        label: `J${j.jeepneyNumber} · ${j.plateNumber}${j.assignedDriverId && j.assignedDriverId !== d.uid ? " (has a driver)" : ""}`,
         disabled: !!j.assignedDriverId && j.assignedDriverId !== d.uid,
       })),
   ];
@@ -462,10 +462,10 @@ function DriverEditPanel({
       } else if (unitId) {
         await assign.mutateAsync({ driverUid: d.uid, jeepneyId: unitId });
       }
-      toast.success('Changes saved');
+      toast.success("Changes saved");
       onClose();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not save changes');
+      toast.error(e instanceof Error ? e.message : "Could not save changes");
     }
   };
 
@@ -475,7 +475,7 @@ function DriverEditPanel({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Could not copy the email');
+      toast.error("Could not copy the email");
     }
   };
 
@@ -487,11 +487,11 @@ function DriverEditPanel({
       title={fullName(d)}
       subtitle={[
         d.email,
-        d.isActive ? 'active' : 'inactive',
+        d.isActive ? "active" : "inactive",
         currentUnit ? `Unit J${currentUnit.jeepneyNumber}` : null,
       ]
         .filter(Boolean)
-        .join(' · ')}
+        .join(" · ")}
       footer={
         <>
           <Button variant="outline" onClick={onClose} disabled={isSaving}>
@@ -515,11 +515,11 @@ function DriverEditPanel({
         <div className="flex items-center gap-4">
           <Avatar name={fullName(d)} size="lg" />
           <div className="min-w-0">
-            <p className="text-ink text-[15px] font-bold">{fullName(d)}</p>
-            <p className="text-ink-muted text-[13px]">
+            <p className="text-[15px] font-bold text-ink">{fullName(d)}</p>
+            <p className="text-[13px] text-ink-muted">
               {lastShared
                 ? `Last shared location ${timeAgo(lastShared, now)} ago`
-                : 'Has not shared a location yet'}
+                : "Has not shared a location yet"}
             </p>
           </div>
         </div>
@@ -532,18 +532,18 @@ function DriverEditPanel({
                 type="button"
                 onClick={copyEmail}
                 aria-label="Copy email"
-                className="text-action hover:bg-action-soft flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-action hover:bg-action-soft"
               >
                 {copied ? <Check size={15} /> : <Copy size={15} />}
               </button>
             </span>
           </PanelValue>
-          <PanelValue label="Added">{added ? format(added, 'MMM d, yyyy') : '—'}</PanelValue>
+          <PanelValue label="Added">{added ? format(added, "MMM d, yyyy") : "—"}</PanelValue>
           <PanelValue label="Driver ID" mono>
             {d.uid.slice(0, 12)}
           </PanelValue>
           <PanelValue label="Sign-in">
-            {d.mustChangePassword ? 'Temporary password' : 'Own password'}
+            {d.mustChangePassword ? "Temporary password" : "Own password"}
           </PanelValue>
         </div>
 
@@ -552,8 +552,8 @@ function DriverEditPanel({
           htmlFor="driver-unit"
           hint={
             d.isActive
-              ? 'Saving moves them onto this unit right away.'
-              : 'Reactivate them to give them a unit.'
+              ? "Saving moves them onto this unit right away."
+              : "Reactivate them to give them a unit."
           }
         >
           <Select
@@ -570,7 +570,7 @@ function DriverEditPanel({
             title="Leaving the cooperative"
             description="Ends their sign-in and frees their unit. The record stays."
             action={
-              <Button variant="outline" size="sm" onClick={() => onAction('deactivate', d)}>
+              <Button variant="outline" size="sm" onClick={() => onAction("deactivate", d)}>
                 Deactivate this driver
               </Button>
             }
@@ -580,7 +580,7 @@ function DriverEditPanel({
             title="Back on the roster"
             description="Lets them sign in to the driver app again."
             action={
-              <Button variant="outline" size="sm" onClick={() => onAction('reactivate', d)}>
+              <Button variant="outline" size="sm" onClick={() => onAction("reactivate", d)}>
                 Reactivate
               </Button>
             }
@@ -592,7 +592,7 @@ function DriverEditPanel({
           title="Delete the account"
           description="Removes their sign-in and record for good."
           action={
-            <Button variant="danger-outline" size="sm" onClick={() => onAction('delete', d)}>
+            <Button variant="danger-outline" size="sm" onClick={() => onAction("delete", d)}>
               Delete driver
             </Button>
           }
@@ -631,7 +631,7 @@ function DriverConfirm({
   const unit = driver.assignedJeepneyId ? jeepneyById.get(driver.assignedJeepneyId) : undefined;
   const handlers = { onError: (e: Error) => toast.error(e.message) };
 
-  if (kind === 'deactivate') {
+  if (kind === "deactivate") {
     return (
       <ConfirmDialog
         isOpen={!!confirm}
@@ -658,15 +658,15 @@ function DriverConfirm({
       >
         <ConfirmFacts
           items={[
-            { label: 'Kept', text: 'The record, and their history in the audit logs.' },
-            { label: 'Removed', text: "Their current sign-in and today's unit." },
+            { label: "Kept", text: "The record, and their history in the audit logs." },
+            { label: "Removed", text: "Their current sign-in and today's unit." },
           ]}
         />
       </ConfirmDialog>
     );
   }
 
-  if (kind === 'reactivate') {
+  if (kind === "reactivate") {
     return (
       <ConfirmDialog
         isOpen={!!confirm}
@@ -716,7 +716,7 @@ function DriverConfirm({
         <ConfirmFacts
           items={[
             {
-              label: 'Also',
+              label: "Also",
               text: `${unit.plateNumber} will have no driver until you assign someone.`,
             },
           ]}

@@ -12,16 +12,19 @@ export function About() {
             A Master in Information Technology project at Mariano Marcos State University
           </h2>
           <p className="text-[17px] leading-[1.6] text-pretty text-muted">
-            JEEP-IN is being built at the College of Computing and Information Sciences in the City of Batac. It started
-            from the question every commuter asks at the roadside: <strong className="text-ink">“Ayanno tay jeep’en?”</strong>{" "}
-            Where’s the jeep already?
+            JEEP-IN is being built at the College of Computing and Information Sciences in the City
+            of Batac. It started from the question every commuter asks at the roadside:{" "}
+            <strong className="text-ink">“Ayanno tay jeep’en?”</strong> Where’s the jeep already?
           </p>
           <p className="text-[15px] font-semibold text-ink">Built by Bryan Jesus Mangapit</p>
         </div>
         <div className="flex flex-col gap-3.5 rounded-[28px] bg-ink p-7 transition-shadow duration-200 ease-out hover:shadow-[0_18px_40px_rgba(11,27,51,.3)]">
-          <p className="text-xs font-bold tracking-[.1em] text-accent uppercase">For panels, LGUs and partners</p>
+          <p className="text-xs font-bold tracking-[.1em] text-accent uppercase">
+            For panels, LGUs and partners
+          </p>
           <p className="text-[22px] leading-[1.3] font-extrabold text-pretty text-white">
-            Want JEEP-IN on your route? We’ll walk you through the commuter, driver and manager apps.
+            Want JEEP-IN on your route? We’ll walk you through the commuter, driver and manager
+            apps.
           </p>
           <div className="mt-1.5 flex flex-wrap gap-2.5">
             <a

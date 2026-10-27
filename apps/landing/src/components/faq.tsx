@@ -57,7 +57,9 @@ export function Faq() {
                     onClick={() => setOpen(isOpen ? -1 : i)}
                     className="flex min-h-16 w-full cursor-pointer items-center gap-4 px-[22px] py-[18px] text-left transition-colors hover:bg-sky-50"
                   >
-                    <span className="flex-1 text-[17px] leading-[1.35] font-extrabold text-ink">{faq.q}</span>
+                    <span className="flex-1 text-[17px] leading-[1.35] font-extrabold text-ink">
+                      {faq.q}
+                    </span>
                     <span
                       aria-hidden
                       className={`flex size-8 flex-none items-center justify-center rounded-full text-xl leading-none font-bold transition-[transform,background-color,color] duration-[260ms] ease-out ${

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { format } from 'date-fns';
-import toast from 'react-hot-toast';
-import { auth } from '@/lib';
-import { useAuthStore, useSidebarStore } from '@/store';
-import { useOrganization } from '@/hooks';
-import { Button, PanelValue, SidePanel } from '@/components/ui';
-import { Avatar } from '@/components/common';
-import { useSignOut } from '@/components/auth';
+import { useState } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { format } from "date-fns";
+import toast from "react-hot-toast";
+import { auth } from "@/lib";
+import { useAuthStore, useSidebarStore } from "@/store";
+import { useOrganization } from "@/hooks";
+import { Button, PanelValue, SidePanel } from "@/components/ui";
+import { Avatar } from "@/components/common";
+import { useSignOut } from "@/components/auth";
 
 /** My profile — opens over whatever page you were on; closing drops you back there. */
 export function ProfilePanel() {
@@ -18,14 +18,14 @@ export function ProfilePanel() {
   const signOut = useSignOut();
   const [sending, setSending] = useState(false);
 
-  const isSuperAdmin = userProfile?.role === 'super_admin';
+  const isSuperAdmin = userProfile?.role === "super_admin";
   const { data: org } = useOrganization(userProfile?.organizationId || undefined);
 
-  const email = user?.email ?? userProfile?.email ?? '';
+  const email = user?.email ?? userProfile?.email ?? "";
   const displayName = userProfile?.firstName
     ? `${userProfile.firstName} ${userProfile.lastName}`
-    : (email.split('@')[0] ?? 'Manager');
-  const roleLabel = isSuperAdmin ? 'Super admin' : 'Admin';
+    : (email.split("@")[0] ?? "Manager");
+  const roleLabel = isSuperAdmin ? "Super admin" : "Admin";
   const signedInAt = user?.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime) : null;
 
   const sendReset = async () => {
@@ -35,7 +35,7 @@ export function ProfilePanel() {
       await sendPasswordResetEmail(auth, email);
       toast.success(`Reset link sent to ${email}`);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not send the reset link');
+      toast.error(e instanceof Error ? e.message : "Could not send the reset link");
     } finally {
       setSending(false);
     }
@@ -46,7 +46,7 @@ export function ProfilePanel() {
       isOpen={isProfileOpen}
       onClose={closeProfile}
       title="My profile"
-      subtitle={`${roleLabel}${org ? ` · ${org.name}` : ''}`}
+      subtitle={`${roleLabel}${org ? ` · ${org.name}` : ""}`}
       footer={
         <Button variant="outline" onClick={closeProfile}>
           Close
@@ -57,28 +57,28 @@ export function ProfilePanel() {
         <div className="flex items-center gap-4">
           <Avatar name={displayName} size="lg" tone="solid" />
           <div className="min-w-0">
-            <p className="text-ink truncate text-[17px] font-bold">{displayName}</p>
-            <p className="text-ink-muted truncate text-[13px]">{email}</p>
+            <p className="truncate text-[17px] font-bold text-ink">{displayName}</p>
+            <p className="truncate text-[13px] text-ink-muted">{email}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <PanelValue label="First name">{userProfile?.firstName || '—'}</PanelValue>
-          <PanelValue label="Last name">{userProfile?.lastName || '—'}</PanelValue>
-          <PanelValue label="Email">{email || '—'}</PanelValue>
+          <PanelValue label="First name">{userProfile?.firstName || "—"}</PanelValue>
+          <PanelValue label="Last name">{userProfile?.lastName || "—"}</PanelValue>
+          <PanelValue label="Email">{email || "—"}</PanelValue>
           <PanelValue label="Organization">
-            {isSuperAdmin ? 'All organizations' : (org?.name ?? userProfile?.organizationId ?? '—')}
+            {isSuperAdmin ? "All organizations" : (org?.name ?? userProfile?.organizationId ?? "—")}
           </PanelValue>
         </div>
-        <p className="text-ink-muted text-[13px]">
+        <p className="text-[13px] text-ink-muted">
           Name and organization are managed by a super admin.
         </p>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="border-line rounded-tile flex flex-col gap-3 border-[1.5px] p-4">
+          <div className="flex flex-col gap-3 rounded-tile border-[1.5px] border-line p-4">
             <div>
-              <p className="text-ink text-[14px] font-bold">Password</p>
-              <p className="text-ink-muted mt-0.5 text-[13px]">
+              <p className="text-[14px] font-bold text-ink">Password</p>
+              <p className="mt-0.5 text-[13px] text-ink-muted">
                 We email you a link to set a new one.
               </p>
             </div>
@@ -93,13 +93,13 @@ export function ProfilePanel() {
               Email me a reset link
             </Button>
           </div>
-          <div className="border-line rounded-tile flex flex-col gap-3 border-[1.5px] p-4">
+          <div className="flex flex-col gap-3 rounded-tile border-[1.5px] border-line p-4">
             <div>
-              <p className="text-ink text-[14px] font-bold">This computer</p>
-              <p className="text-ink-muted mt-0.5 text-[13px]">
+              <p className="text-[14px] font-bold text-ink">This computer</p>
+              <p className="mt-0.5 text-[13px] text-ink-muted">
                 {signedInAt
-                  ? `Signed in since ${format(signedInAt, 'MMM d · h:mm a')}`
-                  : 'Signed in'}
+                  ? `Signed in since ${format(signedInAt, "MMM d · h:mm a")}`
+                  : "Signed in"}
               </p>
             </div>
             <Button variant="danger-outline" size="sm" onClick={signOut} className="mt-auto">

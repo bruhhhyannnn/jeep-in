@@ -1,6 +1,6 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -279,7 +279,7 @@ html {
 }
 
 body {
-  @apply bg-page text-body text-ink font-sans antialiased;
+  @apply bg-page font-sans text-body text-ink antialiased;
 }
 
 :focus-visible {
@@ -333,19 +333,19 @@ textarea:focus-visible {
   font-family: var(--font-sans);
 }
 
-input[type='time']::-webkit-calendar-picker-indicator,
-input[type='date']::-webkit-calendar-picker-indicator {
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0.55;
   cursor: pointer;
 }
 
-input[type='time']::-webkit-calendar-picker-indicator:hover,
-input[type='date']::-webkit-calendar-picker-indicator:hover {
+input[type="time"]::-webkit-calendar-picker-indicator:hover,
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
 
-.dark input[type='time']::-webkit-calendar-picker-indicator,
-.dark input[type='date']::-webkit-calendar-picker-indicator {
+.dark input[type="time"]::-webkit-calendar-picker-indicator,
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
 

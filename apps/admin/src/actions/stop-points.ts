@@ -1,18 +1,18 @@
-'use server';
+"use server";
 
-import { Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { adminDb } from '@/lib/firebase-admin';
-import { serializeDoc } from '@/lib';
-import type { StopPoint } from '@/types';
-import type { StopPointFormData } from '@/lib';
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
+import { serializeDoc } from "@/lib";
+import type { StopPoint } from "@/types";
+import type { StopPointFormData } from "@/lib";
 
-const COL = 'stop_points';
+const COL = "stop_points";
 
 export async function getStopPoints(routeId: string): Promise<StopPoint[]> {
   const snap = await adminDb
     .collection(COL)
-    .where('routeId', '==', routeId)
-    .orderBy('name', 'asc')
+    .where("routeId", "==", routeId)
+    .orderBy("name", "asc")
     .get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as StopPoint), id: d.id }));
 }

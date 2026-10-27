@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Button,
   DataTable,
@@ -10,46 +10,46 @@ import {
   Pagination,
   StatusChip,
   type ChipTone,
-} from '@/components/ui';
-import { Avatar, FilterChips, PageHeader, SearchField } from '@/components/common';
-import { useAuthStore } from '@/store';
-import { useAuditLogs } from '@/hooks';
-import type { AuditLogFilters } from '@/actions';
-import { toDate } from '@/lib';
-import type { AuditLog } from '@/types';
+} from "@/components/ui";
+import { Avatar, FilterChips, PageHeader, SearchField } from "@/components/common";
+import { useAuthStore } from "@/store";
+import { useAuditLogs } from "@/hooks";
+import type { AuditLogFilters } from "@/actions";
+import { toDate } from "@/lib";
+import type { AuditLog } from "@/types";
 
 const PER_PAGE = 20;
 
-type RoleFilter = '' | 'driver' | 'admin';
+type RoleFilter = "" | "driver" | "admin";
 
 const ACTION_TONE: Record<string, ChipTone> = {
-  CREATE: 'live',
-  UPDATE: 'info',
-  DELETE: 'error',
-  ASSIGN: 'info',
-  UNASSIGN: 'pending',
-  LOGIN: 'neutral',
-  GPS: 'pending',
+  CREATE: "live",
+  UPDATE: "info",
+  DELETE: "error",
+  ASSIGN: "info",
+  UNASSIGN: "pending",
+  LOGIN: "neutral",
+  GPS: "pending",
 };
 
 /** "GPS_TOGGLE_ON" → "Gps toggle on" */
 function readableAction(action: string) {
-  const s = action.toLowerCase().replace(/_/g, ' ');
+  const s = action.toLowerCase().replace(/_/g, " ");
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 const dateInputClasses =
-  'font-data border-line-strong bg-card text-ink focus:border-action focus:ring-action/15 h-10 rounded-full border-[1.5px] px-4 text-[13px] shadow-sm focus:ring-[3px] focus:outline-none';
+  "font-data border-line-strong bg-card text-ink focus:border-action focus:ring-action/15 h-10 rounded-full border-[1.5px] px-4 text-[13px] shadow-sm focus:ring-[3px] focus:outline-none";
 
 export default function AuditLogsPage() {
   const { userProfile } = useAuthStore();
-  const isSuperAdmin = userProfile?.role === 'super_admin';
+  const isSuperAdmin = userProfile?.role === "super_admin";
 
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [actorRole, setActorRole] = useState<RoleFilter>('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [actorRole, setActorRole] = useState<RoleFilter>("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function AuditLogsPage() {
   }, [debouncedSearch, actorRole, dateFrom, dateTo]);
 
   const filters: AuditLogFilters = {
-    organizationId: isSuperAdmin ? undefined : (userProfile?.organizationId ?? ''),
+    organizationId: isSuperAdmin ? undefined : (userProfile?.organizationId ?? ""),
     actorRole: actorRole || undefined,
     search: debouncedSearch || undefined,
     dateFrom: dateFrom || undefined,
@@ -77,41 +77,41 @@ export default function AuditLogsPage() {
 
   const columns: ColumnDef<AuditLog, unknown>[] = [
     {
-      id: 'actor',
-      header: 'Who',
+      id: "actor",
+      header: "Who",
       accessorFn: (log) => log.actorName,
       cell: ({ row: { original: log } }) => (
         <div className="flex items-center gap-2.5">
-          <Avatar name={log.actorName ?? '?'} />
+          <Avatar name={log.actorName ?? "?"} />
           <div className="min-w-0">
-            <p className="text-ink truncate font-semibold">{log.actorName}</p>
-            <p className="text-ink-muted text-[12px] capitalize">
-              {log.actorRole?.replace('_', ' ')}
+            <p className="truncate font-semibold text-ink">{log.actorName}</p>
+            <p className="text-[12px] text-ink-muted capitalize">
+              {log.actorRole?.replace("_", " ")}
             </p>
           </div>
         </div>
       ),
     },
     {
-      id: 'action',
-      header: 'What happened',
+      id: "action",
+      header: "What happened",
       accessorFn: (log) => log.action,
       cell: ({ row: { original: log } }) => (
-        <StatusChip tone={ACTION_TONE[log.action.split('_')[0]] ?? 'neutral'}>
+        <StatusChip tone={ACTION_TONE[log.action.split("_")[0]] ?? "neutral"}>
           {readableAction(log.action)}
         </StatusChip>
       ),
     },
     {
-      id: 'target',
-      header: 'To',
-      accessorFn: (log) => log.targetName ?? '',
+      id: "target",
+      header: "To",
+      accessorFn: (log) => log.targetName ?? "",
       cell: ({ row: { original: log } }) =>
         log.targetName ? (
           <div>
             <p className="text-ink">{log.targetName}</p>
-            <p className="text-ink-muted text-[12px] capitalize">
-              {log.targetType?.replace('_', ' ')}
+            <p className="text-[12px] text-ink-muted capitalize">
+              {log.targetType?.replace("_", " ")}
             </p>
           </div>
         ) : (
@@ -119,24 +119,24 @@ export default function AuditLogsPage() {
         ),
     },
     {
-      id: 'details',
-      header: 'Details',
-      accessorFn: (log) => log.details ?? '',
+      id: "details",
+      header: "Details",
+      accessorFn: (log) => log.details ?? "",
       cell: ({ row: { original: log } }) => (
-        <span className="text-ink-muted line-clamp-2 max-w-[320px] text-[13px]">
-          {log.details ?? '—'}
+        <span className="line-clamp-2 max-w-[320px] text-[13px] text-ink-muted">
+          {log.details ?? "—"}
         </span>
       ),
     },
     {
-      id: 'date',
-      header: 'When',
+      id: "date",
+      header: "When",
       accessorFn: (log) => toDate(log.createdAt)?.getTime() ?? 0,
       cell: ({ row: { original: log } }) => {
         const date = toDate(log.createdAt);
         return (
-          <time className="font-data text-ink-muted text-[12px] whitespace-nowrap">
-            {date ? format(date, 'MMM d, yyyy · h:mm a') : '—'}
+          <time className="font-data text-[12px] whitespace-nowrap text-ink-muted">
+            {date ? format(date, "MMM d, yyyy · h:mm a") : "—"}
           </time>
         );
       },
@@ -151,8 +151,8 @@ export default function AuditLogsPage() {
         title="Audit logs"
         description={
           isPending
-            ? 'Who did what, and when.'
-            : `${total.toLocaleString()} ${total === 1 ? 'entry' : 'entries'}${hasFilters ? ' match your filters' : ''} · who did what, and when`
+            ? "Who did what, and when."
+            : `${total.toLocaleString()} ${total === 1 ? "entry" : "entries"}${hasFilters ? " match your filters" : ""} · who did what, and when`
         }
         actions={
           <SearchField
@@ -169,9 +169,9 @@ export default function AuditLogsPage() {
           value={actorRole}
           onChange={setActorRole}
           options={[
-            { value: '', label: 'Everyone' },
-            { value: 'driver', label: 'Drivers' },
-            { value: 'admin', label: 'Admins' },
+            { value: "", label: "Everyone" },
+            { value: "driver", label: "Drivers" },
+            { value: "admin", label: "Admins" },
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
@@ -182,7 +182,7 @@ export default function AuditLogsPage() {
             onChange={(e) => setDateFrom(e.target.value)}
             className={dateInputClasses}
           />
-          <span className="text-ink-muted text-[13px]">to</span>
+          <span className="text-[13px] text-ink-muted">to</span>
           <input
             type="date"
             aria-label="To date"
@@ -195,10 +195,10 @@ export default function AuditLogsPage() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                setActorRole('');
-                setDateFrom('');
-                setDateTo('');
-                setSearch('');
+                setActorRole("");
+                setDateFrom("");
+                setDateTo("");
+                setSearch("");
               }}
             >
               Clear filters
@@ -211,14 +211,14 @@ export default function AuditLogsPage() {
         columns={columns}
         data={logs}
         loading={isPending || isFetching}
-        emptyMessage={hasFilters ? 'No entries match' : 'No activity yet'}
-        emptyHint={hasFilters ? 'Try a wider date range or clear the filters.' : undefined}
+        emptyMessage={hasFilters ? "No entries match" : "No activity yet"}
+        emptyHint={hasFilters ? "Try a wider date range or clear the filters." : undefined}
       />
 
       {totalPages > 1 && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-ink-muted text-[13px]">
-            Page <span className="font-data text-ink">{page}</span> of{' '}
+          <p className="text-[13px] text-ink-muted">
+            Page <span className="font-data text-ink">{page}</span> of{" "}
             <span className="font-data text-ink">{totalPages}</span>
           </p>
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

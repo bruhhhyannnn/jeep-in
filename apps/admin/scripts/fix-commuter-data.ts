@@ -15,23 +15,23 @@
  * Back up first: npx tsx scripts/backup-collections.ts
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { config } from 'dotenv';
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { LAOAG_PAOAY, PAOAY_LAOAG, type StopSeed } from './seed-stop-points';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { config } from "dotenv";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { LAOAG_PAOAY, PAOAY_LAOAG, type StopSeed } from "./seed-stop-points";
 
 // ─── CONFIGURE BEFORE RUNNING ───────────────────────────────────────────────
-const ROUTE_ID = 'q2JCd9VCVuwhlFWfLais'; // Laoag–Batac–Paoay
-const SERVICE_ACCOUNT_PATH = './serviceAccountKey.json';
+const ROUTE_ID = "q2JCd9VCVuwhlFWfLais"; // Laoag–Batac–Paoay
+const SERVICE_ACCOUNT_PATH = "./serviceAccountKey.json";
 // ─────────────────────────────────────────────────────────────────────────────
 
-const APPLY = process.argv.includes('--apply');
-config({ path: join(__dirname, '..', '.env.local'), quiet: true });
+const APPLY = process.argv.includes("--apply");
+config({ path: join(__dirname, "..", ".env.local"), quiet: true });
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN ?? process.env.MAPBOX_PUBLIC_KEY;
-const BACKUP_DIR = join(__dirname, 'backups');
-const PLAN_FILE = join(BACKUP_DIR, 'fix-plan.json');
+const BACKUP_DIR = join(__dirname, "backups");
+const PLAN_FILE = join(BACKUP_DIR, "fix-plan.json");
 
 if (!getApps().length) {
   const serviceAccount = require(SERVICE_ACCOUNT_PATH);
@@ -51,7 +51,7 @@ type Change = {
   touch: boolean;
 };
 
-const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ');
+const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, " ");
 
 /** Straight-line distance in metres. */
 function metres(aLat: number, aLng: number, bLat: number, bLng: number) {
@@ -84,7 +84,7 @@ function matchStops(seeds: StopSeed[], live: LiveStop[]) {
       (s) =>
         !used.has(s.id) &&
         s.direction === seed.routeDirection &&
-        normalize(s.name) === normalize(seed.name)
+        normalize(s.name) === normalize(seed.name),
     );
     if (!candidates.length) {
       missing.push(seed);
@@ -105,7 +105,7 @@ async function checkOnRoad(direction: string, stops: LiveStop[]) {
     console.log(`  ⚠️  MAPBOX_TOKEN not set — skipped the road check for ${direction}`);
     return;
   }
-  const coords = stops.map((s) => `${s.lng},${s.lat}`).join(';');
+  const coords = stops.map((s) => `${s.lng},${s.lat}`).join(";");
   const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?overview=simplified&geometries=polyline&access_token=${MAPBOX_TOKEN}`;
   const res = await fetch(url);
   const json = (await res.json()) as {
@@ -124,9 +124,9 @@ async function checkOnRoad(direction: string, stops: LiveStop[]) {
     const b = stops[i + 1];
     const straight = metres(a.lat, a.lng, b.lat, b.lng);
     const ratio = straight > 50 ? leg.distance / straight : 1;
-    const flag = ratio > 2.5 && leg.distance > 500 ? '  ⚠️ long way round' : '';
+    const flag = ratio > 2.5 && leg.distance > 500 ? "  ⚠️ long way round" : "";
     console.log(
-      `    ${String(i + 1).padStart(2)} → ${String(i + 2).padEnd(2)} ${(leg.distance / 1000).toFixed(2).padStart(6)} km  ${a.name} → ${b.name}${flag}`
+      `    ${String(i + 1).padStart(2)} → ${String(i + 2).padEnd(2)} ${(leg.distance / 1000).toFixed(2).padStart(6)} km  ${a.name} → ${b.name}${flag}`,
     );
   });
 
@@ -134,9 +134,9 @@ async function checkOnRoad(direction: string, stops: LiveStop[]) {
   const pins = stops
     .map(
       (s, i) =>
-        `pin-s-${i + 1}+${i === 0 ? '12b886' : '0b1b33'}(${s.lng.toFixed(5)},${s.lat.toFixed(5)})`
+        `pin-s-${i + 1}+${i === 0 ? "12b886" : "0b1b33"}(${s.lng.toFixed(5)},${s.lat.toFixed(5)})`,
     )
-    .join(',');
+    .join(",");
   const overlay = `path-4+1670e0-0.85(${encodeURIComponent(route.geometry)}),${pins}`;
   const imageUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${overlay}/auto/700x1000@2x?padding=50&access_token=${MAPBOX_TOKEN}`;
   const image = await fetch(imageUrl);
@@ -151,11 +151,11 @@ async function checkOnRoad(direction: string, stops: LiveStop[]) {
 
 async function plan(): Promise<Change[]> {
   const [routesSnap, stopsSnap, jeepsSnap, orgsSnap, locationsSnap] = await Promise.all([
-    db.collection('routes').get(),
-    db.collection('stop_points').where('routeId', '==', ROUTE_ID).get(),
-    db.collection('jeepneys').get(),
-    db.collection('organizations').get(),
-    db.collection('driver_locations').get(),
+    db.collection("routes").get(),
+    db.collection("stop_points").where("routeId", "==", ROUTE_ID).get(),
+    db.collection("jeepneys").get(),
+    db.collection("organizations").get(),
+    db.collection("driver_locations").get(),
   ]);
   const changes: Change[] = [];
 
@@ -164,8 +164,8 @@ async function plan(): Promise<Change[]> {
     const s = d.data();
     return {
       id: d.id,
-      name: String(s.name ?? ''),
-      direction: String(s.routeDirection ?? s.directionId ?? ''),
+      name: String(s.name ?? ""),
+      direction: String(s.routeDirection ?? s.directionId ?? ""),
       lat: Number(s.latitude ?? s.lat),
       lng: Number(s.longitude ?? s.long ?? s.lng),
       order: s.order,
@@ -178,14 +178,14 @@ async function plan(): Promise<Change[]> {
     const { matched, missing, used } = matchStops(seeds, live);
     used.forEach((id) => usedIds.add(id));
     console.log(
-      `\n  ${direction}: ${matched.length} matched, ${missing.length} seed stops not found`
+      `\n  ${direction}: ${matched.length} matched, ${missing.length} seed stops not found`,
     );
     for (const { seed, stop, offsetM } of matched.sort((a, b) => a.seed.order - b.seed.order)) {
-      const moved = offsetM > 100 ? `  ⚠️ ${offsetM} m from the seed position` : '';
+      const moved = offsetM > 100 ? `  ⚠️ ${offsetM} m from the seed position` : "";
       console.log(`    ${String(seed.order).padStart(2)}. ${stop.name}${moved}`);
       if (stop.order !== seed.order) {
         changes.push({
-          collection: 'stop_points',
+          collection: "stop_points",
           id: stop.id,
           label: `${direction} #${seed.order} ${stop.name}`,
           before: { order: stop.order ?? null },
@@ -197,25 +197,25 @@ async function plan(): Promise<Change[]> {
     missing.forEach((s) => console.log(`    ❓ not in Firestore: #${s.order} ${s.name}`));
     await checkOnRoad(
       direction,
-      matched.sort((a, b) => a.seed.order - b.seed.order).map((m) => m.stop)
+      matched.sort((a, b) => a.seed.order - b.seed.order).map((m) => m.stop),
     );
   }
   const extra = live.filter((s) => !usedIds.has(s.id));
   extra.forEach((s) =>
     console.log(
-      `  ❓ in Firestore but not in the seed lists: [${s.direction}] ${s.name} — left as is`
-    )
+      `  ❓ in Firestore but not in the seed lists: [${s.direction}] ${s.name} — left as is`,
+    ),
   );
 
   // 2. The "test" route.
   const routeIds = new Set(routesSnap.docs.map((d) => d.id));
-  console.log('\n2. Routes');
+  console.log("\n2. Routes");
   for (const d of routesSnap.docs) {
     const r = d.data();
-    if (String(r.name).trim().toLowerCase() === 'test' && r.isActive !== false) {
+    if (String(r.name).trim().toLowerCase() === "test" && r.isActive !== false) {
       console.log(`  ${r.name} (${d.id}): isActive true → false`);
       changes.push({
-        collection: 'routes',
+        collection: "routes",
         id: d.id,
         label: `route "${r.name}"`,
         before: { isActive: r.isActive ?? true },
@@ -227,19 +227,19 @@ async function plan(): Promise<Change[]> {
 
   // 3. Jeepneys pointing at a deleted route.
   const orgRoute = new Map(
-    orgsSnap.docs.map((d) => [d.id, d.data().routeId as string | undefined])
+    orgsSnap.docs.map((d) => [d.id, d.data().routeId as string | undefined]),
   );
-  console.log('\n3. Jeepneys');
+  console.log("\n3. Jeepneys");
   for (const d of jeepsSnap.docs) {
     const j = d.data();
     if (routeIds.has(j.routeId)) continue;
     const fix = orgRoute.get(j.organizationId);
     if (fix && routeIds.has(fix)) {
       console.log(
-        `  ${j.plateNumber}: routeId ${j.routeId} (deleted) → ${fix} (organization ${j.organizationId})`
+        `  ${j.plateNumber}: routeId ${j.routeId} (deleted) → ${fix} (organization ${j.organizationId})`,
       );
       changes.push({
-        collection: 'jeepneys',
+        collection: "jeepneys",
         id: d.id,
         label: `jeepney ${j.plateNumber}`,
         before: { routeId: j.routeId ?? null },
@@ -248,19 +248,19 @@ async function plan(): Promise<Change[]> {
       });
     } else {
       console.log(
-        `  ${j.plateNumber}: routeId ${j.routeId} (deleted), organization ${j.organizationId} has no route — left as is`
+        `  ${j.plateNumber}: routeId ${j.routeId} (deleted), organization ${j.organizationId} has no route — left as is`,
       );
     }
   }
 
   // 4. Sharing stuck on.
-  console.log('\n4. Driver locations');
+  console.log("\n4. Driver locations");
   for (const d of locationsSnap.docs) {
     const l = d.data();
     if (l.isSharing === true && l.updatedAt == null) {
       console.log(`  ${d.id}: isSharing true with no updatedAt → false`);
       changes.push({
-        collection: 'driver_locations',
+        collection: "driver_locations",
         id: d.id,
         label: `driver location ${d.id.slice(0, 6)}…`,
         before: { isSharing: true },
@@ -277,11 +277,11 @@ async function plan(): Promise<Change[]> {
 async function apply() {
   if (!existsSync(PLAN_FILE)) {
     console.error(
-      '❌ No reviewed plan. Run the dry run first: npx tsx scripts/fix-commuter-data.ts'
+      "❌ No reviewed plan. Run the dry run first: npx tsx scripts/fix-commuter-data.ts",
     );
     process.exit(1);
   }
-  const changes = JSON.parse(readFileSync(PLAN_FILE, 'utf8')) as Change[];
+  const changes = JSON.parse(readFileSync(PLAN_FILE, "utf8")) as Change[];
   const batch = db.batch();
   for (const c of changes) {
     const ref = db.collection(c.collection).doc(c.id);
@@ -307,12 +307,12 @@ async function main() {
   }, {});
   console.log(`\n📝 Dry run: ${changes.length} changes planned ${JSON.stringify(counts)}`);
   console.log(`   Plan saved to ${PLAN_FILE}. Nothing was written.`);
-  console.log('   Apply it with: npx tsx scripts/fix-commuter-data.ts --apply\n');
+  console.log("   Apply it with: npx tsx scripts/fix-commuter-data.ts --apply\n");
 }
 
 main()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error('❌ Fix failed:', err);
+    console.error("❌ Fix failed:", err);
     process.exit(1);
   });

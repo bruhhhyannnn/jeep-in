@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { User } from 'firebase/auth';
-import type { AdminProfile, UserRole } from '@/types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { User } from "firebase/auth";
+import type { AdminProfile, UserRole } from "@/types";
 
 interface AuthUserProfile extends AdminProfile {
   role: UserRole;
@@ -41,9 +41,9 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'jeep-in-auth',
+      name: "jeep-in-auth",
       // Only persist the profile — never persist the full User object (contains tokens)
       partialize: (state) => ({ userProfile: state.userProfile }),
-    }
-  )
+    },
+  ),
 );

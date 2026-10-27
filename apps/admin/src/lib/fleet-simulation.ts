@@ -222,15 +222,15 @@ export function describeBot(bot: Bot, paths: RoadPath[], now: number) {
   const path = paths[bot.dir];
   const state =
     now < bot.offlineUntil
-      ? 'no signal'
+      ? "no signal"
       : now < bot.pausedUntil
-        ? 'stopped'
+        ? "stopped"
         : `${Math.round(bot.speed * 3.6)} km/h`;
   return `S0${bot.n} ${path.directionId} ${(bot.at / 1000).toFixed(1)}/${(path.length / 1000).toFixed(1)} km ${state}`;
 }
 
 /** The road request the commuter apps make (src/api/directions.ts), so bots stay on their line. */
 export function directionsUrl(stops: { lng: number; lat: number }[], token: string) {
-  const coords = stops.map((s) => `${s.lng},${s.lat}`).join(';');
+  const coords = stops.map((s) => `${s.lng},${s.lat}`).join(";");
   return `https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?alternatives=false&geometries=geojson&overview=full&access_token=${token}`;
 }

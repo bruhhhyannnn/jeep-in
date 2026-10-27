@@ -1,25 +1,25 @@
-import type { Metadata } from 'next';
-import { Figtree, Spline_Sans_Mono } from 'next/font/google';
-import './globals.css';
-import { Providers } from '@/components/providers';
+import type { Metadata } from "next";
+import { Figtree, Spline_Sans_Mono } from "next/font/google";
+import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const figtree = Figtree({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  style: ['normal', 'italic'],
-  variable: '--font-figtree',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-figtree",
 });
 
 const splineMono = Spline_Sans_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-spline-mono',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-spline-mono",
 });
 
 export const metadata: Metadata = {
-  title: 'JEEP-IN',
-  description: 'Admin dashboard for the JEEP-IN Modern Jeepney Tracking System',
-  icons: { icon: '/jeep-in-favicon.png' },
+  title: "JEEP-IN",
+  description: "Admin dashboard for the JEEP-IN Modern Jeepney Tracking System",
+  icons: { icon: "/jeep-in-favicon.png" },
 };
 
 // Applies the saved Appearance (light · dark · match computer) before first paint.

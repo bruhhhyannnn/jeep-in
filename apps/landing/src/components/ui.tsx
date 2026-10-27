@@ -18,7 +18,13 @@ export function Container({
   );
 }
 
-export function Eyebrow({ tone = "primary", children }: { tone?: "primary" | "accent"; children: ReactNode }) {
+export function Eyebrow({
+  tone = "primary",
+  children,
+}: {
+  tone?: "primary" | "accent";
+  children: ReactNode;
+}) {
   return (
     <p
       className={`text-[13px] font-bold tracking-[.1em] uppercase ${tone === "accent" ? "text-accent" : "text-primary"}`}
@@ -28,7 +34,13 @@ export function Eyebrow({ tone = "primary", children }: { tone?: "primary" | "ac
   );
 }
 
-export function SectionTitle({ className = "text-ink", children }: { className?: string; children: ReactNode }) {
+export function SectionTitle({
+  className = "text-ink",
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <h2
       className={`text-[clamp(30px,3.8vw,46px)] leading-[1.08] font-black tracking-[-.03em] text-balance ${className}`}

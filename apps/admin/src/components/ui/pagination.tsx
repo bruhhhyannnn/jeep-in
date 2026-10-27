@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib';
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib";
 
 interface PaginationProps {
   page: number;
@@ -11,7 +11,7 @@ interface PaginationProps {
 }
 
 const stepClasses =
-  'border-line-strong bg-card text-ink-muted hover:bg-sunken hover:text-ink flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-colors disabled:cursor-not-allowed disabled:opacity-40';
+  "border-line-strong bg-card text-ink-muted hover:bg-sunken hover:text-ink flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-colors disabled:cursor-not-allowed disabled:opacity-40";
 
 export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) return null;
@@ -36,16 +36,16 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
         const showEllipsis = prev && p - prev > 1;
         return (
           <React.Fragment key={p}>
-            {showEllipsis && <span className="text-ink-muted px-1">…</span>}
+            {showEllipsis && <span className="px-1 text-ink-muted">…</span>}
             <button
               type="button"
               onClick={() => onPageChange(p)}
-              aria-current={p === page ? 'page' : undefined}
+              aria-current={p === page ? "page" : undefined}
               className={cn(
-                'font-data flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-full px-2 text-[13px] font-semibold transition-colors',
+                "flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-full px-2 font-data text-[13px] font-semibold transition-colors",
                 p === page
-                  ? 'bg-action text-on-action'
-                  : 'text-ink-muted hover:bg-sunken hover:text-ink'
+                  ? "bg-action text-on-action"
+                  : "text-ink-muted hover:bg-sunken hover:text-ink",
               )}
             >
               {p}

@@ -1,9 +1,9 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import { FieldValue, Timestamp } from 'firebase-admin/firestore';
-import { z } from 'zod';
-import { adminAuth, adminDb } from '@/lib/firebase-admin';
+import { cookies } from "next/headers";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { z } from "zod";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   MAX_BOTS,
   botId,
@@ -11,7 +11,7 @@ import {
   directionsUrl,
   type LngLat,
   type RoadLine,
-} from '@/lib/fleet-simulation';
+} from "@/lib/fleet-simulation";
 
 /**
  * Bot jeeps for demos — the dashboard's "Simulate jeeps" panel. The browser tab moves
@@ -21,14 +21,14 @@ import {
  */
 
 async function requireSuperAdmin() {
-  const session = (await cookies()).get('jeep-in-session')?.value;
+  const session = (await cookies()).get("jeep-in-session")?.value;
   // Expired, revoked or forged sessions all get the same plain answer.
   const decoded = session
     ? await adminAuth.verifySessionCookie(session, true).catch(() => null)
     : null;
-  if (!decoded) throw new Error('Sign in again to run the simulation.');
-  if (decoded.role !== 'super_admin') {
-    throw new Error('Only super admins can run the simulation.');
+  if (!decoded) throw new Error("Sign in again to run the simulation.");
+  if (decoded.role !== "super_admin") {
+    throw new Error("Only super admins can run the simulation.");
   }
 }
 
@@ -36,17 +36,17 @@ async function requireSuperAdmin() {
 export async function getSimulationRoads(routeId: string): Promise<RoadLine[]> {
   await requireSuperAdmin();
   const token = process.env.MAPBOX_PUBLIC_KEY;
-  if (!token) throw new Error('MAPBOX_PUBLIC_KEY is missing from .env.local.');
+  if (!token) throw new Error("MAPBOX_PUBLIC_KEY is missing from .env.local.");
 
   const [routeSnap, stopsSnap] = await Promise.all([
-    adminDb.collection('routes').doc(routeId).get(),
-    adminDb.collection('stop_points').where('routeId', '==', routeId).get(),
+    adminDb.collection("routes").doc(routeId).get(),
+    adminDb.collection("stop_points").where("routeId", "==", routeId).get(),
   ]);
   const directions: string[] = routeSnap.data()?.directions ?? [];
   const stops = stopsSnap.docs.map((d) => d.data()).filter((s) => s.isActive !== false);
 
-  if (stops.some((s) => typeof s.order !== 'number')) {
-    throw new Error('Some stops on this route have no order yet, so the road is unknown.');
+  if (stops.some((s) => typeof s.order !== "number")) {
+    throw new Error("Some stops on this route have no order yet, so the road is unknown.");
   }
 
   const roads: RoadLine[] = [];
@@ -68,7 +68,7 @@ export async function getSimulationRoads(routeId: string): Promise<RoadLine[]> {
     roads.push({ directionId, line, stops: ordered });
   }
 
-  if (!roads.length) throw new Error('This route needs at least two stops in a direction.');
+  if (!roads.length) throw new Error("This route needs at least two stops in a direction.");
   return roads;
 }
 
@@ -80,7 +80,7 @@ export async function startSimulation(organizationId: string, routeId: string, c
   const batch = adminDb.batch();
 
   for (let n = 1; n <= MAX_BOTS; n++) {
-    const jeepRef = adminDb.collection('jeepneys').doc(botJeepneyId(n));
+    const jeepRef = adminDb.collection("jeepneys").doc(botJeepneyId(n));
     if (n <= bots) {
       batch.set(
         jeepRef,
@@ -90,17 +90,17 @@ export async function startSimulation(organizationId: string, routeId: string, c
           organizationId,
           routeId,
           assignedDriverId: botId(n),
-          status: 'On route',
+          status: "On route",
           isActive: true,
           isBot: true,
           createdAt: now,
           updatedAt: FieldValue.serverTimestamp(),
         },
-        { merge: true }
+        { merge: true },
       );
     } else {
       batch.delete(jeepRef);
-      batch.delete(adminDb.collection('driver_locations').doc(botId(n)));
+      batch.delete(adminDb.collection("driver_locations").doc(botId(n)));
     }
   }
   await batch.commit();
@@ -116,7 +116,7 @@ const readingsSchema = z
       heading: z.number().min(0).max(360),
       speed: z.number().min(0).max(40),
       directionId: z.string().min(1).max(64).nullable(),
-    })
+    }),
   )
   .max(MAX_BOTS);
 
@@ -127,7 +127,7 @@ export async function writeSimulatedLocations(readings: z.input<typeof readingsS
   const batch = adminDb.batch();
   for (const { n, directionId, ...position } of rows) {
     batch.set(
-      adminDb.collection('driver_locations').doc(botId(n)),
+      adminDb.collection("driver_locations").doc(botId(n)),
       {
         driverId: botId(n),
         ...position,
@@ -136,7 +136,7 @@ export async function writeSimulatedLocations(readings: z.input<typeof readingsS
         isBot: true,
         updatedAt: FieldValue.serverTimestamp(),
       },
-      { merge: true }
+      { merge: true },
     );
   }
   await batch.commit();
@@ -146,7 +146,7 @@ export async function writeSimulatedLocations(readings: z.input<typeof readingsS
 export async function stopSimulation() {
   await requireSuperAdmin();
   const refs = Array.from({ length: MAX_BOTS }, (_, i) =>
-    adminDb.collection('driver_locations').doc(botId(i + 1))
+    adminDb.collection("driver_locations").doc(botId(i + 1)),
   );
   const snaps = await adminDb.getAll(...refs);
   const batch = adminDb.batch();
@@ -159,8 +159,8 @@ export async function removeSimulation() {
   await requireSuperAdmin();
   const batch = adminDb.batch();
   for (let n = 1; n <= MAX_BOTS; n++) {
-    batch.delete(adminDb.collection('jeepneys').doc(botJeepneyId(n)));
-    batch.delete(adminDb.collection('driver_locations').doc(botId(n)));
+    batch.delete(adminDb.collection("jeepneys").doc(botJeepneyId(n)));
+    batch.delete(adminDb.collection("driver_locations").doc(botId(n)));
   }
   await batch.commit();
 }
@@ -170,8 +170,8 @@ export async function getSimulationStatus(): Promise<{ units: number; sharing: n
   await requireSuperAdmin();
   const ids = Array.from({ length: MAX_BOTS }, (_, i) => i + 1);
   const [jeeps, locations] = await Promise.all([
-    adminDb.getAll(...ids.map((n) => adminDb.collection('jeepneys').doc(botJeepneyId(n)))),
-    adminDb.getAll(...ids.map((n) => adminDb.collection('driver_locations').doc(botId(n)))),
+    adminDb.getAll(...ids.map((n) => adminDb.collection("jeepneys").doc(botJeepneyId(n)))),
+    adminDb.getAll(...ids.map((n) => adminDb.collection("driver_locations").doc(botId(n)))),
   ]);
   return {
     units: jeeps.filter((s) => s.exists).length,

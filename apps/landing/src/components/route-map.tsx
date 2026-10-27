@@ -38,7 +38,10 @@ export function RouteMap() {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div onClick={() => setSelected(null)} className="overflow-x-auto overflow-y-hidden rounded-[28px] bg-map">
+    <div
+      onClick={() => setSelected(null)}
+      className="overflow-x-auto overflow-y-hidden rounded-[28px] bg-map"
+    >
       <svg
         viewBox="0 0 1000 440"
         className="block h-auto w-full min-w-[720px]"
@@ -88,14 +91,30 @@ export function RouteMap() {
           paintOrder="stroke"
         >
           {labels.map((label) => (
-            <text key={label.text} x={label.x} y={label.y} textAnchor={label.end ? "end" : undefined}>
+            <text
+              key={label.text}
+              x={label.x}
+              y={label.y}
+              textAnchor={label.end ? "end" : undefined}
+            >
               {label.text}
             </text>
           ))}
         </g>
         <g transform="translate(446 132)">
-          <rect width={148} height={48} rx={13} className="fill-white stroke-ink" strokeWidth={2.5} />
-          <path d="M66 47 L74 57 L82 47" className="fill-white stroke-ink" strokeWidth={2.5} strokeLinejoin="round" />
+          <rect
+            width={148}
+            height={48}
+            rx={13}
+            className="fill-white stroke-ink"
+            strokeWidth={2.5}
+          />
+          <path
+            d="M66 47 L74 57 L82 47"
+            className="fill-white stroke-ink"
+            strokeWidth={2.5}
+            strokeLinejoin="round"
+          />
           <rect x={64} y={44} width={20} height={4} className="fill-white" />
           <text x={14} y={19} fontSize={10} fontWeight={800} letterSpacing={1} className="fill-ink">
             YOUR STOP

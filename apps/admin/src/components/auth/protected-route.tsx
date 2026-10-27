@@ -1,14 +1,14 @@
-﻿'use client';
+﻿"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store';
-import { Spinner } from '@/components/ui';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store";
+import { Spinner } from "@/components/ui";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   /** If set, only this role can access. Both admin and super_admin allowed if not set. */
-  requiredRole?: 'admin' | 'super_admin';
+  requiredRole?: "admin" | "super_admin";
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
@@ -28,14 +28,14 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
 
     // TODO: works but cannot be able to go back to sign-in page anymore
     // Neither admin nor super_admin → unauthorized
-    if (!role || (role !== 'admin' && role !== 'super_admin')) {
-      router.push('/unauthorized');
+    if (!role || (role !== "admin" && role !== "super_admin")) {
+      router.push("/unauthorized");
       return;
     }
 
     // Page requires super_admin but user is only admin
-    if (requiredRole === 'super_admin' && role !== 'super_admin') {
-      router.push('/unauthorized');
+    if (requiredRole === "super_admin" && role !== "super_admin") {
+      router.push("/unauthorized");
       return;
     }
   }, [user, userProfile, loading, router, requiredRole]);
@@ -51,8 +51,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   if (!user) return null;
 
   const role = userProfile?.role;
-  if (!role || (role !== 'admin' && role !== 'super_admin')) return null;
-  if (requiredRole === 'super_admin' && role !== 'super_admin') return null;
+  if (!role || (role !== "admin" && role !== "super_admin")) return null;
+  if (requiredRole === "super_admin" && role !== "super_admin") return null;
 
   return <>{children}</>;
 }

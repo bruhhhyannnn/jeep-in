@@ -129,16 +129,14 @@ export default function JeepneyDetail() {
     };
     return [
       here,
-      ...coming.map(
-        (s): AheadRow => ({
-          key: s.id,
-          name: s.name,
-          note: s.id === target?.id ? t.yourStop : s.id === last?.id ? t.endOfRoute : null,
-          km: stopKm[s.id] != null ? formatKm(stopKm[s.id]) : null,
-          eta: live ? `${minutesFor(along(s) - m.alongKm, speed)} min` : "—",
-          kind: s.id === target?.id ? "yours" : "stop",
-        }),
-      ),
+      ...coming.map((s): AheadRow => ({
+        key: s.id,
+        name: s.name,
+        note: s.id === target?.id ? t.yourStop : s.id === last?.id ? t.endOfRoute : null,
+        km: stopKm[s.id] != null ? formatKm(stopKm[s.id]) : null,
+        eta: live ? `${minutesFor(along(s) - m.alongKm, speed)} min` : "—",
+        kind: s.id === target?.id ? "yours" : "stop",
+      })),
     ];
   }, [jeep, directionId, paths, dirStops, stopAlong, stopKm, route, target, live]);
 

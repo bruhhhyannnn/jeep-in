@@ -174,7 +174,10 @@ export function RoutesCovered() {
         <div className="rounded-[28px] bg-white px-7 py-8 shadow-sm">
           {/* Wide: stops along a line, hover or focus a stop to preview its card */}
           <ol className="relative hidden grid-cols-6 min-[860px]:grid">
-            <li aria-hidden className="absolute top-[13px] right-[8.33%] left-[8.33%] h-1.5 rounded-full bg-ink" />
+            <li
+              aria-hidden
+              className="absolute top-[13px] right-[8.33%] left-[8.33%] h-1.5 rounded-full bg-ink"
+            />
             <li
               aria-hidden
               className={`pointer-events-none absolute top-4 left-[30%] z-[4] -mt-[15px] -ml-[15px] flex size-[30px] items-center justify-center rounded-[9px] border-[3px] border-white bg-accent font-mono text-[8px] font-bold text-ink shadow-[0_2px_6px_rgba(0,0,0,.25)] ${
@@ -205,11 +208,16 @@ export function RoutesCovered() {
                       open={isOpen}
                       className={`relative z-[3] transition-[transform,box-shadow] duration-150 ease-out ${isOpen ? "scale-[1.18]" : ""}`}
                     />
-                    <span className="text-[15px] leading-[1.25] font-extrabold text-balance text-ink">{stop.name}</span>
+                    <span className="text-[15px] leading-[1.25] font-extrabold text-balance text-ink">
+                      {stop.name}
+                    </span>
                     <span className="font-mono text-xs font-semibold text-muted">{stop.km}</span>
                   </button>
                   {isOpen && (
-                    <div className="pointer-events-none absolute bottom-full z-10 w-[280px] pb-3.5" style={pos.card}>
+                    <div
+                      className="pointer-events-none absolute bottom-full z-10 w-[280px] pb-3.5"
+                      style={pos.card}
+                    >
                       <div className="relative animate-pop rounded-[22px] border border-line bg-white p-4 shadow-pop">
                         <StopCard stop={stop} />
                         <span
@@ -227,7 +235,10 @@ export function RoutesCovered() {
 
           {/* Narrow: a vertical line, tap a stop to open its card in place */}
           <ol className="relative flex flex-col min-[860px]:hidden">
-            <li aria-hidden className="absolute top-4 bottom-4 left-[13px] w-1.5 rounded-full bg-ink" />
+            <li
+              aria-hidden
+              className="absolute top-4 bottom-4 left-[13px] w-1.5 rounded-full bg-ink"
+            />
             {stops.map((stop, i) => {
               const isOpen = open === i;
               return (
@@ -260,7 +271,8 @@ export function RoutesCovered() {
           <span className="hidden min-[860px]:inline">Hover a stop to preview its stop card.</span>
         </p>
         <p className="text-sm leading-[1.6] text-muted">
-          More routes in Ilocos Norte are planned after the pilot. Tell us which one you ride when you join.
+          More routes in Ilocos Norte are planned after the pilot. Tell us which one you ride when
+          you join.
         </p>
       </Container>
     </section>

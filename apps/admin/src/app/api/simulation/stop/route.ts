@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { stopSimulation } from '@/actions/simulation';
+import { NextResponse } from "next/server";
+import { stopSimulation } from "@/actions/simulation";
 
 /**
  * Called with fetch(…, { keepalive: true }) when the tab running the simulation closes,
@@ -10,7 +10,7 @@ export async function POST() {
     await stopSimulation();
     return NextResponse.json({ success: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Could not stop the simulation';
+    const message = error instanceof Error ? error.message : "Could not stop the simulation";
     return NextResponse.json({ error: message }, { status: 403 });
   }
 }

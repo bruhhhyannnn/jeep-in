@@ -1,4 +1,4 @@
-import { cn } from '@/lib';
+import { cn } from "@/lib";
 
 interface PageHeaderProps {
   title: string;
@@ -14,13 +14,13 @@ export function PageHeader({ title, description, actions, className }: PageHeade
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between xl:gap-6',
-        className
+        "flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between xl:gap-6",
+        className,
       )}
     >
       <div className="min-w-0">
         <h1 className="text-title text-ink">{title}</h1>
-        {description && <p className="text-ink-muted mt-1.5 text-[14px]">{description}</p>}
+        {description && <p className="mt-1.5 text-[14px] text-ink-muted">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
     </div>

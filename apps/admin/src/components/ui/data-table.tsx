@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useReactTable,
@@ -9,12 +9,12 @@ import {
   flexRender,
   type ColumnDef,
   type SortingState,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './table';
-import { Spinner } from './spinner';
-import { Pagination } from './pagination';
+} from "@tanstack/react-table";
+import { useState } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "./table";
+import { Spinner } from "./spinner";
+import { Pagination } from "./pagination";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -33,7 +33,7 @@ export function DataTable<TData>({
   columns,
   data,
   globalFilter,
-  emptyMessage = 'Nothing here yet',
+  emptyMessage = "Nothing here yet",
   emptyHint,
   loading = false,
   pageSize,
@@ -45,7 +45,7 @@ export function DataTable<TData>({
   const table = useReactTable({
     data,
     columns,
-    state: { sorting, globalFilter: globalFilter ?? '' },
+    state: { sorting, globalFilter: globalFilter ?? "" },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -74,14 +74,14 @@ export function DataTable<TData>({
                   <TableHead
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
-                    className={canSort ? 'hover:text-ink cursor-pointer select-none' : ''}
+                    className={canSort ? "cursor-pointer select-none hover:text-ink" : ""}
                   >
                     <span className="inline-flex items-center gap-1.5">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                       {canSort &&
-                        (sorted === 'asc' ? (
+                        (sorted === "asc" ? (
                           <ArrowUp size={12} />
-                        ) : sorted === 'desc' ? (
+                        ) : sorted === "desc" ? (
                           <ArrowDown size={12} />
                         ) : (
                           <ArrowUpDown size={12} className="opacity-40" />
@@ -117,8 +117,8 @@ export function DataTable<TData>({
           ) : (
             <tr>
               <TableCell colSpan={columns.length} className="py-16 text-center">
-                <p className="text-ink text-[15px] font-semibold">{emptyMessage}</p>
-                {emptyHint && <p className="text-ink-muted mt-1 text-[13px]">{emptyHint}</p>}
+                <p className="text-[15px] font-semibold text-ink">{emptyMessage}</p>
+                {emptyHint && <p className="mt-1 text-[13px] text-ink-muted">{emptyHint}</p>}
               </TableCell>
             </tr>
           )}
@@ -127,8 +127,8 @@ export function DataTable<TData>({
 
       {paginated && totalPages > 1 && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-ink-muted text-[13px]">
-            Page <span className="font-data text-ink">{currentPage}</span> of{' '}
+          <p className="text-[13px] text-ink-muted">
+            Page <span className="font-data text-ink">{currentPage}</span> of{" "}
             <span className="font-data text-ink">{totalPages}</span>
           </p>
           <Pagination

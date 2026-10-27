@@ -1,17 +1,17 @@
-'use server';
+"use server";
 
-import { Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { adminDb } from '@/lib/firebase-admin';
-import { JeepneyFormData, serializeDoc } from '@/lib';
-import type { Jeepney } from '@/types';
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
+import { JeepneyFormData, serializeDoc } from "@/lib";
+import type { Jeepney } from "@/types";
 
-const COL = 'jeepneys';
+const COL = "jeepneys";
 
 export async function getJeepneys(organizationId: string): Promise<Jeepney[]> {
   const snap = await adminDb
     .collection(COL)
-    .where('organizationId', '==', organizationId)
-    .orderBy('createdAt', 'desc')
+    .where("organizationId", "==", organizationId)
+    .orderBy("createdAt", "desc")
     .get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as Jeepney), id: d.id }));
 }
@@ -25,9 +25,9 @@ export async function getJeepney(id: string): Promise<Jeepney | null> {
 export async function getUnassignedJeepneys(organizationId: string): Promise<Jeepney[]> {
   const snap = await adminDb
     .collection(COL)
-    .where('organizationId', '==', organizationId)
-    .where('assignedDriverId', '==', null)
-    .where('isActive', '==', true)
+    .where("organizationId", "==", organizationId)
+    .where("assignedDriverId", "==", null)
+    .where("isActive", "==", true)
     .get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as Jeepney), id: d.id }));
 }
@@ -35,7 +35,7 @@ export async function getUnassignedJeepneys(organizationId: string): Promise<Jee
 export async function createJeepney(
   data: JeepneyFormData,
   organizationId: string,
-  routeId: string
+  routeId: string,
 ): Promise<string> {
   const now = Timestamp.now();
   const ref = await adminDb.collection(COL).add({
@@ -67,7 +67,7 @@ export async function deleteJeepney(id: string): Promise<void> {
   if (snap.exists) {
     const jeepney = snap.data() as Jeepney;
     if (jeepney.assignedDriverId) {
-      await adminDb.collection('drivers').doc(jeepney.assignedDriverId).update({
+      await adminDb.collection("drivers").doc(jeepney.assignedDriverId).update({
         assignedJeepneyId: null,
         updatedAt: FieldValue.serverTimestamp(),
       });
