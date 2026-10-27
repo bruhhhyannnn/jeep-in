@@ -15,11 +15,24 @@ Planned: `apps/mobile-driver` (driver app) and `apps/web-driver` (driver PWA for
 
 ## Packages
 
-Planned, in this order:
+| Folder            | Package           | What                                                                                                                         |
+| ----------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `packages/config` | `@jeep-in/config` | Shared ESLint (`base`, `react`, `reactNative`), Prettier and TypeScript settings                                             |
+| `packages/tokens` | `@jeep-in/tokens` | The commuter design tokens (colours, type roles, radii, shadows, layout) as JS values, plus the generated Tailwind v3 preset |
 
-- `packages/tokens` — colours, type roles, radii and shadows: a Tailwind preset plus JS values.
-- `packages/core` — the Firestore data model (zod schemas and types), the readers that normalize documents, and the fare, arrival, geo, format and search logic.
-- `packages/config` — shared TypeScript, ESLint and Prettier settings.
+Planned: `packages/core` — the Firestore data model (zod schemas and types), the readers that normalize documents, and the fare, arrival, geo, format and search logic.
+
+### Design tokens
+
+`packages/tokens/src/index.ts` is the only place to change a colour, shadow, radius or font. After editing it, run:
+
+```bash
+npm run tokens
+```
+
+This rewrites `packages/tokens/tailwind-preset.cjs` and the generated block of CSS variables in each commuter app's `app/global.css` (NativeWind can't import CSS from a package, so each app keeps its own copy). `npm run lint` fails if any of them is out of date.
+
+The admin and landing apps still use their own Tailwind v4 themes.
 
 ## Getting started
 
