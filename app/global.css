@@ -194,12 +194,13 @@
     overflow-wrap: break-word;
   }
 
-  /* pointerEvents="box-none": the view lets taps through to the map, its children don't. */
-  .pe-box-none {
-    pointer-events: none;
-  }
+  /* pointerEvents="box-none": the view lets taps through to the map, its children don't.
+     The second rule comes last so a box-none view inside another stays see-through. */
   .pe-box-none > * {
     pointer-events: auto;
+  }
+  .pe-box-none {
+    pointer-events: none;
   }
 
   /* Pressable's hitSlop: a larger invisible tap area around small controls. */
@@ -250,6 +251,33 @@
 @keyframes screen-rise {
   from {
     transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+/* Mapbox logo and attribution: below the top controls, clear of the bottom sheets
+   (native: top + 80, left 16). */
+.jeepin-map .mapboxgl-ctrl-top-left {
+  top: calc(env(safe-area-inset-top) + 80px);
+  left: 6px;
+  display: flex;
+  align-items: center;
+}
+.jeepin-map .mapboxgl-ctrl-top-left .mapboxgl-ctrl {
+  margin: 0 0 0 10px;
+}
+.jeepin-map .mapboxgl-marker {
+  line-height: normal;
+}
+
+/* The location dot's soft pulse. */
+@keyframes puck-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  to {
+    transform: scale(2.8);
     opacity: 0;
   }
 }

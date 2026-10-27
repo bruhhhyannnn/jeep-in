@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { usePreferences } from "@/store";
+import { useAlerts, useOfflineCache, usePreferences } from "@/store";
 import { useFonts } from "@/hooks/useFonts";
 import { fonts } from "@/theme";
 
@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const persistedStores = [usePreferences];
+const persistedStores = [usePreferences, useAlerts, useOfflineCache];
 const allHydrated = () => persistedStores.every((s) => s.persist.hasHydrated());
 
 /** Saved preferences, alerts and the offline copy load before the first screen. */
