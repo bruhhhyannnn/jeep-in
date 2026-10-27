@@ -15,11 +15,11 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@jeep-in/config": "*",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "~19.1.0",
     "@types/react-dom": "~19.1.0",
-    "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
     "typescript": "^5"

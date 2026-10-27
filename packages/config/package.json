@@ -1,0 +1,24 @@
+{
+  "name": "@jeep-in/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared ESLint, Prettier and TypeScript settings for every JEEP-IN app.",
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.mjs",
+    "./prettier": "./prettier.mjs",
+    "./tsconfig/base.json": "./tsconfig/base.json"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier-plugin-tailwindcss": "^0.7.4",
+    "typescript-eslint": "^8.72.1"
+  },
+  "peerDependencies": {
+    "eslint": "^9.39.0",
+    "prettier": "^3.0.0"
+  }
+}

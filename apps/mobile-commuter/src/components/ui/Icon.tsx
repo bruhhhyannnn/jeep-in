@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme, type Palette } from "@/theme";
 
@@ -18,6 +19,13 @@ export default function Icon({
   tone = "ink",
 }: IconProps) {
   const { colors } = useTheme();
-  const IconComponent = family === "Ionicons" ? Ionicons : MaterialCommunityIcons;
-  return <IconComponent name={name as any} size={size} color={color ?? colors[tone]} />;
+  const iconColor = color ?? colors[tone];
+  return family === "Ionicons" ? (
+    <Ionicons name={name as IoniconName} size={size} color={iconColor} />
+  ) : (
+    <MaterialCommunityIcons name={name as MaterialIconName} size={size} color={iconColor} />
+  );
 }
+
+type IoniconName = ComponentProps<typeof Ionicons>["name"];
+type MaterialIconName = ComponentProps<typeof MaterialCommunityIcons>["name"];

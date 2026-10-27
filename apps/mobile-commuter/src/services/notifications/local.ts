@@ -12,6 +12,7 @@ let notifications: typeof NotificationsModule | null | undefined;
 function load(): typeof NotificationsModule | null {
   if (notifications !== undefined) return notifications;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- must stay lazy, see above
     notifications = require("expo-notifications") as typeof NotificationsModule;
     notifications.setNotificationHandler({
       handleNotification: async () => ({

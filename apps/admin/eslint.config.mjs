@@ -1,36 +1,30 @@
-import unusedImports from 'eslint-plugin-unused-imports';
-import tsParser from '@typescript-eslint/parser';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+import { base } from "@jeep-in/config/eslint";
 
-const eslintConfig = [
+export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Last, so the shared rules and eslint-config-prettier win over Next's presets.
+  ...base,
   {
-    ignores: ['.next/**', 'node_modules/**', 'public/**'],
-  },
-  {
-    files: ['**/*.ts', '**/*.tsx'],
-    languageOptions: {
-      parser: tsParser,
-    },
-    plugins: {
-      'unused-imports': unusedImports,
-      '@typescript-eslint': tsPlugin,
-    },
+    // These React Compiler rules arrived with eslint-config-next 16, after most admin
+    // pages were written. They stay visible as warnings and get fixed as each page is
+    // reworked.
     rules: {
-      'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': [
-        'warn',
-        {
-          vars: 'all',
-          varsIgnorePattern: '^_',
-          args: 'after-used',
-          argsIgnorePattern: '^_',
-        },
-      ],
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      'no-unused-vars': 'off',
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/refs": "warn",
     },
   },
-];
-
-export default eslintConfig;
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "public/**",
+    "next-env.d.ts",
+    "scripts/backups/**",
+    // Vendored from mapcn.
+    "src/components/ui/map.tsx",
+  ]),
+]);

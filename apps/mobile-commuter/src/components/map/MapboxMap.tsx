@@ -12,7 +12,7 @@ const toPaddingArray = (p: number | CameraPadding) =>
   typeof p === "number" ? p : [p.top, p.right, p.bottom, p.left];
 
 const MapboxMap = () => {
-  const map = useMap();
+  const mapRef = useMap();
   const { isDark } = useTheme();
   const { top } = useSafeAreaInsets();
 
@@ -21,8 +21,8 @@ const MapboxMap = () => {
 
   // Expose camera controls to screens through the map context.
   useEffect(() => {
-    map.current = {
-      ...map.current,
+    mapRef.current = {
+      ...mapRef.current,
       flyTo: (coords, { duration = 1200, zoom = 16, bottomInset = 0 } = {}) => {
         cameraRef.current?.setCamera({
           centerCoordinate: coords,
@@ -46,7 +46,7 @@ const MapboxMap = () => {
         });
       },
     };
-  }, [map]);
+  }, [mapRef]);
 
   return (
     <MapView

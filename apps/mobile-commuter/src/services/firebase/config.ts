@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { type Auth, initializeAuth, getAuth } from "firebase/auth";
+import { type Auth, type Persistence, initializeAuth, getAuth } from "firebase/auth";
 import * as firebaseAuth from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,6 +16,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// Metro loads firebase/auth's React Native build, which exports this; the TypeScript
+// types describe the browser build, which doesn't.
+type ReactNativeAuth = {
+  getReactNativePersistence: (storage: typeof AsyncStorage) => Persistence;
+};
+
 let authInstance: Auth | null = null;
 
 export function getAuthInstance(): Auth {
@@ -23,7 +29,7 @@ export function getAuthInstance(): Auth {
     if (Platform.OS === "web") {
       authInstance = getAuth(app);
     } else {
-      const persistence = (firebaseAuth as any).getReactNativePersistence;
+      const persistence = (firebaseAuth as unknown as ReactNativeAuth).getReactNativePersistence;
       authInstance = initializeAuth(app, {
         persistence: persistence(AsyncStorage),
       });

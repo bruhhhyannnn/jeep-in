@@ -1,0 +1,14 @@
+node_modules
+package-lock.json
+.turbo
+dist
+dev-dist
+build
+.next
+.expo
+android
+ios
+**/public
+**/scripts/backups
+**/next-env.d.ts
+**/expo-env.d.ts
