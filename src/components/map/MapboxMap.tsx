@@ -44,13 +44,33 @@ const MapboxMap = () => {
     m.addControl(new mapboxgl.AttributionControl({ compact: true }), "top-left");
     m.on("style.load", () => setStyleVersion((v) => v + 1));
     m.on("error", (e) => console.warn("Map error:", e.error?.message ?? e));
+
+    // Expose camera controls to screens through the map context. Set here, before
+    // the screens' own effects run, so a screen's first camera move isn't lost.
+    const idle = mapRef.current;
+    mapRef.current = {
+      ...idle,
+      flyTo: (coords, { duration = 1200, zoom = 16, bottomInset = 0 } = {}) => {
+        // Shift the centre up by half the sheet, so the point lands in the visible map.
+        m.flyTo({ center: coords, zoom, duration, offset: [0, -bottomInset / 2] });
+      },
+
+      fitBounds: (sw, ne, padding = 48) => {
+        m.fitBounds([sw, ne], { padding: toPadding(padding), duration: 700 });
+      },
+
+      zoomInAt: (coords, zoomIncrement = 1.5) => {
+        m.easeTo({ center: coords, zoom: m.getZoom() + zoomIncrement, duration: 300 });
+      },
+    };
     setInstance(m);
 
     return () => {
+      mapRef.current = idle;
       setInstance(null);
       m.remove();
     };
-  }, []);
+  }, [mapRef]);
 
   // Light and Dark use different Mapbox styles; the layers are added back on style.load.
   useEffect(() => {
@@ -60,33 +80,10 @@ const MapboxMap = () => {
     instance.setStyle(url);
   }, [instance, isDark]);
 
-  // Expose camera controls to screens through the map context.
-  useEffect(() => {
-    if (!instance) return;
-    mapRef.current = {
-      ...mapRef.current,
-      flyTo: (coords, { duration = 1200, zoom = 16, bottomInset = 0 } = {}) => {
-        // Shift the centre up by half the sheet, so the point lands in the visible map.
-        instance.flyTo({ center: coords, zoom, duration, offset: [0, -bottomInset / 2] });
-      },
-
-      fitBounds: (sw, ne, padding = 48) => {
-        instance.fitBounds([sw, ne], { padding: toPadding(padding), duration: 700 });
-      },
-
-      zoomInAt: (coords, zoomIncrement = 1.5) => {
-        instance.easeTo({
-          center: coords,
-          zoom: instance.getZoom() + zoomIncrement,
-          duration: 300,
-        });
-      },
-    };
-  }, [instance, mapRef]);
-
   // mapbox-gl.css makes its container position: relative, so it fills a positioned wrapper.
+  // `isolate` keeps the logo, attribution and markers (z-indexed by mapbox-gl) under the screens.
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 isolate">
       <div ref={containerRef} className="jeepin-map h-full w-full">
         {instance && styleVersion > 0 && (
           <CommuterMapLayers map={instance} styleVersion={styleVersion} />
