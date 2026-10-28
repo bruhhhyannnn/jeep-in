@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import {
   Map,
+  TriangleAlert,
   ClipboardList,
   Users,
   Bus,
@@ -35,6 +36,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Operations",
     items: [
       { icon: Map, name: "Fleet overview", path: "/" },
+      { icon: TriangleAlert, name: "Alerts", path: "/alerts" },
       { icon: ClipboardList, name: "Assignments", path: "/assignments" },
       { icon: Users, name: "Drivers", path: "/drivers" },
       { icon: Bus, name: "Jeepney units", path: "/jeepneys" },

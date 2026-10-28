@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Clock, UserRoundX, X } from "lucide-react";
 import toast from "react-hot-toast";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -28,7 +29,17 @@ import type { DriverProfile, Jeepney } from "@/types";
 
 const fullName = (d: DriverProfile) => `${d.firstName} ${d.lastName}`;
 
+/** `?unit=<id>` opens with that unit's driver picker, e.g. from a report on Alerts. */
 export default function AssignmentsPage() {
+  return (
+    <Suspense>
+      <Assignments />
+    </Suspense>
+  );
+}
+
+function Assignments() {
+  const searchParams = useSearchParams();
   const { orgId } = useOrgScope();
   const { data: org } = useOrganization(orgId || undefined);
   const routeId = org?.routeId ?? "";
@@ -38,7 +49,7 @@ export default function AssignmentsPage() {
   const { data: drivers = [] } = useDrivers(orgId);
 
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(() => searchParams.get("unit"));
   /** Started from "Assign these units": after each save, move to the next empty unit. */
   const [walkingEmpty, setWalkingEmpty] = useState(false);
   const [shiftOpen, setShiftOpen] = useState(false);

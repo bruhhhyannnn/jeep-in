@@ -7,3 +7,4 @@ export * from "./audit-logs";
 export * from "./organizations";
 export * from "./stop-points";
 export * from "./simulation";
+export * from "./driver-reports";
