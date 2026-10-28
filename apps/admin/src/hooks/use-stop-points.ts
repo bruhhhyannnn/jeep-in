@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getStopPoints, createStopPoint, updateStopPoint, deleteStopPoint } from "@/actions";
+import {
+  getStopPoints,
+  createStopPoint,
+  updateStopPoint,
+  reorderStopPoints,
+  deleteStopPoint,
+} from "@/actions";
 import type { StopPointFormData } from "@/lib";
 
 export function useStopPoints(routeId?: string) {
@@ -25,6 +31,22 @@ export function useUpdateStopPoint() {
     mutationFn: ({ id, data }: { id: string; data: StopPointFormData }) =>
       updateStopPoint(id, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["stop-points"] }),
+  });
+}
+
+export function useReorderStopPoints() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      routeId,
+      directionId,
+      ids,
+    }: {
+      routeId: string;
+      directionId: string;
+      ids: string[];
+    }) => reorderStopPoints(routeId, directionId, ids),
+    onSuccess: (_, { routeId }) => qc.invalidateQueries({ queryKey: ["stop-points", routeId] }),
   });
 }
 

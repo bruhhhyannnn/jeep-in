@@ -98,6 +98,32 @@ export async function updateStopPoint(id: string, data: StopPointFormData): Prom
   await batch.commit();
 }
 
+/** Saves a direction's stops in the order given: the first id becomes stop 1. */
+export async function reorderStopPoints(
+  routeId: string,
+  directionId: string,
+  ids: string[],
+): Promise<void> {
+  const stops = (await getStopPoints(routeId)).filter((s) => s.directionId === directionId);
+  const byId = new Map(stops.map((s) => [s.id, s]));
+  if (
+    ids.length !== stops.length ||
+    new Set(ids).size !== ids.length ||
+    ids.some((id) => !byId.has(id))
+  ) {
+    throw new Error("Stops were added or removed while you were reordering. Close and try again.");
+  }
+
+  const batch = adminDb.batch();
+  const now = FieldValue.serverTimestamp();
+  ids.forEach((id, i) => {
+    if (byId.get(id)!.order !== i + 1) {
+      batch.update(adminDb.collection(COL).doc(id), { order: i + 1, updatedAt: now });
+    }
+  });
+  await batch.commit();
+}
+
 export async function deleteStopPoint(id: string): Promise<void> {
   const stop = await getStopPoint(id);
   if (!stop) return;

@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Plus, Route as RouteIcon } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Plus,
+  Route as RouteIcon,
+} from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
@@ -32,11 +39,12 @@ import {
   useCreateStopPoint,
   useUpdateStopPoint,
   useDeleteStopPoint,
+  useReorderStopPoints,
   useAllRoutes,
   useOrganization,
 } from "@/hooks";
 import { inSentence } from "@jeep-in/core/format";
-import { directionLabel, stopPointSchema, type StopPointFormData } from "@/lib";
+import { cn, directionLabel, stopPointSchema, type StopPointFormData } from "@/lib";
 import type { RouteDirection, StopPoint } from "@/types";
 
 const DEFAULT_CENTER: [number, number] = [120.551474, 18.058174];
@@ -68,6 +76,9 @@ export default function StopPointsPage() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<StopPoint | null>(null);
+  const [reorderOpen, setReorderOpen] = useState(false);
+  /** Bumped on each open so the reorder panel starts from the saved order. */
+  const [reorderKey, setReorderKey] = useState(0);
 
   const { data: stopPoints = [], isPending, error } = useStopPoints(routeId || undefined);
   const deleteStopPoint = useDeleteStopPoint();
@@ -202,6 +213,17 @@ export default function StopPointsPage() {
               )}
               <SearchField value={query} onChange={setQuery} placeholder="Search stops" />
               <Button
+                variant="outline"
+                startIcon={<ArrowUpDown size={16} />}
+                onClick={() => {
+                  setReorderKey((k) => k + 1);
+                  setReorderOpen(true);
+                }}
+                disabled={!routeId || stopPoints.length < 2 || directions.length === 0}
+              >
+                Reorder
+              </Button>
+              <Button
                 startIcon={<Plus size={17} />}
                 onClick={() => openPanel(null)}
                 disabled={!routeId}
@@ -245,6 +267,16 @@ export default function StopPointsPage() {
         onDelete={setDeleting}
       />
 
+      <ReorderPanel
+        key={reorderKey}
+        isOpen={reorderOpen}
+        onClose={() => setReorderOpen(false)}
+        routeId={routeId}
+        directions={directions}
+        stops={stopPoints}
+        initialDirection={selectedDirection || directions[0]?.id || ""}
+      />
+
       <ConfirmDialog
         isOpen={!!deleting}
         onClose={() => setDeleting(null)}
@@ -267,6 +299,170 @@ export default function StopPointsPage() {
         }
       />
     </>
+  );
+}
+
+/* ─── Put a direction's stops in travel order ─── */
+function ReorderPanel({
+  isOpen,
+  onClose,
+  routeId,
+  directions,
+  stops,
+  initialDirection,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  routeId: string;
+  directions: RouteDirection[];
+  stops: StopPoint[];
+  initialDirection: string;
+}) {
+  const reorder = useReorderStopPoints();
+  const savedOrder = (directionId: string) =>
+    stops
+      .filter((s) => s.directionId === directionId)
+      .sort((a, b) => a.order - b.order)
+      .map((s) => s.id);
+
+  const [directionId, setDirectionId] = useState(initialDirection);
+  const [ids, setIds] = useState(() => savedOrder(initialDirection));
+  const [dragId, setDragId] = useState<string | null>(null);
+
+  // `Map` here is the map component, so look stops up in a plain object.
+  const byId: Record<string, StopPoint> = Object.fromEntries(stops.map((s) => [s.id, s]));
+  const dirty = ids.join("|") !== savedOrder(directionId).join("|");
+
+  const move = (id: string, to: number) => {
+    const from = ids.indexOf(id);
+    if (from < 0 || to < 0 || to >= ids.length || from === to) return;
+    const next = [...ids];
+    next.splice(from, 1);
+    next.splice(to, 0, id);
+    setIds(next);
+  };
+
+  const save = () =>
+    reorder.mutate(
+      { routeId, directionId, ids },
+      {
+        onSuccess: () => {
+          toast.success("Stop order saved");
+          onClose();
+        },
+        onError: (e) => toast.error(e.message),
+      },
+    );
+
+  return (
+    <SidePanel
+      isOpen={isOpen}
+      onClose={onClose}
+      busy={reorder.isPending}
+      title="Reorder stops"
+      subtitle="Drag stops into the order a jeep passes them. Stop 1 is where the trip starts."
+      footer={
+        <>
+          <Button variant="outline" onClick={onClose} disabled={reorder.isPending}>
+            Cancel
+          </Button>
+          <Button
+            onClick={save}
+            disabled={!dirty}
+            isLoading={reorder.isPending}
+            loadingText="Saving…"
+          >
+            Save order
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        {directions.length > 1 && (
+          <Field
+            label="Direction"
+            htmlFor="reorder-direction"
+            hint={dirty ? "Switching direction drops the changes you haven't saved." : undefined}
+          >
+            <Select
+              id="reorder-direction"
+              options={directions.map((d) => ({ value: d.id, label: d.label }))}
+              value={directionId}
+              onChange={(e) => {
+                setDirectionId(e.target.value);
+                setIds(savedOrder(e.target.value));
+              }}
+            />
+          </Field>
+        )}
+
+        {ids.length === 0 ? (
+          <p className="py-6 text-center text-[13px] text-ink-muted">
+            No stops {inSentence(directionLabel(directions, directionId))} yet.
+          </p>
+        ) : (
+          <ol className="space-y-1.5">
+            {ids.map((id, index) => {
+              const stop = byId[id];
+              if (!stop) return null;
+              return (
+                <li
+                  key={id}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", id);
+                    setDragId(id);
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    if (dragId && dragId !== id) move(dragId, index);
+                  }}
+                  onDrop={(e) => e.preventDefault()}
+                  onDragEnd={() => setDragId(null)}
+                  className={cn(
+                    "flex cursor-grab items-center gap-2 rounded-tile border-[1.5px] bg-card py-2 pr-2 pl-1.5 active:cursor-grabbing",
+                    dragId === id ? "border-action bg-action-soft" : "border-line",
+                  )}
+                >
+                  <GripVertical size={16} className="shrink-0 text-ink-meta" aria-hidden />
+                  <span className="w-6 shrink-0 text-center font-data text-[13px] font-semibold text-ink-muted">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[14px] font-semibold text-ink">{stop.name}</p>
+                    {(stop.landmark || stop.address || !stop.isActive) && (
+                      <p className="truncate text-[12px] text-ink-muted">
+                        {!stop.isActive && "Hidden · "}
+                        {stop.landmark ?? stop.address}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => move(id, index - 1)}
+                    disabled={index === 0}
+                    aria-label={`Move ${stop.name} up`}
+                    className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted hover:bg-sunken hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    <ChevronUp size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(id, index + 1)}
+                    disabled={index === ids.length - 1}
+                    aria-label={`Move ${stop.name} down`}
+                    className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted hover:bg-sunken hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    <ChevronDown size={16} />
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </div>
+    </SidePanel>
   );
 }
 
