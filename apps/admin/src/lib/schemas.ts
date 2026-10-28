@@ -40,6 +40,16 @@ export const jeepneySchema = z.object({
     .string()
     .min(1, "Jeepney number is required")
     .max(2, "Jeepney number must be 2 characters or less"),
+  /** Passenger seats; the driver app shows them on its Profile tab. Empty when not known. */
+  seats: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : v),
+    z.coerce
+      .number()
+      .int("Use a whole number")
+      .min(1, "At least 1 seat")
+      .max(40, "A jeepney seats 40 at most")
+      .optional(),
+  ),
 });
 
 /* ─── Fare Guide (a route's fare matrix) ─── */

@@ -41,6 +41,7 @@ export async function createJeepney(
   const ref = await adminDb.collection(COL).add({
     plateNumber: data.plateNumber,
     jeepneyNumber: data.jeepneyNumber,
+    seats: data.seats ?? null,
     organizationId,
     routeId,
     assignedDriverId: null,
@@ -51,12 +52,14 @@ export async function createJeepney(
   return ref.id;
 }
 
-export async function updateJeepney(id: string, data: Partial<JeepneyFormData>): Promise<void> {
+export async function updateJeepney(id: string, data: JeepneyFormData): Promise<void> {
   await adminDb
     .collection(COL)
     .doc(id)
     .update({
-      ...data,
+      plateNumber: data.plateNumber,
+      jeepneyNumber: data.jeepneyNumber,
+      seats: data.seats ?? null,
       updatedAt: FieldValue.serverTimestamp(),
     });
 }

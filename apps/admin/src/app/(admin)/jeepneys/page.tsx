@@ -75,7 +75,10 @@ export default function JeepneysPage() {
           <UnitTile number={j.jeepneyNumber} />
           <div>
             <p className="font-data text-[14px] font-bold text-ink">{j.plateNumber}</p>
-            <p className="text-[12px] text-ink-muted">Unit J{j.jeepneyNumber}</p>
+            <p className="text-[12px] text-ink-muted">
+              Unit J{j.jeepneyNumber}
+              {j.seats ? ` · ${j.seats} seats` : ""}
+            </p>
           </div>
         </div>
       ),
@@ -260,8 +263,12 @@ function JeepneyPanel({
     if (!isOpen) return;
     reset(
       unit
-        ? { plateNumber: unit.plateNumber, jeepneyNumber: unit.jeepneyNumber }
-        : { plateNumber: "", jeepneyNumber: "" },
+        ? {
+            plateNumber: unit.plateNumber,
+            jeepneyNumber: unit.jeepneyNumber,
+            seats: unit.seats ?? undefined,
+          }
+        : { plateNumber: "", jeepneyNumber: "", seats: undefined },
     );
   }, [isOpen, unit, reset]);
 
@@ -330,6 +337,18 @@ function JeepneyPanel({
             error={!!errors.plateNumber}
             hint={errors.plateNumber?.message ?? "Up to 8 characters."}
             {...register("plateNumber")}
+          />
+          <Input
+            id="seats"
+            label="Seats (optional)"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            placeholder="22"
+            className="font-data"
+            error={!!errors.seats}
+            hint={errors.seats?.message ?? "Shown to the driver with the unit."}
+            {...register("seats")}
           />
         </div>
 

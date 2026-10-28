@@ -55,8 +55,7 @@ export function useCreateJeepney() {
 export function useUpdateJeepney() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<JeepneyFormData> }) =>
-      updateJeepney(id, data),
+    mutationFn: ({ id, data }: { id: string; data: JeepneyFormData }) => updateJeepney(id, data),
     onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ["jeepneys"] });
       qc.invalidateQueries({ queryKey: ["jeepney", id] });

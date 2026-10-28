@@ -74,6 +74,8 @@ export interface Jeepney {
   organizationId: string;
   routeId: string | null;
   assignedDriverId: string | null;
+  /** Passenger seats; null or missing when not known. */
+  seats?: number | null;
   isActive: boolean;
   /** A simulated unit from the "Simulate jeeps" panel (jeepneys/sim-0N); its driver is bot-0N. */
   isBot?: boolean;
