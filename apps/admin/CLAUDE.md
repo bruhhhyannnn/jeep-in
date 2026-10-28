@@ -4,19 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**JEEP-IN Admin Dashboard** — a Next.js 15 web admin portal for managing a jeepney fleet tracking system. Admins and super admins manage routes, organizations, jeepneys, drivers, stop points, and fare guides. Real-time GPS tracking of drivers is displayed on a MapLibre map. The companion mobile app (separate repo) serves commuters and drivers.
+**JEEP-IN Admin Dashboard** — a Next.js 16 web admin portal for managing a jeepney fleet tracking system. Admins and super admins manage routes, organizations, jeepneys, drivers, stop points and fare guides, and read the reports drivers send (Alerts). Real-time GPS tracking of drivers is displayed on a MapLibre map. It lives in the `jeep-in` monorepo as `apps/admin`, next to the commuter apps (`apps/mobile-commuter`, `apps/web-commuter`) and the landing page.
 
 ## Commands
 
+Run from the monorepo root:
+
 ```bash
-npm run dev          # Start dev server (Turbopack)
-npm run build        # Production build
-npm run lint         # ESLint on src/
-npm run lint:fix     # ESLint with auto-fix
-npm run seed         # Run scripts/seed.ts to seed Firestore
+npm run dev -w @jeep-in/admin         # Start dev server (Turbopack)
+npm run build -w @jeep-in/admin       # Production build
+npm run lint -w @jeep-in/admin        # ESLint on src/ and scripts/
+npm run typecheck -w @jeep-in/admin   # next typegen + tsc
+npm test                              # Tests for the shared logic in packages/core
 ```
 
-No test suite exists yet.
+Data scripts live in `scripts/` (run with `npx tsx scripts/<name>.ts` from `apps/admin`). Back up with `backup-collections.ts` before any script that writes.
 
 ## Architecture
 
@@ -52,18 +54,23 @@ Every resource follows the same pattern:
 
 ### Firestore Collections
 
-| Collection         | Key fields                                                                                       |
-| ------------------ | ------------------------------------------------------------------------------------------------ |
-| `routes`           | name, directions[], isActive, workingHours {start, end}                                          |
-| `organizations`    | name, shortName (used as doc ID), routeId, isActive                                              |
-| `admins`           | uid (doc ID), organizationId, firstName, lastName, isActive                                      |
-| `drivers`          | uid (doc ID), organizationId, routeId, assignedJeepneyId, mustChangePassword, lastLocationUpdate |
-| `jeepneys`         | plateNumber, jeepneyNumber, organizationId, routeId, assignedDriverId                            |
-| `stop_points`      | name, address, routeId, routeDirection, lat, long, order, isActive                               |
-| `fare_guide`       | routeId, stopPointName, distanceKm, regularFare, discountedFare                                  |
-| `audit_logs`       | actorId, actorRole, action, targetType, targetId, organizationId                                 |
-| `users`            | uid, email, role, displayName, isActive (mirror of auth claims)                                  |
-| `driver_locations` | driverId, lat, long, heading, isSharing                                                          |
+Routes, stops, fares, jeepneys, drivers and driver reports follow the data model every app shares, in `packages/core/src/model.ts`. Read documents through its readers (`normalizeRoute`, `normalizeStopPoint`, `normalizeDriverReport`, … in `@jeep-in/core/documents`) so older documents still load.
+
+| Collection         | Key fields                                                                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `routes`           | name, description, vehicleClass, averageSpeedKph, directions[] `{ id, label, via[], path? }`, isActive, workingHours {start, end}                                                          |
+| `organizations`    | name, shortName (used as doc ID), routeId, isActive                                                                                                                                        |
+| `admins`           | uid (doc ID), organizationId, firstName, lastName, isActive                                                                                                                                |
+| `drivers`          | uid (doc ID), organizationId, routeId, firstName, lastName, employeeId, role (main / reliever), phone, licenseNo, licenseExpiry, assignedJeepneyId, mustChangePassword, lastLocationUpdate |
+| `jeepneys`         | plateNumber, jeepneyNumber, seats, organizationId, routeId, assignedDriverId, isActive                                                                                                     |
+| `stop_points`      | name, address, landmark, description, amenities[], routeId, directionId, order (1-based per direction), lat, long, isActive                                                                |
+| `fare_matrices`    | routeId, vehicleClass, orderNo, issuedBy, effectiveDate, baseFare, baseKm, perKm, discountRate, roundTo, discountRoundTo, table[] `{ km, landmark, regular, discounted }`                  |
+| `driver_reports`   | driverId, jeepneyId, unit, reason, note, lat, long, directionId, status (sent / withdrawn), createdAt. Written by the driver app; no organizationId, so the admin finds them by jeepneyId  |
+| `audit_logs`       | actorId, actorRole, action, targetType, targetId, organizationId                                                                                                                           |
+| `users`            | uid, email, role, displayName, isActive (mirror of auth claims)                                                                                                                            |
+| `driver_locations` | driverId, lat, long, heading, speed, directionId, isSharing, updatedAt                                                                                                                     |
+
+`fare_guide` is retired: the posted fares are the `table` of the route's fare matrix (the admin's Fare guide page edits it).
 
 `organizations` uses `shortName.toUpperCase()` as the Firestore document ID (not an auto-ID).
 `admins` and `drivers` use their Firebase Auth UID as the document ID.
@@ -71,7 +78,7 @@ Every resource follows the same pattern:
 ### Cascade Deletion Rules
 
 - **deleteOrganization**: deletes jeepneys, audit_logs, admins (+users docs), drivers (+users docs), then the org doc; Firebase Auth accounts deleted after batch
-- **deleteRoute**: deletes stop_points, fare_guide entries, drivers (+users docs), route doc; organizations referencing the route get `routeId: null` (unassigned, not deleted); Firebase Auth accounts deleted after batch
+- **deleteRoute**: deletes stop_points, fare matrices (and any leftover fare_guide entries), drivers (+users docs), route doc; organizations referencing the route get `routeId: null` (unassigned, not deleted); Firebase Auth accounts deleted after batch
 
 ### Key Utilities (`src/lib/utils.ts`)
 
@@ -107,5 +114,6 @@ FIREBASE_ADMIN_PRIVATE_KEY   # escape newlines as \\n in the .env file
 - All Firestore writes in server actions use `FieldValue.serverTimestamp()` for `updatedAt` and `Timestamp.now()` for `createdAt`
 - Firestore batch writes cap at 500 ops; Firebase Auth deletions must happen **outside** the batch (separate API)
 - TanStack Query keys follow the pattern `['resource']` for lists and `['resource', id]` for single items. Mutation `onSuccess` must invalidate all query keys affected by cascade side effects.
-- The `directions` field on a `Route` document drives stop point direction options (e.g. `["laoag_paoay", "paoay_laoag"]`). Format for display: split on `_`, capitalize each word, join with `→`.
+- A route's `directions` drive the stop point direction options. Show a direction by its `label` (`directionLabel()` in `src/lib/utils.ts`); stops point to it through `directionId`. Mid-sentence, use `inSentence()` from `@jeep-in/core/format` so place names keep their capitals.
+- Saving or deleting a stop renumbers the rest of its direction so `order` stays 1, 2, 3…; the Reorder panel on Stop points saves a whole direction's order at once.
 - `src/proxy.ts` is the Edge middleware file (Next.js config points to it); do not create `middleware.ts`
