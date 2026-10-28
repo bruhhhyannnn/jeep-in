@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  normalizeDriver,
   normalizeDriverLocation,
+  normalizeDriverReport,
   normalizeFareMatrix,
   normalizeRoute,
   normalizeStopPoint,
@@ -104,5 +106,55 @@ describe("normalizeDriverLocation", () => {
   it("reads a Firestore Timestamp", () => {
     const location = normalizeDriverLocation("u1", { updatedAt: { toMillis: () => 1_700_000 } });
     assert.equal(location.updatedAt, 1_700_000);
+  });
+});
+
+describe("normalizeDriver", () => {
+  it("builds the name from the admin's first and last name", () => {
+    const driver = normalizeDriver("u1", {
+      firstName: " Juan ",
+      lastName: "Dela Cruz",
+      name: "Old",
+    });
+    assert.equal(driver.name, "Juan Dela Cruz");
+  });
+
+  it("falls back to name, then to the name it is given", () => {
+    assert.equal(normalizeDriver("u1", { name: "Pedro" }).name, "Pedro");
+    assert.equal(normalizeDriver("u1", {}, "Maria Santos").name, "Maria Santos");
+  });
+
+  it("treats anything but reliever as the main driver", () => {
+    assert.equal(normalizeDriver("u1", { role: "reliever" }).role, "reliever");
+    assert.equal(normalizeDriver("u1", { role: "spare" }).role, "main");
+  });
+});
+
+describe("normalizeDriverReport", () => {
+  it("reads a report as the driver app writes it", () => {
+    const report = normalizeDriverReport("r1", {
+      driverId: "u1",
+      jeepneyId: "j1",
+      unit: "14",
+      reason: "road_blocked",
+      note: "  Flood at Quiling Sur ",
+      lat: 18.04,
+      long: 120.55,
+      directionId: "laoag_paoay",
+      status: "sent",
+      createdAt: { toMillis: () => 1_700_000 },
+    });
+    assert.equal(report.reason, "road_blocked");
+    assert.equal(report.note, "Flood at Quiling Sur");
+    assert.equal(report.createdAt, 1_700_000);
+    assert.equal(report.status, "sent");
+  });
+
+  it("files an unknown reason under other, and keeps a taken-back report withdrawn", () => {
+    const report = normalizeDriverReport("r1", { reason: "flat_tire", status: "withdrawn" });
+    assert.equal(report.reason, "other");
+    assert.equal(report.status, "withdrawn");
+    assert.equal(report.lat, null);
+    assert.equal(report.createdAt, null);
   });
 });

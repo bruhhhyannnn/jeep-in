@@ -1,4 +1,4 @@
-import { commuterStrings } from "@jeep-in/core/strings";
+import { commuterStrings, reportReasons } from "@jeep-in/core/strings";
 import { inSentence } from "@jeep-in/core/format";
 
 // Commuter copy is shared with the web app (packages/core); this adds the native
@@ -175,13 +175,7 @@ export const STRINGS = {
     report: {
       title: "What's wrong?",
       subtitle: "Tap one. Your manager gets it straight away.",
-      reasons: {
-        breakdown: { title: "Breakdown", sub: "The jeep can't continue the trip" },
-        road_blocked: { title: "Road blocked", sub: "Closure, flood or a landslide ahead" },
-        accident: { title: "Accident", sub: "Involving this jeep, or blocking the road" },
-        heavy_traffic: { title: "Heavy traffic", sub: "Running well behind the usual time" },
-        other: { title: "Something else", sub: "Say what happened in the note below" },
-      },
+      reasons: reportReasons,
       noteLabel: "Anything to add? (not required)",
       notePlaceholder: "Type a short note",
       send: "Send to manager",

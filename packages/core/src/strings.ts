@@ -1,3 +1,4 @@
+import type { ReportReason } from "./model";
 import { inSentence } from "./format";
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
@@ -409,4 +410,13 @@ export const commuterStrings = {
     notFoundDescription: "The screen you're looking for doesn't exist or has been moved.",
     generic: "Something went wrong. Please try again.",
   },
+};
+
+/** The five reasons a driver can report, as the driver app and the admin's Reports page word them. */
+export const reportReasons: Record<ReportReason, { title: string; sub: string }> = {
+  breakdown: { title: "Breakdown", sub: "The jeep can't continue the trip" },
+  road_blocked: { title: "Road blocked", sub: "Closure, flood or a landslide ahead" },
+  accident: { title: "Accident", sub: "Involving this jeep, or blocking the road" },
+  heavy_traffic: { title: "Heavy traffic", sub: "Running well behind the usual time" },
+  other: { title: "Something else", sub: "Say what happened in the note below" },
 };

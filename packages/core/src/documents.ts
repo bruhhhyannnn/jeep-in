@@ -1,10 +1,12 @@
 import type {
   Driver,
   DriverLocation,
+  DriverReport,
   FareMatrix,
   FareRow,
   Jeepney,
   LngLat,
+  ReportReason,
   Route,
   RouteDirection,
   StopPoint,
@@ -141,13 +143,39 @@ export const normalizeDriverLocation = (id: string, d: RawDoc): DriverLocation =
   };
 };
 
+/** "Juan Dela Cruz" from the admin's first and last name fields. Null when both are empty. */
+const fullName = (d: RawDoc): string | null =>
+  optionalStr([optionalStr(d.firstName), optionalStr(d.lastName)].filter(Boolean).join(" "));
+
 export const normalizeDriver = (id: string, d: RawDoc, fallbackName = "Driver"): Driver => ({
   id,
-  name: str(d.name ?? d.displayName, fallbackName),
+  name: fullName(d) ?? str(d.name ?? d.displayName, fallbackName),
   employeeId: optionalStr(d.employeeId),
   role: d.role === "reliever" ? "reliever" : "main",
   phone: optionalStr(d.phone),
   licenseNo: optionalStr(d.licenseNo),
   licenseExpiry: optionalStr(d.licenseExpiry),
   photoUrl: optionalStr(d.photoUrl),
+});
+
+const REPORT_REASONS: ReportReason[] = [
+  "breakdown",
+  "road_blocked",
+  "accident",
+  "heavy_traffic",
+  "other",
+];
+
+export const normalizeDriverReport = (id: string, d: RawDoc): DriverReport => ({
+  id,
+  driverId: str(d.driverId),
+  jeepneyId: str(d.jeepneyId),
+  unit: str(d.unit),
+  reason: REPORT_REASONS.includes(d.reason) ? d.reason : "other",
+  note: optionalStr(d.note),
+  lat: optionalNum(d.lat),
+  long: optionalNum(d.long),
+  directionId: optionalStr(d.directionId),
+  status: d.status === "withdrawn" ? "withdrawn" : "sent",
+  createdAt: toMillis(d.createdAt),
 });
