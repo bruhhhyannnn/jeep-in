@@ -7,19 +7,28 @@ export const signInSchema = z.object({
 });
 
 /* ─── Driver ─── */
+/** The record the driver app shows on its Profile tab. Only the name is required. */
+const driverRecordFields = {
+  firstName: z.string().trim().min(1, "First name is required"),
+  lastName: z.string().trim().min(1, "Last name is required"),
+  employeeId: z.string().optional(),
+  role: z.enum(["main", "reliever"]),
+  phone: z
+    .string()
+    .regex(/^[\d\s()+-]*$/, "Use digits, spaces, + or -")
+    .optional(),
+  licenseNo: z.string().optional(),
+  /** "YYYY-MM-DD" from a date input. */
+  licenseExpiry: z.string().optional(),
+};
+
 export const driverCreateSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  ...driverRecordFields,
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export const driverEditSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  isActive: z.boolean().default(true),
-});
+export const driverRecordSchema = z.object(driverRecordFields);
 
 /* ─── Jeepney ─── */
 export const jeepneySchema = z.object({
@@ -137,6 +146,7 @@ export const adminCreateSchema = z.object({
 /* ─── Inferred Types ─── */
 export type SignInFormData = z.infer<typeof signInSchema>;
 export type DriverCreateFormData = z.infer<typeof driverCreateSchema>;
+export type DriverRecordFormData = z.infer<typeof driverRecordSchema>;
 export type JeepneyFormData = z.infer<typeof jeepneySchema>;
 export type FareRowFormData = z.infer<typeof fareRowSchema>;
 export type FareMatrixFormData = z.infer<typeof fareMatrixSchema>;

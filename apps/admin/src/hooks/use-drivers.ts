@@ -3,13 +3,14 @@ import {
   getDrivers,
   getDriver,
   createDriver,
+  updateDriver,
   deactivateDriver,
   reactivateDriver,
   deleteDriver,
   assignJeepney,
   unassignJeepney,
 } from "@/actions";
-import { DriverCreateFormData } from "@/lib";
+import { DriverCreateFormData, DriverRecordFormData } from "@/lib";
 
 export function useDrivers(organizationId: string) {
   return useQuery({
@@ -41,6 +42,18 @@ export function useCreateDriver() {
     }) => createDriver(data, organizationId, routeId),
     onSuccess: (_, { organizationId }) =>
       qc.invalidateQueries({ queryKey: ["drivers", organizationId] }),
+  });
+}
+
+export function useUpdateDriver() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ uid, data }: { uid: string; data: DriverRecordFormData }) =>
+      updateDriver(uid, data),
+    onSuccess: (_, { uid }) => {
+      qc.invalidateQueries({ queryKey: ["drivers"] });
+      qc.invalidateQueries({ queryKey: ["driver", uid] });
+    },
   });
 }
 

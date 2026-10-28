@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, Copy, KeyRound, Plus, RefreshCw } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -41,14 +41,17 @@ import {
   useOrganization,
   useReactivateDriver,
   useUnassignJeepney,
+  useUpdateDriver,
   useNow,
 } from "@/hooks";
 import {
   driverCreateSchema,
+  driverRecordSchema,
   generatePassword,
   timeAgo,
   toDate,
   type DriverCreateFormData,
+  type DriverRecordFormData,
 } from "@/lib";
 import type { DriverProfile, Jeepney } from "@/types";
 
@@ -56,6 +59,19 @@ type DriverFilter = "all" | "active" | "inactive" | "temp";
 type ConfirmKind = "deactivate" | "reactivate" | "delete";
 
 const fullName = (d: DriverProfile) => `${d.firstName} ${d.lastName}`;
+
+const ROLE_LABEL = { main: "Main driver", reliever: "Reliever" } as const;
+
+/** The form's values for a driver's record; empty fields stay empty strings. */
+const recordValues = (d: DriverProfile): DriverRecordFormData => ({
+  firstName: d.firstName,
+  lastName: d.lastName,
+  employeeId: d.employeeId ?? "",
+  role: d.role,
+  phone: d.phone ?? "",
+  licenseNo: d.licenseNo ?? "",
+  licenseExpiry: d.licenseExpiry ?? "",
+});
 
 export default function DriversPage() {
   const { orgId } = useOrgScope();
@@ -92,7 +108,9 @@ export default function DriversPage() {
             ? d.mustChangePassword
             : true,
     )
-    .filter((d) => !q || `${fullName(d)} ${d.email}`.toLowerCase().includes(q));
+    .filter(
+      (d) => !q || `${fullName(d)} ${d.email} ${d.employeeId ?? ""}`.toLowerCase().includes(q),
+    );
 
   const columns: ColumnDef<DriverProfile, unknown>[] = [
     {
@@ -104,9 +122,22 @@ export default function DriversPage() {
           <Avatar name={fullName(d)} size="md" />
           <div className="min-w-0">
             <p className="truncate font-semibold text-ink">{fullName(d)}</p>
-            <p className="truncate text-[12px] text-ink-muted">{d.email}</p>
+            <p className="truncate text-[12px] text-ink-muted">
+              {d.employeeId && <span className="font-data">{d.employeeId} · </span>}
+              {d.email}
+            </p>
           </div>
         </div>
+      ),
+    },
+    {
+      id: "role",
+      header: "Role",
+      accessorFn: (d) => d.role,
+      cell: ({ row: { original: d } }) => (
+        <StatusChip tone={d.role === "reliever" ? "pending" : "live"}>
+          {ROLE_LABEL[d.role]}
+        </StatusChip>
       ),
     },
     {
@@ -195,7 +226,11 @@ export default function DriversPage() {
           actions={
             <>
               <OrgPicker />
-              <SearchField value={query} onChange={setQuery} placeholder="Search name or email" />
+              <SearchField
+                value={query}
+                onChange={setQuery}
+                placeholder="Search name, email or ID"
+              />
               <Button
                 startIcon={<Plus size={17} />}
                 onClick={() => setAddOpen(true)}
@@ -273,6 +308,7 @@ function DriverCreatePanel({
   const [copied, setCopied] = useState(false);
   const formId = "driver-create-form";
 
+  const form = useForm<DriverCreateFormData>({ resolver: zodResolver(driverCreateSchema) });
   const {
     register,
     handleSubmit,
@@ -280,10 +316,21 @@ function DriverCreatePanel({
     setValue,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<DriverCreateFormData>({ resolver: zodResolver(driverCreateSchema) });
+  } = form;
 
   useEffect(() => {
-    if (isOpen) reset({ firstName: "", lastName: "", email: "", password: generatePassword() });
+    if (isOpen)
+      reset({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: generatePassword(),
+        employeeId: "",
+        role: "main",
+        phone: "",
+        licenseNo: "",
+        licenseExpiry: "",
+      });
   }, [isOpen, reset]);
 
   const password = watch("password") ?? "";
@@ -330,18 +377,106 @@ function DriverCreatePanel({
         </>
       }
     >
-      <form id={formId} onSubmit={onSubmit} className="space-y-5" noValidate>
-        {!routeId && (
-          <Notice
-            icon={<KeyRound size={16} />}
-            tone="info"
-            title="This organization has no route yet"
-            description="The driver is saved without a route until one is assigned."
+      <FormProvider {...form}>
+        <form id={formId} onSubmit={onSubmit} className="space-y-5" noValidate>
+          {!routeId && (
+            <Notice
+              icon={<KeyRound size={16} />}
+              tone="info"
+              title="This organization has no route yet"
+              description="The driver is saved without a route until one is assigned."
+            />
+          )}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Input
+              id="firstName"
+              label="First name"
+              autoComplete="off"
+              error={!!errors.firstName}
+              hint={errors.firstName?.message}
+              {...register("firstName")}
+            />
+            <Input
+              id="lastName"
+              label="Last name"
+              autoComplete="off"
+              error={!!errors.lastName}
+              hint={errors.lastName?.message}
+              {...register("lastName")}
+            />
+          </div>
+          <Input
+            id="email"
+            type="email"
+            label="Email"
+            autoComplete="off"
+            placeholder="name@email.com"
+            error={!!errors.email}
+            hint={errors.email?.message ?? "This is what they type on the driver app's sign-in."}
+            {...register("email")}
           />
-        )}
+
+          <Field
+            label="Password · made for you"
+            htmlFor="password"
+            error={errors.password?.message}
+            hint="Share it with the driver. They choose their own the first time they sign in."
+          >
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="relative flex-1">
+                <input
+                  id="password"
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="h-12 w-full rounded-input border-[1.5px] border-line-strong bg-sunken pr-24 pl-4 font-data text-[15px] text-ink focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={copyPassword}
+                  className="absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-action hover:bg-action-soft"
+                >
+                  {copied ? <Check size={14} /> : <Copy size={14} />}
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <Button
+                variant="outline"
+                className="h-12"
+                startIcon={<RefreshCw size={15} />}
+                onClick={() => setValue("password", generatePassword(), { shouldValidate: true })}
+              >
+                Make a new one
+              </Button>
+            </div>
+          </Field>
+
+          <DriverRecordFields />
+        </form>
+      </FormProvider>
+    </SidePanel>
+  );
+}
+
+/* ─── The record the driver app shows on its Profile tab ─── */
+function DriverRecordFields({ withName = false }: { withName?: boolean }) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<DriverRecordFormData>();
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <p className="text-[14px] font-bold text-ink">Driver record</p>
+        <p className="mt-0.5 text-[13px] text-ink-muted">
+          Shown on their Profile tab in the driver app. Fill in what you have.
+        </p>
+      </div>
+      {withName && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
-            id="firstName"
+            id="record-firstName"
             label="First name"
             autoComplete="off"
             error={!!errors.firstName}
@@ -349,7 +484,7 @@ function DriverCreatePanel({
             {...register("firstName")}
           />
           <Input
-            id="lastName"
+            id="record-lastName"
             label="Last name"
             autoComplete="off"
             error={!!errors.lastName}
@@ -357,53 +492,52 @@ function DriverCreatePanel({
             {...register("lastName")}
           />
         </div>
+      )}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Input
-          id="email"
-          type="email"
-          label="Email"
+          id="record-employeeId"
+          label="Driver ID (optional)"
+          placeholder="DRV-0142"
+          className="font-data"
           autoComplete="off"
-          placeholder="name@email.com"
-          error={!!errors.email}
-          hint={errors.email?.message ?? "This is what they type on the driver app's sign-in."}
-          {...register("email")}
+          {...register("employeeId")}
         />
-
-        <Field
-          label="Password · made for you"
-          htmlFor="password"
-          error={errors.password?.message}
-          hint="Share it with the driver. They choose their own the first time they sign in."
-        >
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <div className="relative flex-1">
-              <input
-                id="password"
-                autoComplete="off"
-                spellCheck={false}
-                className="h-12 w-full rounded-input border-[1.5px] border-line-strong bg-sunken pr-24 pl-4 font-data text-[15px] text-ink focus:border-action focus:ring-[3px] focus:ring-action/15 focus:outline-none"
-                {...register("password")}
-              />
-              <button
-                type="button"
-                onClick={copyPassword}
-                className="absolute top-1/2 right-2 flex h-8 -translate-y-1/2 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-action hover:bg-action-soft"
-              >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? "Copied" : "Copy"}
-              </button>
-            </div>
-            <Button
-              variant="outline"
-              className="h-12"
-              startIcon={<RefreshCw size={15} />}
-              onClick={() => setValue("password", generatePassword(), { shouldValidate: true })}
-            >
-              Make a new one
-            </Button>
-          </div>
+        <Field label="Role" htmlFor="record-role">
+          <Select
+            id="record-role"
+            options={[
+              { value: "main", label: ROLE_LABEL.main },
+              { value: "reliever", label: ROLE_LABEL.reliever },
+            ]}
+            {...register("role")}
+          />
         </Field>
-      </form>
-    </SidePanel>
+        <Input
+          id="record-phone"
+          type="tel"
+          label="Phone (optional)"
+          placeholder="0917 123 4567"
+          autoComplete="off"
+          error={!!errors.phone}
+          hint={errors.phone?.message}
+          {...register("phone")}
+        />
+        <Input
+          id="record-licenseNo"
+          label="Licence no. (optional)"
+          placeholder="A01-23-456789"
+          className="font-data"
+          autoComplete="off"
+          {...register("licenseNo")}
+        />
+        <Input
+          id="record-licenseExpiry"
+          type="date"
+          label="Licence expiry (optional)"
+          {...register("licenseExpiry")}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -421,9 +555,23 @@ function DriverEditPanel({
 }) {
   const assign = useAssignJeepney();
   const unassign = useUnassignJeepney();
+  const update = useUpdateDriver();
   const now = useNow(30_000);
   const [unitId, setUnitId] = useState("");
   const [copied, setCopied] = useState(false);
+
+  const form = useForm<DriverRecordFormData>({ resolver: zodResolver(driverRecordSchema) });
+  const {
+    handleSubmit,
+    reset,
+    formState: { isDirty, isSubmitting },
+  } = form;
+
+  // Start from the saved record each time a driver opens, not after every refetch.
+  useEffect(() => {
+    if (driver) reset(recordValues(driver));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [driver?.uid, reset]);
 
   // Keep the last driver around while the panel animates closed.
   const [shown, setShown] = useState<DriverProfile | null>(driver);
@@ -441,8 +589,8 @@ function DriverEditPanel({
   const currentUnit = jeepneys.find((j) => j.id === d.assignedJeepneyId);
   const lastShared = toDate(d.lastLocationUpdate);
   const added = toDate(d.createdAt);
-  const isSaving = assign.isPending || unassign.isPending;
-  const dirty = unitId !== (d.assignedJeepneyId ?? "");
+  const isSaving = isSubmitting || update.isPending || assign.isPending || unassign.isPending;
+  const unitChanged = unitId !== (d.assignedJeepneyId ?? "");
 
   const unitOptions = [
     { value: "", label: "No unit" },
@@ -455,11 +603,12 @@ function DriverEditPanel({
       })),
   ];
 
-  const save = async () => {
+  const save = handleSubmit(async (data) => {
     try {
-      if (!unitId && d.assignedJeepneyId) {
+      if (isDirty) await update.mutateAsync({ uid: d.uid, data });
+      if (unitChanged && !unitId && d.assignedJeepneyId) {
         await unassign.mutateAsync({ driverUid: d.uid, jeepneyId: d.assignedJeepneyId });
-      } else if (unitId) {
+      } else if (unitChanged && unitId) {
         await assign.mutateAsync({ driverUid: d.uid, jeepneyId: unitId });
       }
       toast.success("Changes saved");
@@ -467,7 +616,7 @@ function DriverEditPanel({
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not save changes");
     }
-  };
+  });
 
   const copyEmail = async () => {
     try {
@@ -497,7 +646,12 @@ function DriverEditPanel({
           <Button variant="outline" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={save} disabled={!dirty} isLoading={isSaving} loadingText="Saving…">
+          <Button
+            onClick={save}
+            disabled={!isDirty && !unitChanged}
+            isLoading={isSaving}
+            loadingText="Saving…"
+          >
             Save changes
           </Button>
         </>
@@ -539,13 +693,17 @@ function DriverEditPanel({
             </span>
           </PanelValue>
           <PanelValue label="Added">{added ? format(added, "MMM d, yyyy") : "—"}</PanelValue>
-          <PanelValue label="Driver ID" mono>
+          <PanelValue label="Account ID" mono>
             {d.uid.slice(0, 12)}
           </PanelValue>
           <PanelValue label="Sign-in">
             {d.mustChangePassword ? "Temporary password" : "Own password"}
           </PanelValue>
         </div>
+
+        <FormProvider {...form}>
+          <DriverRecordFields withName />
+        </FormProvider>
 
         <Field
           label="Unit today"

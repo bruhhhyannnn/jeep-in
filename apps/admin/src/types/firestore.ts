@@ -1,5 +1,6 @@
 import type { Timestamp } from "firebase/firestore";
 import type {
+  DriverRole,
   FareMatrix,
   FareRow,
   Route as RouteModel,
@@ -42,6 +43,14 @@ export interface DriverProfile {
   email: string;
   firstName: string;
   lastName: string;
+  /** The driver app shows these on its Profile tab; see Driver in packages/core. */
+  employeeId: string | null;
+  role: DriverRole;
+  phone: string | null;
+  licenseNo: string | null;
+  /** "YYYY-MM-DD" */
+  licenseExpiry: string | null;
+  photoUrl: string | null;
   organizationId: string;
   assignedJeepneyId: string | null;
   routeId: string | null;

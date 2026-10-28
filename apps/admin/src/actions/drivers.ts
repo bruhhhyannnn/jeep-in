@@ -1,11 +1,44 @@
 "use server";
 
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
-import { DriverCreateFormData, serializeDoc } from "@/lib";
+import { normalizeDriver, type RawDoc } from "@jeep-in/core/documents";
+import { DriverCreateFormData, DriverRecordFormData, serializeDoc } from "@/lib";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import type { DriverProfile } from "@/types";
 
 const COL = "drivers";
+
+/** Fills in the driver app's record fields, which older driver documents don't have. */
+function toProfile(uid: string, data: RawDoc): DriverProfile {
+  const { employeeId, role, phone, licenseNo, licenseExpiry, photoUrl } = normalizeDriver(
+    uid,
+    data,
+  );
+  return serializeDoc({
+    ...(data as DriverProfile),
+    uid,
+    employeeId,
+    role,
+    phone,
+    licenseNo,
+    licenseExpiry,
+    photoUrl,
+  });
+}
+
+/** The record fields as stored: trimmed, with empty answers saved as null. */
+function recordFields(data: DriverRecordFormData) {
+  const optional = (value: string | undefined) => value?.trim() || null;
+  return {
+    firstName: data.firstName.trim(),
+    lastName: data.lastName.trim(),
+    employeeId: optional(data.employeeId),
+    role: data.role,
+    phone: optional(data.phone),
+    licenseNo: optional(data.licenseNo),
+    licenseExpiry: optional(data.licenseExpiry),
+  };
+}
 
 export async function getDrivers(organizationId: string): Promise<DriverProfile[]> {
   const snap = await adminDb
@@ -13,13 +46,13 @@ export async function getDrivers(organizationId: string): Promise<DriverProfile[
     .where("organizationId", "==", organizationId)
     .orderBy("createdAt", "desc")
     .get();
-  return snap.docs.map((d) => serializeDoc({ ...(d.data() as DriverProfile), uid: d.id }));
+  return snap.docs.map((d) => toProfile(d.id, d.data()));
 }
 
 export async function getDriver(uid: string): Promise<DriverProfile | null> {
   const snap = await adminDb.collection(COL).doc(uid).get();
   if (!snap.exists) return null;
-  return serializeDoc({ ...(snap.data() as DriverProfile), uid: snap.id });
+  return toProfile(snap.id, snap.data()!);
 }
 
 export async function createDriver(
@@ -27,11 +60,14 @@ export async function createDriver(
   organizationId: string,
   routeId: string,
 ): Promise<{ uid: string; tempPassword: string }> {
+  const record = recordFields(data);
+  const displayName = `${record.firstName} ${record.lastName}`;
+
   // 1. Create Firebase Auth user via Admin SDK
   const userRecord = await adminAuth.createUser({
     email: data.email,
     password: data.password,
-    displayName: `${data.firstName} ${data.lastName}`,
+    displayName,
   });
 
   const uid = userRecord.uid;
@@ -42,36 +78,60 @@ export async function createDriver(
   const now = Timestamp.now();
 
   // 3. Create /users/{uid}
-  await adminDb
-    .collection("users")
-    .doc(uid)
-    .set({
-      uid,
-      email: data.email,
-      role: "driver",
-      displayName: `${data.firstName} ${data.lastName}`,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    });
-
-  // 4. Create /drivers/{uid}
-  await adminDb.collection(COL).doc(uid).set({
+  await adminDb.collection("users").doc(uid).set({
     uid,
     email: data.email,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    organizationId,
-    routeId,
-    assignedJeepneyId: null,
+    role: "driver",
+    displayName,
     isActive: true,
-    mustChangePassword: true,
-    lastLocationUpdate: null,
     createdAt: now,
     updatedAt: now,
   });
 
+  // 4. Create /drivers/{uid}
+  await adminDb
+    .collection(COL)
+    .doc(uid)
+    .set({
+      uid,
+      email: data.email,
+      ...record,
+      photoUrl: null,
+      organizationId,
+      routeId,
+      assignedJeepneyId: null,
+      isActive: true,
+      mustChangePassword: true,
+      lastLocationUpdate: null,
+      createdAt: now,
+      updatedAt: now,
+    });
+
   return { uid, tempPassword: data.password };
+}
+
+/** Saves the name and the record the driver app shows. The sign-in email stays as it is. */
+export async function updateDriver(uid: string, data: DriverRecordFormData): Promise<void> {
+  const record = recordFields(data);
+  const displayName = `${record.firstName} ${record.lastName}`;
+
+  const batch = adminDb.batch();
+  batch.update(adminDb.collection(COL).doc(uid), {
+    ...record,
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+  batch.set(
+    adminDb.collection("users").doc(uid),
+    { displayName, updatedAt: FieldValue.serverTimestamp() },
+    { merge: true },
+  );
+  await batch.commit();
+  try {
+    await adminAuth.updateUser(uid, { displayName });
+  } catch (e) {
+    // Seeded and simulated drivers have no sign-in account to rename.
+    if ((e as { code?: string }).code !== "auth/user-not-found") throw e;
+  }
 }
 
 export async function deactivateDriver(uid: string): Promise<void> {

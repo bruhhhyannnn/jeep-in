@@ -401,12 +401,12 @@ function DriverPicker({
           pool.map((d) => {
             const isPicked = d.uid === picked;
             const drives = d.assignedJeepneyId ? unitById.get(d.assignedJeepneyId) : undefined;
-            const meta =
+            const status =
               d.assignedJeepneyId === unit.id
-                ? "Driving this unit"
+                ? "driving this unit"
                 : drives
-                  ? `Drives ${drives.plateNumber}`
-                  : "Free";
+                  ? `drives ${drives.plateNumber}`
+                  : "free";
             return (
               <button
                 key={d.uid}
@@ -428,10 +428,10 @@ function DriverPicker({
                 <span
                   className={cn(
                     "shrink-0 text-[12px] font-semibold",
-                    meta === "Free" ? "text-live-ink" : "text-ink-muted",
+                    status === "free" ? "text-live-ink" : "text-ink-muted",
                   )}
                 >
-                  {meta}
+                  {d.role === "reliever" ? "Reliever" : "Main"} · {status}
                 </span>
               </button>
             );
