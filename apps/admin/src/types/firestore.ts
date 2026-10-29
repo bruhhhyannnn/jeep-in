@@ -1,6 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 import type {
   DriverRole,
+  JeepneyStatus,
   FareMatrix,
   FareRow,
   Route as RouteModel,
@@ -76,6 +77,8 @@ export interface Jeepney {
   assignedDriverId: string | null;
   /** Passenger seats; null or missing when not known. */
   seats?: number | null;
+  /** "Out of service" hides the unit from commuters (Tell commuters this jeep is out). */
+  status?: JeepneyStatus | null;
   isActive: boolean;
   /** A simulated unit from the "Simulate jeeps" panel (jeepneys/sim-0N); its driver is bot-0N. */
   isBot?: boolean;

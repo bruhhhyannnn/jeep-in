@@ -1,6 +1,7 @@
 "use server";
 
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { OUT_OF_SERVICE } from "@jeep-in/core/fleet";
 import { assertOrg, assertOrgOf, assertRoute, requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 import { JeepneyFormData, serializeDoc } from "@/lib";
@@ -87,4 +88,16 @@ export async function deleteJeepney(id: string): Promise<void> {
     }
   }
   await adminDb.collection(COL).doc(id).delete();
+}
+
+/**
+ * "Tell commuters this jeep is out": the commuter apps stop showing the unit, and
+ * anyone following it is told, until it's put back in service.
+ */
+export async function setJeepneyOutOfService(id: string, out: boolean): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, id);
+  await adminDb
+    .collection(COL)
+    .doc(id)
+    .update({ status: out ? OUT_OF_SERVICE : null, updatedAt: FieldValue.serverTimestamp() });
 }

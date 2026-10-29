@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MapPinOff, Phone, UserRoundPlus } from "lucide-react";
+import { EyeOff, MapPinOff, Phone, UserRoundPlus } from "lucide-react";
+import { OUT_OF_SERVICE } from "@jeep-in/core/fleet";
 import { format, isSameDay } from "date-fns";
+import toast from "react-hot-toast";
 import type { ColumnDef } from "@tanstack/react-table";
 import { distanceKm } from "@jeep-in/core/geo";
 import { formatDistance } from "@jeep-in/core/format";
@@ -40,6 +42,7 @@ import {
   useOrgScope,
   useOrganization,
   useRoute,
+  useSetJeepneyOutOfService,
   useStopPoints,
 } from "@/hooks";
 import { directionLabel, timeAgo } from "@/lib";
@@ -304,6 +307,7 @@ function ReportPanel({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const setOutOfService = useSetJeepneyOutOfService();
 
   // Keep the last report on screen while the panel slides closed.
   const [shown, setShown] = useState(report);
@@ -316,6 +320,7 @@ function ReportPanel({
   const name = driver ? fullName(driver) : null;
   const hasPosition = r.lat != null && r.long != null;
   const near = nearestStop(r, stops);
+  const isOut = unit?.status === OUT_OF_SERVICE;
 
   return (
     <SidePanel
@@ -396,6 +401,45 @@ function ReportPanel({
                   onClick={() => router.push(`/assignments?unit=${encodeURIComponent(unit.id)}`)}
                 >
                   Choose a driver
+                </Button>
+              }
+            />
+          )}
+          {unit && (
+            <PanelActionRow
+              title={
+                isOut
+                  ? `${unit.plateNumber} is off the commuters' map`
+                  : "Tell commuters this jeep is out"
+              }
+              description={
+                isOut
+                  ? "Commuters don't see it, and anyone following it was told. Put it back once it can run."
+                  : "Hides it from the commuter apps and tells anyone following it. Undo it once the jeep can run."
+              }
+              action={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  startIcon={isOut ? undefined : <EyeOff size={15} />}
+                  isLoading={setOutOfService.isPending}
+                  loadingText="Saving…"
+                  onClick={() =>
+                    setOutOfService.mutate(
+                      { id: unit.id, out: !isOut },
+                      {
+                        onSuccess: () =>
+                          toast.success(
+                            isOut
+                              ? `${unit.plateNumber} is back on the commuters' map`
+                              : `${unit.plateNumber} is off the commuters' map`,
+                          ),
+                        onError: (e) => toast.error(e.message),
+                      },
+                    )
+                  }
+                >
+                  {isOut ? "Back in service" : "Take it off the map"}
                 </Button>
               }
             />

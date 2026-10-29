@@ -6,6 +6,7 @@ import {
   createJeepney,
   updateJeepney,
   deleteJeepney,
+  setJeepneyOutOfService,
 } from "@/actions";
 import { JeepneyFormData } from "@/lib";
 
@@ -70,6 +71,17 @@ export function useDeleteJeepney() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jeepneys"] });
       qc.invalidateQueries({ queryKey: ["drivers"] });
+    },
+  });
+}
+
+export function useSetJeepneyOutOfService() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, out }: { id: string; out: boolean }) => setJeepneyOutOfService(id, out),
+    onSuccess: (_, { id }) => {
+      qc.invalidateQueries({ queryKey: ["jeepneys"] });
+      qc.invalidateQueries({ queryKey: ["jeepney", id] });
     },
   });
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { EyeOff, Plus } from "lucide-react";
+import { OUT_OF_SERVICE } from "@jeep-in/core/fleet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -26,6 +27,7 @@ import {
   useOrgScope,
   useOrganization,
   useRoute,
+  useSetJeepneyOutOfService,
   useUpdateJeepney,
 } from "@/hooks";
 import { jeepneySchema, toDate, type JeepneyFormData } from "@/lib";
@@ -107,7 +109,11 @@ export default function JeepneysPage() {
       header: "Condition",
       accessorFn: (j) => j.isActive,
       cell: ({ row: { original: j } }) =>
-        j.isActive ? (
+        j.status === OUT_OF_SERVICE ? (
+          <StatusChip tone="error" dot>
+            Out of service
+          </StatusChip>
+        ) : j.isActive ? (
           <StatusChip tone="live" dot>
             On the road
           </StatusChip>
@@ -250,6 +256,8 @@ function JeepneyPanel({
   const isEdit = !!unit;
   const createJeepney = useCreateJeepney();
   const updateJeepney = useUpdateJeepney();
+  const setOutOfService = useSetJeepneyOutOfService();
+  const isOut = unit?.status === OUT_OF_SERVICE;
   const formId = "jeepney-form";
 
   const {
@@ -358,6 +366,46 @@ function JeepneyPanel({
             Use Assignments to choose who drives this unit. Changes there take effect right away.
           </p>
         </div>
+
+        {unit && (
+          <PanelActionRow
+            title={
+              isOut
+                ? `${unit.plateNumber} is off the commuters' map`
+                : "Tell commuters this jeep is out"
+            }
+            description={
+              isOut
+                ? "Commuters don't see it, and anyone following it was told. Put it back once it can run."
+                : "Hides it from the commuter apps and tells anyone following it. Undo it once the jeep can run."
+            }
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                startIcon={isOut ? undefined : <EyeOff size={15} />}
+                isLoading={setOutOfService.isPending}
+                loadingText="Saving…"
+                onClick={() =>
+                  setOutOfService.mutate(
+                    { id: unit.id, out: !isOut },
+                    {
+                      onSuccess: () =>
+                        toast.success(
+                          isOut
+                            ? `${unit.plateNumber} is back on the commuters' map`
+                            : `${unit.plateNumber} is off the commuters' map`,
+                        ),
+                      onError: (e) => toast.error(e.message),
+                    },
+                  )
+                }
+              >
+                {isOut ? "Back in service" : "Take it off the map"}
+              </Button>
+            }
+          />
+        )}
 
         {unit && (
           <PanelActionRow
