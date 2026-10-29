@@ -1,0 +1,94 @@
+rules_version = '2';
+
+// Who can read and write what from the apps. The admin dashboard writes through its
+// server with the Admin SDK, which skips these rules (apps/admin/src/lib/caller.ts
+// checks the caller there), so nothing here lets a browser change routes, stops,
+// fares, units or accounts.
+//
+// Deploy: npx tsx scripts/deploy-firestore-rules.ts (from apps/admin; dry run by default).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // The role custom claim the dashboard sets on each account.
+    function role() {
+      return signedIn() ? request.auth.token.get('role', '') : '';
+    }
+
+    function isDriver() {
+      return role() == 'driver';
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // ── What commuters see. No account needed; written only by the dashboard.
+    match /routes/{id} {
+      allow read: if true;
+    }
+    match /stop_points/{id} {
+      allow read: if true;
+    }
+    match /fare_matrices/{id} {
+      allow read: if true;
+    }
+    // Retired (its rows live in fare_matrices); older app builds still read it.
+    match /fare_guide/{id} {
+      allow read: if true;
+    }
+    match /jeepneys/{id} {
+      allow read: if true;
+    }
+
+    // ── Live positions. Anyone reads; a driver writes only their own.
+    match /driver_locations/{driverId} {
+      function locationFields() {
+        return ['driverId', 'lat', 'long', 'heading', 'speed', 'isSharing', 'updatedAt',
+                'directionId', 'overtimeUntil'];
+      }
+      function ownDoc() {
+        return isDriver() && isSelf(driverId)
+          && request.resource.data.get('driverId', driverId) == driverId;
+      }
+
+      allow read: if true;
+      allow create: if ownDoc() && request.resource.data.keys().hasOnly(locationFields());
+      allow update: if ownDoc()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(locationFields());
+    }
+
+    // ── A driver's own record: read it, and stamp when they last sent a position.
+    match /drivers/{uid} {
+      allow read: if isSelf(uid);
+      allow update: if isDriver() && isSelf(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastLocationUpdate']);
+    }
+
+    // ── Reports from the driver app's Report tab: send one, or take it back.
+    match /driver_reports/{id} {
+      allow create: if isDriver()
+        && request.resource.data.driverId == request.auth.uid
+        && request.resource.data.status == 'sent'
+        && request.resource.data.keys().hasOnly(['driverId', 'jeepneyId', 'unit', 'reason', 'note',
+                                                  'lat', 'long', 'directionId', 'status', 'createdAt']);
+      allow update: if isDriver()
+        && resource.data.driverId == request.auth.uid
+        && request.resource.data.status == 'withdrawn'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'withdrawnAt']);
+    }
+
+    // ── Each account reads only its own profile (the sign-in checks).
+    match /users/{uid} {
+      allow read: if isSelf(uid);
+    }
+    match /admins/{uid} {
+      allow read: if isSelf(uid);
+    }
+
+    // Everything else (organizations, audit_logs, …) only through the dashboard's server.
+  }
+}

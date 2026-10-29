@@ -15,7 +15,8 @@
     "format:check": "prettier --check .",
     "prepare": "husky",
     "tokens": "npm run generate -w @jeep-in/tokens --",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-jeep-in \"npx tsx apps/admin/scripts/test-firestore-rules.ts\""
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,css,json,md}": "prettier --write --ignore-unknown"
