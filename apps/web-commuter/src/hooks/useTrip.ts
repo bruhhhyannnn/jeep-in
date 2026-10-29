@@ -2,6 +2,7 @@ import { useShallow } from "zustand/react/shallow";
 import type { LngLat, StopPoint } from "@/types";
 import type { Transit } from "@/hooks/useTransit";
 import { quoteFare, type FareQuote } from "@/lib/fare";
+import { nearestStop } from "@jeep-in/core/geo";
 import { distanceKm } from "@/utils";
 import { useLocationStore, usePreferences } from "@/store";
 
@@ -30,14 +31,8 @@ export function resolveInDirection(
   return best?.stop ?? null;
 }
 
-export function nearestStop(stops: StopPoint[], [lng, lat]: LngLat) {
-  let best: { stop: StopPoint; km: number } | null = null;
-  for (const s of stops) {
-    const km = distanceKm(lat, lng, s.lat, s.long);
-    if (!best || km < best.km) best = { stop: s, km };
-  }
-  return best;
-}
+// Shared with the driver apps (packages/core).
+export { nearestStop };
 
 export type Trip = {
   boarding: StopPoint | null;

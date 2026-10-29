@@ -1,6 +1,6 @@
 import { bearing, length, lineSliceAlong, lineString, nearestPointOnLine, point } from "@turf/turf";
 import type { Feature, LineString } from "geojson";
-import type { LngLat } from "./model";
+import type { LngLat, StopPoint } from "./model";
 
 const lines = new WeakMap<LngLat[], Feature<LineString>>();
 
@@ -80,3 +80,13 @@ export const distanceKm = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
+
+/** The stop closest to a point, with its distance; null when there are no stops. */
+export function nearestStop(stops: StopPoint[], [lng, lat]: LngLat) {
+  let best: { stop: StopPoint; km: number } | null = null;
+  for (const s of stops) {
+    const km = distanceKm(lat, lng, s.lat, s.long);
+    if (!best || km < best.km) best = { stop: s, km };
+  }
+  return best;
+}
