@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import type { LngLat, StopPoint } from "@/types";
+import type { StopPoint } from "@/types";
 import type { Transit } from "@/hooks/useTransit";
 import { quoteFare, type FareQuote } from "@/lib/fare";
 import { nearestStop } from "@jeep-in/core/geo";
