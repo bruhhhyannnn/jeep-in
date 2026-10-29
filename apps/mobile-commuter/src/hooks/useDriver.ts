@@ -42,11 +42,26 @@ export function useDriverSessionSync() {
   // Last handshake step: the driver's own record came back from the server.
   useEffect(() => {
     if (!uid) return;
+    // Set once one of this session's position writes is seen in flight: the next server
+    // copy is that write coming back. Firestore delivers that copy before the write's promise
+    // resolves (lastAckAt), so waiting for lastAckAt alone skipped it, and a parked jeep
+    // then sat on this step until its next write.
+    let ownWriteSeen = false;
     return subscribeToOwnLocation(uid, (location, meta) => {
       const s = useSharingStore.getState();
-      if (s.phase !== "starting" && s.phase !== "on") return;
-      if (meta.fromCache || meta.hasPendingWrites || !location?.isSharing) return;
-      if (location.updatedAt == null || s.lastAckAt == null) return;
+      if (s.phase !== "starting" && s.phase !== "on") {
+        ownWriteSeen = false;
+        return;
+      }
+      if (meta.hasPendingWrites) {
+        // A position write: its server timestamp reads as empty until the server has it.
+        // (A direction change is a write too, but leaves the timestamp alone.)
+        if (location?.isSharing && location.updatedAt == null) ownWriteSeen = true;
+        return;
+      }
+      if (meta.fromCache || !location?.isSharing || location.updatedAt == null) return;
+      // A copy from before sharing started (e.g. left on after a crash) isn't a read-back.
+      if (!ownWriteSeen && s.lastAckAt == null) return;
       markStep("readback");
       useSharingStore.setState({ phase: "on", confirmedAt: Date.now() });
     });
