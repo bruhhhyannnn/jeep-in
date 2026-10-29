@@ -20,8 +20,9 @@ Planned: `apps/mobile-driver` (driver app) and `apps/web-driver` (driver PWA for
 | `packages/config` | `@jeep-in/config` | Shared ESLint (`base`, `react`, `reactNative`), Prettier and TypeScript settings                                                        |
 | `packages/tokens` | `@jeep-in/tokens` | The commuter design tokens (colours, type roles, radii, shadows, layout) as JS values, plus the generated Tailwind v3 preset            |
 | `packages/core`   | `@jeep-in/core`   | The data model, the readers that turn Firestore documents into it, the fare, fleet, geo, format and search logic, and the commuter copy |
+| `packages/web-ui` | `@jeep-in/web-ui` | The web apps' UI kit (React Native-style `View`, `Pressable`, `ThemedText`, `Button`, sheets…), theme, splash, toasts and browser hooks |
 
-Packages ship TypeScript source; each app's bundler compiles it. The commuter apps still import through their own paths (`@/lib/fare`, `@/types`), which re-export the package.
+Packages ship TypeScript source; each app's bundler compiles it. The commuter apps still import through their own paths (`@/lib/fare`, `@/types`, `@/components/ui`), which re-export the package, so web screens keep the native app's imports. A web app that uses `@jeep-in/web-ui` adds `../../packages/web-ui/src/**/*.{ts,tsx}` to its Tailwind `content`.
 
 ### Shared logic
 
@@ -58,6 +59,16 @@ Each app keeps its own env file (never committed); see its `.env.example` / `.en
 | `web-commuter`    | `apps/web-commuter/.env.local` (`VITE_*`)                               |
 | `admin`           | `apps/admin/.env.local` and `apps/admin/scripts/serviceAccountKey.json` |
 | `landing`         | none yet                                                                |
+
+## Firestore rules
+
+`firestore.rules` is the one copy of the database's security rules. Check it in the Firestore emulator (needs firebase-tools and Java), then deploy from `apps/admin`:
+
+```bash
+npm run test:rules                                    # 42 reads and writes the apps make, or must be refused
+npx tsx scripts/deploy-firestore-rules.ts             # dry run: shows the live rules and the change
+npx tsx scripts/deploy-firestore-rules.ts --deploy    # puts firestore.rules live
+```
 
 ## Checks
 
