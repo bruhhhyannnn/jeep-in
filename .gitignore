@@ -9,3 +9,6 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Firebase emulator logs (npm run test:rules)
+*-debug.log
