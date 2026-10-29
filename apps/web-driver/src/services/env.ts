@@ -8,6 +8,8 @@ const schema = z.object({
   VITE_FIREBASE_STORAGE_BUCKET: z.string().min(1),
   VITE_FIREBASE_MESSAGING_SENDER_ID: z.string().min(1),
   VITE_FIREBASE_APP_ID: z.string().min(1),
+  /** "true" talks to the local Auth and Firestore emulators (firebase.json), not the live project. */
+  VITE_FIREBASE_EMULATORS: z.enum(["true", "false"]).optional(),
 });
 
 const parsed = schema.safeParse(import.meta.env);

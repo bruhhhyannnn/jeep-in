@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import {
+  connectFirestoreEmulator,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
@@ -27,3 +28,10 @@ export const getAuthInstance = () => auth;
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
+
+// For trying the app without touching live data: `firebase emulators:start --project demo-jeep-in`
+// at the monorepo root, then run with VITE_FIREBASE_EMULATORS=true and VITE_FIREBASE_PROJECT_ID=demo-jeep-in.
+if (env.VITE_FIREBASE_EMULATORS === "true") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
