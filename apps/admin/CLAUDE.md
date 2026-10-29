@@ -34,7 +34,7 @@ Data scripts live in `scripts/` (run with `npx tsx scripts/<name>.ts` from `apps
 
 1. Client signs in via Firebase Auth (email/password)
 2. ID token is sent to `POST /api/auth/session` → verified by Admin SDK → sets `jeep-in-session` cookie (5-day, httpOnly)
-3. Edge middleware at `src/proxy.ts` (not `middleware.ts`) guards all routes by checking the cookie
+3. Edge middleware at `src/proxy.ts` (not `middleware.ts`) redirects pages to sign-in when the cookie is missing. It only checks that the cookie exists; the server actions verify it (below)
 4. Roles live as Firebase custom claims: `super_admin`, `admin`, `driver`, `commuter`
 5. Only `admin` and `super_admin` can create sessions in this app
 
@@ -42,13 +42,13 @@ Data scripts live in `scripts/` (run with `npx tsx scripts/<name>.ts` from `apps
 
 - **super_admin**: manages all organizations and routes; sees all data across orgs
 - **admin**: scoped to their own organization; manages jeepneys, drivers, fare guides
-- **driver / commuter**: mobile app only; cannot access this admin portal
+- **driver / commuter**: the commuter and driver apps only; cannot access this admin portal
 
 ### Data Layer Pattern
 
 Every resource follows the same pattern:
 
-- `src/actions/<resource>.ts` — `'use server'` functions calling Admin SDK directly
+- `src/actions/<resource>.ts` — `'use server'` functions calling Admin SDK directly. **Every action starts with a check from `src/lib/caller.ts`**: `requireSuperAdmin()` for organizations, routes and admin accounts; otherwise `requireCaller()` plus `assertOrg` / `assertOrgOf` / `assertRoute`, so an admin only reaches their own organization and its route. Anyone can post to a server action, and the Admin SDK skips the Firestore rules, so an action without a check is open to the internet
 - `src/hooks/use-<resource>.ts` — TanStack Query wrappers (`useQuery` + `useMutation`) that call the server actions
 - Pages import hooks only; pages never call server actions directly
 
@@ -108,6 +108,10 @@ FIREBASE_ADMIN_PROJECT_ID
 FIREBASE_ADMIN_CLIENT_EMAIL
 FIREBASE_ADMIN_PRIVATE_KEY   # escape newlines as \\n in the .env file
 ```
+
+### Firestore Rules
+
+The browser side (this app's sign-in, the commuter and driver apps) is limited by `firestore.rules` at the monorepo root: public reads of routes, stops, fares, units and positions; drivers write only their own position and reports; everything else goes through the server actions. Check changes with `npm run test:rules` (monorepo root, Firestore emulator) and deploy with `npx tsx scripts/deploy-firestore-rules.ts --deploy`.
 
 ## Important Conventions
 
