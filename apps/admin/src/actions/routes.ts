@@ -3,6 +3,7 @@
 import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { normalizeRoute, normalizeStopPoint } from "@jeep-in/core/documents";
 import { inSentence } from "@jeep-in/core/format";
+import { assertRoute, requireCaller, requireSuperAdmin } from "@/lib/caller";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { WorkingHoursFormData, RouteFormData, splitList } from "@/lib";
 import type { Route, RouteDirection } from "@/types";
@@ -12,12 +13,19 @@ const toRoute = (id: string, d: DocumentData): Route => ({
   description: typeof d.description === "string" && d.description.trim() ? d.description : null,
 });
 
-export async function getRoute(routeId: string): Promise<Route | null> {
+async function readRoute(routeId: string): Promise<Route | null> {
   const snap = await adminDb.collection("routes").doc(routeId).get();
   return snap.exists ? toRoute(snap.id, snap.data()!) : null;
 }
 
+// Routes are public (the commuter apps read them), so any signed-in manager may read them.
+export async function getRoute(routeId: string): Promise<Route | null> {
+  await requireCaller();
+  return readRoute(routeId);
+}
+
 export async function getAllRoutes(): Promise<Route[]> {
+  await requireCaller();
   const snap = await adminDb.collection("routes").get();
   return snap.docs.map((d) => toRoute(d.id, d.data()));
 }
@@ -57,6 +65,7 @@ export async function updateWorkingHours(
   routeId: string,
   data: WorkingHoursFormData,
 ): Promise<void> {
+  await assertRoute(await requireCaller(), routeId);
   await adminDb
     .collection("routes")
     .doc(routeId)
@@ -79,6 +88,7 @@ function fields(data: RouteFormData, current: RouteDirection[]) {
 }
 
 export async function createRoute(data: RouteFormData): Promise<string> {
+  await requireSuperAdmin();
   const now = FieldValue.serverTimestamp();
   const ref = await adminDb
     .collection("routes")
@@ -87,7 +97,8 @@ export async function createRoute(data: RouteFormData): Promise<string> {
 }
 
 export async function updateRoute(routeId: string, data: RouteFormData): Promise<void> {
-  const current = await getRoute(routeId);
+  await requireSuperAdmin();
+  const current = await readRoute(routeId);
   if (!current) throw new Error("This route no longer exists.");
   const next = fields(data, current.directions);
 
@@ -115,6 +126,7 @@ export async function updateRoute(routeId: string, data: RouteFormData): Promise
 }
 
 export async function deleteRoute(routeId: string): Promise<void> {
+  await requireSuperAdmin();
   const batch = adminDb.batch();
 
   // Stop points
@@ -154,7 +166,8 @@ export async function deleteRoute(routeId: string): Promise<void> {
 
 /** Returns true if current time is within working hours for the given route */
 export async function isWithinWorkingHours(routeId: string): Promise<boolean> {
-  const route = await getRoute(routeId);
+  await requireCaller();
+  const route = await readRoute(routeId);
   if (!route) return false;
 
   const now = new Date();

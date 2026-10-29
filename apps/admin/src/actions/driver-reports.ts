@@ -2,6 +2,7 @@
 
 import { normalizeDriverReport } from "@jeep-in/core/documents";
 import type { DriverReport } from "@jeep-in/core/model";
+import { assertOrg, requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 
 const COL = "driver_reports";
@@ -14,6 +15,7 @@ const IN_LIMIT = 30;
  * driver took back are left out, as the driver app tells them.
  */
 export async function getDriverReports(organizationId: string): Promise<DriverReport[]> {
+  assertOrg(await requireCaller(), organizationId);
   const units = await adminDb
     .collection("jeepneys")
     .where("organizationId", "==", organizationId)

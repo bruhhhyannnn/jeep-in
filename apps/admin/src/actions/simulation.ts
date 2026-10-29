@@ -1,10 +1,10 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 import { normalizeRoute, normalizeStopPoint } from "@jeep-in/core/documents";
-import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { requireSuperAdmin } from "@/lib/caller";
+import { adminDb } from "@/lib/firebase-admin";
 import {
   MAX_BOTS,
   botId,
@@ -20,18 +20,6 @@ import {
  * Admin SDK, exactly as the driver app would: jeepneys/sim-0N and driver_locations/bot-0N.
  * Real drivers and jeepneys are never touched. Super admins only.
  */
-
-async function requireSuperAdmin() {
-  const session = (await cookies()).get("jeep-in-session")?.value;
-  // Expired, revoked or forged sessions all get the same plain answer.
-  const decoded = session
-    ? await adminAuth.verifySessionCookie(session, true).catch(() => null)
-    : null;
-  if (!decoded) throw new Error("Sign in again to run the simulation.");
-  if (decoded.role !== "super_admin") {
-    throw new Error("Only super admins can run the simulation.");
-  }
-}
 
 /** The route's roads: stops in order per direction and the Mapbox road through them. */
 export async function getSimulationRoads(routeId: string): Promise<RoadLine[]> {

@@ -3,6 +3,7 @@
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { normalizeDriver, type RawDoc } from "@jeep-in/core/documents";
 import { DriverCreateFormData, DriverRecordFormData, serializeDoc } from "@/lib";
+import { assertOrg, assertOrgOf, assertRoute, requireCaller } from "@/lib/caller";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import type { DriverProfile } from "@/types";
 
@@ -41,6 +42,7 @@ function recordFields(data: DriverRecordFormData) {
 }
 
 export async function getDrivers(organizationId: string): Promise<DriverProfile[]> {
+  assertOrg(await requireCaller(), organizationId);
   const snap = await adminDb
     .collection(COL)
     .where("organizationId", "==", organizationId)
@@ -50,8 +52,10 @@ export async function getDrivers(organizationId: string): Promise<DriverProfile[
 }
 
 export async function getDriver(uid: string): Promise<DriverProfile | null> {
+  const caller = await requireCaller();
   const snap = await adminDb.collection(COL).doc(uid).get();
   if (!snap.exists) return null;
+  assertOrg(caller, snap.data()?.organizationId);
   return toProfile(snap.id, snap.data()!);
 }
 
@@ -60,6 +64,9 @@ export async function createDriver(
   organizationId: string,
   routeId: string,
 ): Promise<{ uid: string; tempPassword: string }> {
+  const caller = await requireCaller();
+  assertOrg(caller, organizationId);
+  await assertRoute(caller, routeId);
   const record = recordFields(data);
   const displayName = `${record.firstName} ${record.lastName}`;
 
@@ -112,6 +119,7 @@ export async function createDriver(
 
 /** Saves the name and the record the driver app shows. The sign-in email stays as it is. */
 export async function updateDriver(uid: string, data: DriverRecordFormData): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, uid);
   const record = recordFields(data);
   const displayName = `${record.firstName} ${record.lastName}`;
 
@@ -135,6 +143,7 @@ export async function updateDriver(uid: string, data: DriverRecordFormData): Pro
 }
 
 export async function deactivateDriver(uid: string): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, uid);
   // Mark inactive and unassign jeepney
   const snap = await adminDb.collection(COL).doc(uid).get();
   if (snap.exists) {
@@ -159,6 +168,7 @@ export async function deactivateDriver(uid: string): Promise<void> {
 }
 
 export async function reactivateDriver(uid: string): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, uid);
   await adminAuth.updateUser(uid, { disabled: false });
   await adminDb
     .collection(COL)
@@ -167,6 +177,7 @@ export async function reactivateDriver(uid: string): Promise<void> {
 }
 
 export async function deleteDriver(uid: string): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, uid);
   // Clear jeepney assignment if any
   const snap = await adminDb.collection(COL).doc(uid).get();
   if (snap.exists) {
@@ -189,6 +200,9 @@ export async function deleteDriver(uid: string): Promise<void> {
 }
 
 export async function assignJeepney(driverUid: string, jeepneyId: string): Promise<void> {
+  const caller = await requireCaller();
+  await assertOrgOf(caller, COL, driverUid);
+  await assertOrgOf(caller, "jeepneys", jeepneyId);
   // Clear old assignment on previous jeepney if any
   const snap = await adminDb.collection(COL).doc(driverUid).get();
   if (snap.exists) {
@@ -214,6 +228,9 @@ export async function assignJeepney(driverUid: string, jeepneyId: string): Promi
 }
 
 export async function unassignJeepney(driverUid: string, jeepneyId: string): Promise<void> {
+  const caller = await requireCaller();
+  await assertOrgOf(caller, COL, driverUid);
+  await assertOrgOf(caller, "jeepneys", jeepneyId);
   await adminDb.collection(COL).doc(driverUid).update({
     assignedJeepneyId: null,
     updatedAt: FieldValue.serverTimestamp(),

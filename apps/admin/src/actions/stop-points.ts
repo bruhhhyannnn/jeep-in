@@ -2,6 +2,7 @@
 
 import { FieldValue, type WriteBatch } from "firebase-admin/firestore";
 import { normalizeStopPoint } from "@jeep-in/core/documents";
+import { assertRoute, requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 import { splitList, type StopPointFormData } from "@/lib";
 import type { StopPoint } from "@/types";
@@ -18,15 +19,25 @@ const OLD_FIELDS = {
 const byPosition = (a: StopPoint, b: StopPoint) =>
   a.directionId.localeCompare(b.directionId) || a.order - b.order || a.name.localeCompare(b.name);
 
-/** A route's stops, each direction in travel order. */
-export async function getStopPoints(routeId: string): Promise<StopPoint[]> {
+async function readStopPoints(routeId: string): Promise<StopPoint[]> {
   const snap = await adminDb.collection(COL).where("routeId", "==", routeId).get();
   return snap.docs.map((d) => normalizeStopPoint(d.id, d.data())).sort(byPosition);
 }
 
-export async function getStopPoint(id: string): Promise<StopPoint | null> {
+async function readStopPoint(id: string): Promise<StopPoint | null> {
   const snap = await adminDb.collection(COL).doc(id).get();
   return snap.exists ? normalizeStopPoint(snap.id, snap.data()!) : null;
+}
+
+/** A route's stops, each direction in travel order. Public, like routes. */
+export async function getStopPoints(routeId: string): Promise<StopPoint[]> {
+  await requireCaller();
+  return readStopPoints(routeId);
+}
+
+export async function getStopPoint(id: string): Promise<StopPoint | null> {
+  await requireCaller();
+  return readStopPoint(id);
 }
 
 /**
@@ -40,7 +51,7 @@ async function renumber(
   stopId: string,
   position?: number,
 ): Promise<number> {
-  const stops = (await getStopPoints(routeId)).filter(
+  const stops = (await readStopPoints(routeId)).filter(
     (s) => s.directionId === directionId && s.id !== stopId,
   );
   const ids = stops.map((s) => s.id);
@@ -71,6 +82,7 @@ function fields(data: StopPointFormData) {
 }
 
 export async function createStopPoint(data: StopPointFormData, routeId: string): Promise<string> {
+  await assertRoute(await requireCaller(), routeId);
   const ref = adminDb.collection(COL).doc();
   const batch = adminDb.batch();
   const order = await renumber(batch, routeId, data.directionId, ref.id, data.order);
@@ -81,8 +93,10 @@ export async function createStopPoint(data: StopPointFormData, routeId: string):
 }
 
 export async function updateStopPoint(id: string, data: StopPointFormData): Promise<void> {
-  const before = await getStopPoint(id);
+  const caller = await requireCaller();
+  const before = await readStopPoint(id);
   if (!before) throw new Error("This stop no longer exists.");
+  await assertRoute(caller, before.routeId);
 
   const batch = adminDb.batch();
   if (before.directionId !== data.directionId) {
@@ -104,7 +118,8 @@ export async function reorderStopPoints(
   directionId: string,
   ids: string[],
 ): Promise<void> {
-  const stops = (await getStopPoints(routeId)).filter((s) => s.directionId === directionId);
+  await assertRoute(await requireCaller(), routeId);
+  const stops = (await readStopPoints(routeId)).filter((s) => s.directionId === directionId);
   const byId = new Map(stops.map((s) => [s.id, s]));
   if (
     ids.length !== stops.length ||
@@ -125,8 +140,10 @@ export async function reorderStopPoints(
 }
 
 export async function deleteStopPoint(id: string): Promise<void> {
-  const stop = await getStopPoint(id);
+  const caller = await requireCaller();
+  const stop = await readStopPoint(id);
   if (!stop) return;
+  await assertRoute(caller, stop.routeId);
   const batch = adminDb.batch();
   await renumber(batch, stop.routeId, stop.directionId, id);
   batch.delete(adminDb.collection(COL).doc(id));

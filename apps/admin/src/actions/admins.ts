@@ -2,23 +2,27 @@
 
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { AdminCreateFormData, serializeDoc } from "@/lib";
+import { requireSuperAdmin } from "@/lib/caller";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import type { AdminProfile } from "@/types";
 
 const COL = "admins";
 
 export async function getAdmins(): Promise<AdminProfile[]> {
+  await requireSuperAdmin();
   const snap = await adminDb.collection(COL).orderBy("createdAt", "desc").get();
   return snap.docs.map((d) => serializeDoc({ ...(d.data() as AdminProfile), uid: d.id }));
 }
 
 export async function getAdmin(uid: string): Promise<AdminProfile | null> {
+  await requireSuperAdmin();
   const snap = await adminDb.collection(COL).doc(uid).get();
   if (!snap.exists) return null;
   return serializeDoc({ ...(snap.data() as AdminProfile), uid: snap.id });
 }
 
 export async function createAdmin(data: AdminCreateFormData): Promise<string> {
+  await requireSuperAdmin();
   const userRecord = await adminAuth.createUser({
     email: data.email,
     password: data.password,
@@ -58,6 +62,7 @@ export async function createAdmin(data: AdminCreateFormData): Promise<string> {
 }
 
 export async function deactivateAdmin(uid: string): Promise<void> {
+  await requireSuperAdmin();
   await adminDb
     .collection(COL)
     .doc(uid)
@@ -67,6 +72,7 @@ export async function deactivateAdmin(uid: string): Promise<void> {
 }
 
 export async function reactivateAdmin(uid: string): Promise<void> {
+  await requireSuperAdmin();
   await adminAuth.updateUser(uid, { disabled: false });
   await adminDb
     .collection(COL)
@@ -75,6 +81,7 @@ export async function reactivateAdmin(uid: string): Promise<void> {
 }
 
 export async function reassignAdminOrg(uid: string, organizationId: string): Promise<void> {
+  await requireSuperAdmin();
   await adminDb
     .collection(COL)
     .doc(uid)
@@ -82,6 +89,7 @@ export async function reassignAdminOrg(uid: string, organizationId: string): Pro
 }
 
 export async function deleteAdmin(uid: string): Promise<void> {
+  await requireSuperAdmin();
   await adminDb.collection(COL).doc(uid).delete();
   await adminDb.collection("users").doc(uid).delete();
   await adminAuth.deleteUser(uid);

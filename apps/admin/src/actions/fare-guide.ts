@@ -2,6 +2,7 @@
 
 import { FieldValue, type Transaction } from "firebase-admin/firestore";
 import { PLACEHOLDER_FARE_MATRIX, normalizeFareMatrix } from "@jeep-in/core/documents";
+import { assertRoute, requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 import type { FareMatrixFormData, FareRowFormData } from "@/lib";
 import type { FareGuideRow, FareMatrix, FareRow } from "@/types";
@@ -17,12 +18,14 @@ async function findMatrix(routeId: string, tx?: Transaction) {
 }
 
 export async function getFareMatrix(routeId: string): Promise<FareMatrix | null> {
+  await requireCaller();
   const doc = await findMatrix(routeId);
   return doc ? normalizeFareMatrix(doc.id, doc.data()) : null;
 }
 
 /** Posted fares by distance; every route's when no route is given. */
 export async function getFareGuide(routeId?: string): Promise<FareGuideRow[]> {
+  await requireCaller();
   const query = routeId
     ? adminDb.collection(COL).where("routeId", "==", routeId)
     : adminDb.collection(COL);
@@ -60,6 +63,7 @@ async function changeTable(routeId: string, change: (table: FareRow[]) => FareRo
 
 /** Adds a posted fare, or replaces the one at `previousKm` when editing. */
 export async function saveFareRow(data: FareRowFormData, previousKm?: number): Promise<void> {
+  await assertRoute(await requireCaller(), data.routeId);
   await changeTable(data.routeId, (table) => {
     const clash = table.find((r) => r.km === data.km && r.km !== previousKm);
     if (clash) {
@@ -78,11 +82,13 @@ export async function saveFareRow(data: FareRowFormData, previousKm?: number): P
 }
 
 export async function deleteFareRow(routeId: string, km: number): Promise<void> {
+  await assertRoute(await requireCaller(), routeId);
   await changeTable(routeId, (table) => table.filter((r) => r.km !== km));
 }
 
 /** The order the fares come from, and the rule for trips longer than the table. */
 export async function updateFareMatrix(routeId: string, data: FareMatrixFormData): Promise<void> {
+  await assertRoute(await requireCaller(), routeId);
   const details = {
     orderNo: data.orderNo?.trim() || null,
     issuedBy: data.issuedBy?.trim() || null,

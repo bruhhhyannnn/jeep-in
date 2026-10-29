@@ -2,6 +2,7 @@
 
 import { Timestamp } from "firebase-admin/firestore";
 import type { Query } from "firebase-admin/firestore";
+import { requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 import { serializeDoc } from "@/lib";
 import type { AuditLog } from "@/types";
@@ -21,6 +22,8 @@ export async function getAuditLogs(
   filters: AuditLogFilters = {},
   page = 1,
 ): Promise<{ data: AuditLog[]; total: number; hasMore: boolean }> {
+  const caller = await requireCaller();
+  if (caller.role === "admin") filters = { ...filters, organizationId: caller.organizationId };
   let q: Query = adminDb.collection(COL).orderBy("createdAt", "desc");
 
   if (filters.organizationId) {

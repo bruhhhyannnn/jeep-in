@@ -1,6 +1,7 @@
 "use server";
 
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { assertOrg, assertOrgOf, assertRoute, requireCaller } from "@/lib/caller";
 import { adminDb } from "@/lib/firebase-admin";
 import { JeepneyFormData, serializeDoc } from "@/lib";
 import type { Jeepney } from "@/types";
@@ -8,6 +9,7 @@ import type { Jeepney } from "@/types";
 const COL = "jeepneys";
 
 export async function getJeepneys(organizationId: string): Promise<Jeepney[]> {
+  assertOrg(await requireCaller(), organizationId);
   const snap = await adminDb
     .collection(COL)
     .where("organizationId", "==", organizationId)
@@ -17,12 +19,15 @@ export async function getJeepneys(organizationId: string): Promise<Jeepney[]> {
 }
 
 export async function getJeepney(id: string): Promise<Jeepney | null> {
+  const caller = await requireCaller();
   const snap = await adminDb.collection(COL).doc(id).get();
   if (!snap.exists) return null;
+  assertOrg(caller, snap.data()?.organizationId);
   return serializeDoc({ ...(snap.data() as Jeepney), id: snap.id });
 }
 
 export async function getUnassignedJeepneys(organizationId: string): Promise<Jeepney[]> {
+  assertOrg(await requireCaller(), organizationId);
   const snap = await adminDb
     .collection(COL)
     .where("organizationId", "==", organizationId)
@@ -37,6 +42,9 @@ export async function createJeepney(
   organizationId: string,
   routeId: string,
 ): Promise<string> {
+  const caller = await requireCaller();
+  assertOrg(caller, organizationId);
+  await assertRoute(caller, routeId);
   const now = Timestamp.now();
   const ref = await adminDb.collection(COL).add({
     plateNumber: data.plateNumber,
@@ -53,6 +61,7 @@ export async function createJeepney(
 }
 
 export async function updateJeepney(id: string, data: JeepneyFormData): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, id);
   await adminDb
     .collection(COL)
     .doc(id)
@@ -65,6 +74,7 @@ export async function updateJeepney(id: string, data: JeepneyFormData): Promise<
 }
 
 export async function deleteJeepney(id: string): Promise<void> {
+  await assertOrgOf(await requireCaller(), COL, id);
   // If a driver is assigned, clear the assignment first
   const snap = await adminDb.collection(COL).doc(id).get();
   if (snap.exists) {
