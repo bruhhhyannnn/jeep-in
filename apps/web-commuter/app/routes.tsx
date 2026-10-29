@@ -1,6 +1,6 @@
 import { createBrowserRouter, type RouteObject } from "react-router";
 import { bindRouter } from "@/lib/router";
-import { KeepSplash } from "@/lib/splash";
+import { KeepSplash } from "@jeep-in/web-ui/splash";
 import RootLayout from "./_layout";
 import RootScreen from "./index";
 import NotFoundScreen from "./+not-found";

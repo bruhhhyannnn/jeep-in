@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/theme";
-import ThemedText from "@/components/ui/ThemedText";
-import Icon, { type IconName } from "@/components/ui/Icon";
-import Pressable from "@/components/ui/Pressable";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import { useTheme } from "../theme";
+import ThemedText from "./ThemedText";
+import Icon, { type IconName } from "./Icon";
+import Pressable from "./Pressable";
+import View from "./View";
 
 type RadioCardProps = {
   title: string;
@@ -29,7 +29,7 @@ function Radio({ selected }: { selected: boolean }) {
         selected ? "border-action" : "border-line-strong",
       )}
     >
-      {selected && <View className="h-2.5 w-2.5 rounded-full bg-action" />}
+      {selected && <View className="bg-action h-2.5 w-2.5 rounded-full" />}
     </View>
   );
 }
@@ -55,10 +55,10 @@ export default function RadioCard({
       accessibilityState={{ checked: selected }}
       style={selected ? shadows.md : shadows.sm}
       className={cn(
-        "flex-row items-center gap-3 bg-card active:opacity-90",
-        compact ? "min-h-[56px] rounded-[18px] py-2.5" : "min-h-[64px] rounded-card py-3.5",
+        "bg-card flex-row items-center gap-3 active:opacity-90",
+        compact ? "min-h-[56px] rounded-[18px] py-2.5" : "rounded-card min-h-[64px] py-3.5",
         leading ? "pl-2.5 pr-4" : compact ? "px-3.5" : "px-4",
-        selected ? "border-2 border-action" : "border-[1.5px] border-line",
+        selected ? "border-action border-2" : "border-line border-[1.5px]",
       )}
     >
       {!radioEnd && <Radio selected={selected} />}

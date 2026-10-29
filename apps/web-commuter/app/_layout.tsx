@@ -4,8 +4,8 @@ import { Outlet } from "react-router";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAlerts, useOfflineCache, usePreferences } from "@/store";
-import { useFonts } from "@/hooks/useFonts";
-import { markAppReady } from "@/lib/splash";
+import { useFonts } from "@jeep-in/web-ui/hooks";
+import { markAppReady } from "@jeep-in/web-ui/splash";
 import { useUpdatePrompt } from "@/services/pwa/useUpdatePrompt";
 import { fonts } from "@/theme";
 

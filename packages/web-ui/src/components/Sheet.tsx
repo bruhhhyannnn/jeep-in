@@ -8,10 +8,10 @@ import {
   type CSSProperties,
   type Ref,
 } from "react";
-import { cn } from "@/lib/utils";
-import { layout, useTheme } from "@/theme";
-import type { SheetRef } from "@/types";
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import { cn } from "../lib/utils";
+import { layout, useTheme } from "../theme";
+import type { SheetRef } from "../types";
+import { useWindowDimensions } from "../hooks/useWindowDimensions";
 
 type SheetProps = {
   snapPoints: (string | number)[];
@@ -337,7 +337,7 @@ export default function Sheet({
   return (
     <div
       ref={sheetRef}
-      className="view absolute overflow-hidden rounded-t-sheet"
+      className="view rounded-t-sheet absolute overflow-hidden"
       style={{
         ...shadows.lg,
         left: side,
@@ -398,7 +398,7 @@ export default function Sheet({
           ref={footerRef}
           className={cn(
             "view absolute left-0 right-0 z-10",
-            footerDivider ? "border-t border-line px-5 pb-4 pt-3" : "px-4 pb-3 pt-1",
+            footerDivider ? "border-line border-t px-5 pb-4 pt-3" : "px-4 pb-3 pt-1",
           )}
           style={{
             bottom: "var(--offset, 0px)",

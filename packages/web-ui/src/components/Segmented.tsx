@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import ThemedText from "@/components/ui/ThemedText";
-import Pressable from "@/components/ui/Pressable";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import ThemedText from "./ThemedText";
+import Pressable from "./Pressable";
+import View from "./View";
 
 type SegmentedProps<T extends string> = {
   options: { value: T; label: string }[];
@@ -21,7 +21,7 @@ export default function Segmented<T extends string>({
     <View
       accessibilityRole="tablist"
       className={cn(
-        "flex-row gap-1 rounded-full border-[1.5px] border-line bg-card p-1",
+        "border-line bg-card flex-row gap-1 rounded-full border-[1.5px] p-1",
         className,
       )}
     >

@@ -1,7 +1,7 @@
 import type { CSSProperties, HTMLAttributes } from "react";
-import { splitA11y, type AccessibilityProps } from "@/lib/a11y";
-import { cn } from "@/lib/utils";
-import { typeRoles, type TypeRole } from "@/theme";
+import { splitA11y, type AccessibilityProps } from "../lib/a11y";
+import { cn } from "../lib/utils";
+import { typeRoles, type TypeRole } from "../theme";
 
 export type TextTone =
   | "ink"

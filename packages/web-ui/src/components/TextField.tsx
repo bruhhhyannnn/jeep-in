@@ -1,9 +1,9 @@
 import { useState, type InputHTMLAttributes, type Ref } from "react";
-import { cn } from "@/lib/utils";
-import { fonts, useTheme } from "@/theme";
-import Icon, { type IconName } from "@/components/ui/Icon";
-import Pressable from "@/components/ui/Pressable";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import { fonts, useTheme } from "../theme";
+import Icon, { type IconName } from "./Icon";
+import Pressable from "./Pressable";
+import View from "./View";
 
 interface TextFieldProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -46,9 +46,9 @@ export default function TextField({
     <View
       style={shadows.sm}
       className={cn(
-        "h-[52px] flex-row items-center gap-2.5 bg-card px-4",
+        "bg-card h-[52px] flex-row items-center gap-2.5 px-4",
         shape === "pill" ? "rounded-full" : "rounded-tile",
-        focused ? "border-2 border-action" : "border-[1.5px] border-line-strong",
+        focused ? "border-action border-2" : "border-line-strong border-[1.5px]",
         className,
       )}
     >
@@ -70,7 +70,7 @@ export default function TextField({
           setFocused(false);
           onBlur?.(e);
         }}
-        className="h-full min-w-0 flex-1 bg-transparent text-ink outline-none"
+        className="text-ink h-full min-w-0 flex-1 bg-transparent outline-none"
         style={{
           fontFamily: fonts.medium,
           fontSize: "calc(15px * var(--text-scale))",
@@ -85,7 +85,7 @@ export default function TextField({
           accessibilityRole="button"
           accessibilityLabel="Clear"
           hitSlop={12}
-          className="h-6 w-6 items-center justify-center rounded-full bg-sunken"
+          className="bg-sunken h-6 w-6 items-center justify-center rounded-full"
         >
           <Icon name="close" size={14} tone="muted" />
         </Pressable>

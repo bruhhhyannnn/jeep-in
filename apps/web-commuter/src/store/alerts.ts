@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { safeStorage } from "@/lib/storage";
+import { safeStorage } from "@jeep-in/web-ui/storage";
 import type { CommuterAlert } from "@/types";
 
 const MAX_ALERTS = 50;

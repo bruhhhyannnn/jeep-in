@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { layout } from "@/theme";
-import ThemedView from "@/components/ui/ThemedView";
-import View, { type ViewProps } from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import { layout } from "../theme";
+import ThemedView from "./ThemedView";
+import View, { type ViewProps } from "./View";
 
 interface SafeAreaContainerProps extends ViewProps {
   showPadding?: boolean;

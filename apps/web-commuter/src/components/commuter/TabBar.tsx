@@ -2,7 +2,7 @@ import { ROUTES, STRINGS } from "@/constants";
 import { router, usePathname } from "@/lib/router";
 import { fonts, layout } from "@/theme";
 import { useAlerts } from "@/store";
-import { useSafeAreaInsets } from "@/hooks/useSafeAreaInsets";
+import { useSafeAreaInsets } from "@jeep-in/web-ui/hooks";
 import { Icon, Pressable, ThemedText, View } from "@/components/ui";
 
 const TABS = [

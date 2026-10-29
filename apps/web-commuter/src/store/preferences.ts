@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { safeStorage } from "@/lib/storage";
-import { colorScheme, setTextScale } from "@/theme/document";
+import { safeStorage } from "@jeep-in/web-ui/storage";
+import { colorScheme, setTextScale } from "@/theme";
 import type { Appearance, TextSize, TripField } from "@/types";
 
 interface PreferencesState {

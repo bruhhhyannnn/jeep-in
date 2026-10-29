@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/theme";
-import Icon, { type IconName } from "@/components/ui/Icon";
-import Pressable from "@/components/ui/Pressable";
+import { cn } from "../lib/utils";
+import { useTheme } from "../theme";
+import Icon, { type IconName } from "./Icon";
+import Pressable from "./Pressable";
 
 type IconButtonProps = {
   iconName: IconName;
@@ -34,7 +34,7 @@ export default function IconButton({
       style={{ width: size, height: size, ...(variant === "surface" ? shadows.sm : undefined) }}
       className={cn(
         "items-center justify-center rounded-full active:opacity-80",
-        variant === "surface" && "border-[1.5px] border-line bg-card",
+        variant === "surface" && "border-line bg-card border-[1.5px]",
         disabled && "opacity-50",
       )}
     >

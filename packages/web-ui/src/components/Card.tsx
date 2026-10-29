@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/theme";
-import View, { type ViewProps } from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import { useTheme } from "../theme";
+import View, { type ViewProps } from "./View";
 
 interface CardProps extends ViewProps {
   /** md for the main card on a screen, sm for everything else. */
@@ -30,9 +30,9 @@ export default function Card({
         "rounded-card",
         !selected && "border-[1.5px]",
         dashed
-          ? "border-dashed border-line-strong"
+          ? "border-line-strong border-dashed"
           : selected
-            ? "border-2 border-action bg-card"
+            ? "border-action bg-card border-2"
             : "border-line bg-card",
         className,
       )}

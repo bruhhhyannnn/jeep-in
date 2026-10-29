@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
-import type { Appearance, TextSize } from "@/types";
-import { palette, textScale } from "@/theme/tokens";
+import type { Appearance, TextSize } from "../types";
+import { palette, textScale } from "@jeep-in/tokens";
 
 // Applies the Appearance and Text size settings to the page: the `dark` class on
 // <html> (which switches the CSS variables in app/global.css), the browser's

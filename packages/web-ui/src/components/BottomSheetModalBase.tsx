@@ -1,9 +1,9 @@
 import { useImperativeHandle, useState, type ReactNode, type Ref } from "react";
 import { Drawer } from "vaul";
-import { layout, useTheme } from "@/theme";
-import type { BottomSheetModalBaseRef } from "@/types";
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
-import ThemedText from "@/components/ui/ThemedText";
+import { layout, useTheme } from "../theme";
+import type { BottomSheetModalBaseRef } from "../types";
+import { useWindowDimensions } from "../hooks/useWindowDimensions";
+import ThemedText from "./ThemedText";
 
 interface BottomSheetModalBaseProps {
   title: string;
@@ -30,7 +30,7 @@ export default function BottomSheetModalBase({ title, children, ref }: BottomShe
         <Drawer.Overlay className="fixed inset-0 z-50 bg-black/50" />
         <Drawer.Content
           aria-describedby={undefined}
-          className="view fixed bottom-0 z-50 max-h-[calc(100dvh-env(safe-area-inset-top)-24px)] rounded-t-sheet bg-card outline-none"
+          className="view rounded-t-sheet bg-card fixed bottom-0 z-50 max-h-[calc(100dvh-env(safe-area-inset-top)-24px)] outline-none"
           style={{ left: side, right: side }}
         >
           <div className="view h-6 shrink-0 items-center justify-center">

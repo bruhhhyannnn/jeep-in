@@ -7,6 +7,12 @@ import tokens from "@jeep-in/tokens/tailwind";
 export default {
   darkMode: "class",
   presets: [tokens],
-  content: ["./index.html", "./app/**/*.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./index.html",
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    // The shared UI kit's classes.
+    "../../packages/web-ui/src/**/*.{ts,tsx}",
+  ],
   plugins: [],
 };

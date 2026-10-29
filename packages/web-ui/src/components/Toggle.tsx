@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import Pressable from "@/components/ui/Pressable";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import Pressable from "./Pressable";
+import View from "./View";
 
 type ToggleProps = {
   value: boolean;
@@ -33,7 +33,7 @@ export default function Toggle({
             ? "bg-accent"
             : "bg-action"
           : onInverse
-            ? "border-[1.5px] border-navy-400"
+            ? "border-navy-400 border-[1.5px]"
             : "bg-line-strong",
         value ? "items-end" : "items-start",
         disabled && "opacity-50",
@@ -42,7 +42,7 @@ export default function Toggle({
       <View
         className={cn(
           "rounded-full",
-          !value && onInverse ? "h-[18px] w-[18px] bg-navy-400" : "h-[22px] w-[22px] bg-white",
+          !value && onInverse ? "bg-navy-400 h-[18px] w-[18px]" : "h-[22px] w-[22px] bg-white",
         )}
       />
     </Pressable>

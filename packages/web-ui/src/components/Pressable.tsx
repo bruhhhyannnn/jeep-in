@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, CSSProperties, MouseEvent, Ref } from "react";
-import { splitA11y, type AccessibilityProps } from "@/lib/a11y";
-import { cn } from "@/lib/utils";
+import { splitA11y, type AccessibilityProps } from "../lib/a11y";
+import { cn } from "../lib/utils";
 
 export interface PressableProps
   extends

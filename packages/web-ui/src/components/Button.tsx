@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
-import type { Palette } from "@/theme";
-import ThemedText, { type TextTone } from "@/components/ui/ThemedText";
-import Icon, { type IconName } from "@/components/ui/Icon";
-import Pressable from "@/components/ui/Pressable";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import type { Palette } from "../theme";
+import ThemedText, { type TextTone } from "./ThemedText";
+import Icon, { type IconName } from "./Icon";
+import Pressable from "./Pressable";
+import View from "./View";
 
 type ButtonProps = {
   label: string;

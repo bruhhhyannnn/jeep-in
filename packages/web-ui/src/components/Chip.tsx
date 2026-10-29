@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import ThemedText, { type TextTone } from "@/components/ui/ThemedText";
-import View from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import ThemedText, { type TextTone } from "./ThemedText";
+import View from "./View";
 
 export type ChipTone =
   "live" | "pending" | "stale" | "error" | "selected" | "neutral" | "fresh" | "onInverse";

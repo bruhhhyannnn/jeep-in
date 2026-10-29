@@ -38,7 +38,7 @@ import {
   IoThumbsUpOutline,
   IoTimeOutline,
 } from "react-icons/io5";
-import { useTheme, type Palette } from "@/theme";
+import { useTheme, type Palette } from "../theme";
 
 /**
  * Ionicons by the names the native app uses with @expo/vector-icons. Only the

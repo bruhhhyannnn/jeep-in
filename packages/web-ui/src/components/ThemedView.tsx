@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import View, { type ViewProps } from "@/components/ui/View";
+import { cn } from "../lib/utils";
+import View, { type ViewProps } from "./View";
 
 interface ThemedViewProps extends ViewProps {
   /** page: every screen background · card: cards and sheets · sunken: inputs and tracks */

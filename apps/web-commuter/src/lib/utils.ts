@@ -1,4 +1,1 @@
-// Combine classNames (handles conditional merging)
-export function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+export { cn } from "@jeep-in/web-ui";

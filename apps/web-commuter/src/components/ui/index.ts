@@ -1,22 +1,2 @@
-export { default as View } from "@/components/ui/View";
-export { default as Pressable } from "@/components/ui/Pressable";
-export { default as SafeAreaContainer } from "@/components/ui/SafeAreaContainer";
-export { default as ThemedView } from "@/components/ui/ThemedView";
-export { default as ThemedText } from "@/components/ui/ThemedText";
-export { default as Button } from "@/components/ui/Button";
-export { default as IconButton } from "@/components/ui/IconButton";
-export { default as Icon } from "@/components/ui/Icon";
-export { default as Card } from "@/components/ui/Card";
-export { default as Chip } from "@/components/ui/Chip";
-export { default as Segmented } from "@/components/ui/Segmented";
-export { default as RadioCard } from "@/components/ui/RadioCard";
-export { default as Toggle } from "@/components/ui/Toggle";
-export { default as TextField } from "@/components/ui/TextField";
-export { default as Sheet } from "@/components/ui/Sheet";
-export { default as BottomSheetModalBase } from "@/components/ui/BottomSheetModalBase";
-export { default as Spinner } from "@/components/ui/Spinner";
-
-export type { TextTone } from "@/components/ui/ThemedText";
-export type { ChipTone } from "@/components/ui/Chip";
-export type { IconName } from "@/components/ui/Icon";
-export type { ViewProps } from "@/components/ui/View";
+// The UI kit is shared with the driver app (packages/web-ui).
+export * from "@jeep-in/web-ui";

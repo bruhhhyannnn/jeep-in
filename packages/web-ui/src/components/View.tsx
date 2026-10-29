@@ -1,6 +1,6 @@
 import type { HTMLAttributes, Ref } from "react";
-import { splitA11y, type AccessibilityProps } from "@/lib/a11y";
-import { cn } from "@/lib/utils";
+import { splitA11y, type AccessibilityProps } from "../lib/a11y";
+import { cn } from "../lib/utils";
 
 export interface ViewProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "role">, AccessibilityProps {
