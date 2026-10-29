@@ -8,10 +8,11 @@ Live jeepney tracking for Ilocos Norte: commuters see jeeps, stops and fares; dr
 | ---------------------- | -------------------------- | ------------------------------------------------------ | --------------------- |
 | `apps/mobile-commuter` | `@jeep-in/mobile-commuter` | Commuter app (Android / iOS)                           | Expo 54, React Native |
 | `apps/web-commuter`    | `@jeep-in/web-commuter`    | Commuter app as an installable web app (PWA)           | Vite, React           |
+| `apps/web-driver`      | `@jeep-in/web-driver`      | Driver app as an installable web app (PWA)             | Vite, React           |
 | `apps/admin`           | `@jeep-in/admin`           | Admin and super admin dashboard (UI changes with role) | Next.js 16            |
 | `apps/landing`         | `@jeep-in/landing`         | Public landing page                                    | Next.js 16            |
 
-Planned: `apps/mobile-driver` (driver app) and `apps/web-driver` (driver PWA for testing).
+Planned: `apps/mobile-driver`. The native driver screens still live in `apps/mobile-commuter` (`app/driver`), behind its sign-in.
 
 ## Packages
 
@@ -47,6 +48,7 @@ Node 22.13 or later, npm 11.
 ```bash
 npm install          # once, at the repo root — installs every app
 npm run dev -w @jeep-in/web-commuter
+npm run dev -w @jeep-in/web-driver     # port 5174, next to the commuter app's 5173
 npm run dev -w @jeep-in/admin
 npm run start -w @jeep-in/mobile-commuter   # Expo
 ```
@@ -57,6 +59,7 @@ Each app keeps its own env file (never committed); see its `.env.example` / `.en
 | ----------------- | ----------------------------------------------------------------------- |
 | `mobile-commuter` | `apps/mobile-commuter/.env.local` (`EXPO_PUBLIC_*`)                     |
 | `web-commuter`    | `apps/web-commuter/.env.local` (`VITE_*`)                               |
+| `web-driver`      | `apps/web-driver/.env.local` (`VITE_FIREBASE_*`, as in web-commuter)    |
 | `admin`           | `apps/admin/.env.local` and `apps/admin/scripts/serviceAccountKey.json` |
 | `landing`         | none yet                                                                |
 
