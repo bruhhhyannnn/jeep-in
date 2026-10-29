@@ -38,14 +38,14 @@ The `.env.local` values are the native app's `EXPO_PUBLIC_*` values under `VITE_
 Folders and file names follow the native app, so a change in one is easy to find in the other.
 
 - `app/` holds the screens at the same paths as the native expo-router files (`app/(map)/(commuter)/home/index.tsx`, …). `app/routes.tsx` wires them into React Router; URLs match expo-router's (`/home`, `/stops`, `/jeepney/:id`, `/settings`, …).
-- `src/api`, `src/lib`, `src/hooks`, `src/store`, `src/types`, `src/constants`, `src/theme`, `src/components/{commuter,map,ui,settings,onboarding}` hold the same modules. `src/lib` is copied unchanged.
+- `src/api`, `src/lib`, `src/hooks`, `src/store`, `src/types`, `src/constants`, `src/theme`, `src/components/{commuter,map,ui,settings,onboarding}` hold the same modules. `src/lib` is copied unchanged. `src/components/ui` and `src/theme` re-export `@jeep-in/web-ui` (`packages/web-ui`), the UI kit this app shares with the web driver app.
 
-Web-only pieces:
+Web-only pieces (the ones marked web-ui live in `packages/web-ui/src`):
 
-- `src/components/ui/View.tsx` and `Pressable.tsx`: React Native's View / Pressable (layout defaults, accessibility props mapped to ARIA), so ported markup reads the same.
+- web-ui `components/View.tsx` and `Pressable.tsx`: React Native's View / Pressable (layout defaults, accessibility props mapped to ARIA), so ported markup reads the same.
 - `src/lib/router.ts`: expo-router's `router.push / replace / back`, `usePathname`, `useLocalSearchParams`.
-- `src/theme/document.ts`: applies Appearance (`dark` class on `<html>`, browser theme colour) and Text size (`--text-scale`).
-- `src/components/ui/Sheet.tsx`: the map sheets (snap points, pinned footer; the map stays pannable).
+- web-ui `theme/document.ts`: applies Appearance (`dark` class on `<html>`, browser theme colour) and Text size (`--text-scale`).
+- web-ui `components/Sheet.tsx`: the map sheets (snap points, pinned footer; the map stays pannable).
 - `src/sw.ts`: the service worker. `src/store/install.ts`: the install prompt.
 
 ## Development helpers
