@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+import { OUT_OF_SERVICE } from "@jeep-in/core/fleet";
 import { STRINGS } from "@/constants";
 import { notifyNow } from "@/services/notifications/local";
-import { ALERT_MINUTES, useAlerts, usePreferences } from "@/store";
+import { ALERT_MINUTES, useAlerts, useFleetStore, usePreferences } from "@/store";
 import { useTransit } from "@/hooks/useTransit";
 import { useArrivals, useFleet } from "@/hooks/useFleet";
 
@@ -24,6 +25,12 @@ export function useCommuterWatchers() {
   );
   const { jeeps } = useFleet(transit);
   const missingSince = useRef<number | null>(null);
+  // The operator took the followed jeep off the road from the dashboard.
+  const followedOut = useFleetStore((s) =>
+    following
+      ? s.jeepneys.some((j) => j.id === following.jeepneyId && j.status === OUT_OF_SERVICE)
+      : false,
+  );
 
   const t = STRINGS.commuter.alerts;
 
@@ -37,6 +44,15 @@ export function useCommuterWatchers() {
       push({ kind: "arrival", title, body, jeepneyId: following.jeepneyId });
       if (usePreferences.getState().arrivalAlerts) notifyNow(title, body).catch(() => {});
     };
+
+    // Say why straight away, rather than waiting for it to count as lost.
+    if (followedOut) {
+      const title = t.outTitle(following.unit);
+      push({ kind: "lost", title, body: t.outBody, jeepneyId: following.jeepneyId });
+      if (usePreferences.getState().arrivalAlerts) notifyNow(title, t.outBody).catch(() => {});
+      unfollow();
+      return;
+    }
 
     const arrival = arrivals.find((a) => a.jeep.id === following.jeepneyId);
     const usable = arrival && arrival.state !== "stale" && arrival.state !== "offroute";
@@ -73,7 +89,7 @@ export function useCommuterWatchers() {
       );
       unfollow();
     }
-  }, [arrivals, following, offline, lastServerAt, t]);
+  }, [arrivals, following, followedOut, offline, lastServerAt, t]);
 
   useEffect(() => {
     if (!liveWatch) return;

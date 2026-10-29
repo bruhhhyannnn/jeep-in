@@ -283,6 +283,8 @@ export const commuterStrings = {
         `It went past ${stop} before the alert time. Pick another jeep.`,
       lostTitle: (unit: string) => `${unit} stopped sharing`,
       lostBody: "Its position stopped updating, so the alert was cleared.",
+      outTitle: (unit: string) => `${unit} is out of service`,
+      outBody: "Its operator took it off the road, so the alert was cleared. Pick another jeep.",
       liveTitle: (direction: string) => `A jeep is live ${inSentence(direction)}`,
       liveBody: (unit: string) =>
         `${unit} just started sharing. Open the map to see how far it is.`,

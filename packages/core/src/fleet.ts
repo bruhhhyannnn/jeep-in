@@ -8,6 +8,12 @@ import type {
 } from "./model";
 import { angleBetween, measureOnPath, segmentBearing } from "./geo";
 
+/**
+ * Set from the dashboard ("Tell commuters this jeep is out") when a unit can't run:
+ * commuters stop seeing it even if its driver's phone is still sharing.
+ */
+export const OUT_OF_SERVICE: JeepneyStatus = "Out of service";
+
 /** A position older than this is shown as "last seen" and gets no arrival time. */
 export const STALE_AFTER_MS = 2 * 60 * 1000;
 /** Further than this from the route, a jeep is treated as off route. */
@@ -65,7 +71,10 @@ function inferDirection(
   return directionMemory.get(jeepId) ?? null;
 }
 
-/** Joins jeepneys with their drivers' shared positions. Only jeeps that are sharing appear. */
+/**
+ * Joins jeepneys with their drivers' shared positions. Only jeeps that are sharing
+ * appear, and none the dashboard has marked out of service.
+ */
 export function buildLiveJeeps(
   jeepneys: Jeepney[],
   locations: DriverLocation[],
@@ -76,6 +85,7 @@ export function buildLiveJeeps(
   const byDriver = new Map(locations.map((l) => [l.driverId, l]));
 
   return jeepneys.flatMap((j) => {
+    if (j.status === OUT_OF_SERVICE) return [];
     const location = j.assignedDriverId ? byDriver.get(j.assignedDriverId) : undefined;
     if (!location?.isSharing || (location.lat === 0 && location.long === 0)) return [];
 
