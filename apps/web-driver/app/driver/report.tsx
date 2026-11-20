@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatClock } from "@jeep-in/core/format";
 import { ROUTES, STRINGS } from "@/constants";
-import { sendDriverReport, withdrawDriverReport } from "@/api";
+import { sendDriverReport, subscribeToReportSeen, withdrawDriverReport } from "@/api";
 import { useSafeAreaInsets } from "@/hooks";
 import { router } from "@/lib/router";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,40 @@ const REASONS: { reason: ReportReason; icon: IconName }[] = [
   { reason: "other", icon: "ellipsis-horizontal" },
 ];
 
-type Sent = { id: string; reason: ReportReason; at: number; withdrawn: boolean };
+type Sent = {
+  id: string;
+  reason: ReportReason;
+  at: number;
+  withdrawn: boolean;
+  deliveredAt: number | null;
+  seenAt: number | null;
+};
+
+const shortClock = (ms: number) => formatClock(ms).replace(/\s?[AP]M$/, "");
+
+/** One step of Queued → Delivered → Seen: green once it happened, dashed until then. */
+function Stage({ label, at }: { label: string; at: number | null }) {
+  const done = at != null;
+  return (
+    <View
+      className={cn(
+        "flex-1 items-center gap-0.5 rounded-tile border-[1.5px] px-2 py-2.5",
+        done ? "border-live bg-live-tint" : "border-dashed border-line-strong",
+      )}
+    >
+      <ThemedText variant="label" className={done ? "text-live-ink" : undefined}>
+        {label}
+      </ThemedText>
+      <ThemedText
+        variant="dataSm"
+        tone={done ? undefined : "muted"}
+        className={done ? "text-live-ink" : undefined}
+      >
+        {done ? shortClock(at) : STRINGS.driver.report.notYet}
+      </ThemedText>
+    </View>
+  );
+}
 
 /** Five fixed reasons, one tap each. Locked while the jeep moves. */
 export default function ReportTab() {
@@ -47,7 +80,7 @@ export default function ReportTab() {
 
   const send = () => {
     if (!uid || !jeepney || !reason) return;
-    const id = sendDriverReport({
+    const { id, delivered } = sendDriverReport({
       driverId: uid,
       jeepneyId: jeepney.id,
       unit: jeepney.jeepneyNumber || jeepney.plateNumber,
@@ -57,10 +90,23 @@ export default function ReportTab() {
       long: position?.[0] ?? null,
       directionId,
     });
-    setSent({ id, reason, at: Date.now(), withdrawn: false });
+    setSent({ id, reason, at: Date.now(), withdrawn: false, deliveredAt: null, seenAt: null });
     setReason(null);
     setNote("");
+    // Resolves once the server has the report; with no signal that's later, by itself.
+    delivered
+      .then(() => setSent((s) => (s?.id === id ? { ...s, deliveredAt: Date.now() } : s)))
+      .catch(() => {});
   };
+
+  // Seen can only follow Delivered (see subscribeToReportSeen).
+  const seenWatchId = sent?.deliveredAt != null ? sent.id : null;
+  useEffect(() => {
+    if (!seenWatchId) return;
+    return subscribeToReportSeen(seenWatchId, (seenAt) =>
+      setSent((s) => (s?.id === seenWatchId ? { ...s, seenAt } : s)),
+    );
+  }, [seenWatchId]);
 
   if (sent) {
     return (
@@ -75,12 +121,17 @@ export default function ReportTab() {
               <Icon name="checkmark" size={44} tone="actionInk" />
             </View>
             <View className="items-center gap-1">
-              <ThemedText variant="title" accessibilityRole="header">
-                {t.sentTitle}
+              <ThemedText variant="title" accessibilityRole="header" className="text-center">
+                {sent.deliveredAt ? t.sentTitle : t.queuedTitle}
               </ThemedText>
               <ThemedText variant="small" tone="muted">
                 {t.sentMeta(t.reasons[sent.reason].title, formatClock(sent.at))}
               </ThemedText>
+            </View>
+            <View className="w-full flex-row gap-2">
+              <Stage label={t.stages.queued} at={sent.at} />
+              <Stage label={t.stages.delivered} at={sent.deliveredAt} />
+              <Stage label={t.stages.seen} at={sent.seenAt} />
             </View>
             <Card className="w-full gap-2.5 p-4">
               <ThemedText variant="eyebrow" tone="muted">
