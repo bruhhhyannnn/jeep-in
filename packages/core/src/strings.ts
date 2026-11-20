@@ -491,7 +491,7 @@ export const driverAppStrings = {
       droppedTitle: (place: string) => `Commuters still see you at ${place}`,
       droppedTitleNoPlace: "Commuters still see your last position",
       droppedBody: (min: number) =>
-        `Your position hasn't reached the server for ${min} minutes. It sends by itself when signal returns.`,
+        `Your position hasn't reached the server for ${min} minutes. Nothing is lost — it sends when signal returns.`,
       retry: "Retry now",
       gotIt: "Got it",
 
@@ -573,7 +573,7 @@ export const driverAppStrings = {
 
     report: {
       title: "What's wrong?",
-      subtitle: "Tap one. Your manager gets it straight away.",
+      subtitle: "Choose a problem, add a note if needed, then tap Send to manager.",
       reasons: reportReasons,
       noteLabel: "Anything to add? (not required)",
       notePlaceholder: "Type a short note",
