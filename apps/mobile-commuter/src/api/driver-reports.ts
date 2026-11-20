@@ -2,7 +2,7 @@ import type { DriverReport } from "@/types";
 import { db } from "@/services/firebase/config";
 import { collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 
-export type NewDriverReport = Omit<DriverReport, "id" | "status" | "createdAt">;
+export type NewDriverReport = Omit<DriverReport, "id" | "status" | "createdAt" | "seenAt">;
 
 /**
  * Writes a report and returns its id straight away. Firestore queues the write

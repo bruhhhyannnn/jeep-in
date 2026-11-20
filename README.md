@@ -68,7 +68,7 @@ Each app keeps its own env file (never committed); see its `.env.example` / `.en
 `firestore.rules` is the one copy of the database's security rules. Check it in the Firestore emulator (needs firebase-tools and Java), then deploy from `apps/admin`:
 
 ```bash
-npm run test:rules                                    # 42 reads and writes the apps make, or must be refused
+npm run test:rules                                    # 47 reads and writes the apps make, or must be refused
 npx tsx scripts/deploy-firestore-rules.ts             # dry run: shows the live rules and the change
 npx tsx scripts/deploy-firestore-rules.ts --deploy    # puts firestore.rules live
 ```

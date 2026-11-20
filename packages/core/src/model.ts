@@ -104,6 +104,8 @@ export interface DriverReport {
   /** "withdrawn" after "Take it back". */
   status: "sent" | "withdrawn";
   createdAt: number | null;
+  /** When a manager first opened it on the dashboard; the driver app shows it as Seen. */
+  seenAt: number | null;
 }
 
 export interface DriverLocation {

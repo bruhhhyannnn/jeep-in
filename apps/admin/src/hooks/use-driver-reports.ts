@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getDriverReports } from "@/actions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getDriverReports, markDriverReportSeen } from "@/actions";
 
 /** Checks for new reports every 30 seconds while the page is open. */
 export function useDriverReports(organizationId: string) {
@@ -8,5 +8,14 @@ export function useDriverReports(organizationId: string) {
     queryFn: () => getDriverReports(organizationId),
     enabled: !!organizationId,
     refetchInterval: 30_000,
+  });
+}
+
+/** Tells the driver their report was seen (see markDriverReportSeen). */
+export function useMarkDriverReportSeen() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => markDriverReportSeen(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["driver-reports"] }),
   });
 }

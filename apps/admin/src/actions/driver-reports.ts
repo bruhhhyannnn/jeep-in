@@ -1,5 +1,6 @@
 "use server";
 
+import { FieldValue } from "firebase-admin/firestore";
 import { normalizeDriverReport } from "@jeep-in/core/documents";
 import type { DriverReport } from "@jeep-in/core/model";
 import { assertOrg, requireCaller } from "@/lib/caller";
@@ -33,4 +34,24 @@ export async function getDriverReports(organizationId: string): Promise<DriverRe
     .flatMap((snap) => snap.docs.map((d) => normalizeDriverReport(d.id, d.data())))
     .filter((r) => r.status === "sent")
     .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+}
+
+/**
+ * Stamps when a manager first opened a report. The driver app shows it as Seen.
+ * Reopening it later keeps the first time.
+ */
+export async function markDriverReportSeen(id: string): Promise<void> {
+  const caller = await requireCaller();
+  const ref = adminDb.collection(COL).doc(id);
+  await adminDb.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) throw new Error("This report no longer exists.");
+    const report = snap.data()!;
+    if (caller.role === "admin") {
+      const unit = await tx.get(adminDb.collection("jeepneys").doc(String(report.jeepneyId)));
+      assertOrg(caller, unit.data()?.organizationId);
+    }
+    if (report.seenAt) return;
+    tx.update(ref, { seenAt: FieldValue.serverTimestamp() });
+  });
 }

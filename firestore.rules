@@ -70,6 +70,8 @@ service cloud.firestore {
 
     // ── Reports from the driver app's Report tab: send one, or take it back.
     match /driver_reports/{id} {
+      // A driver reads their own report, to see when a manager opened it (seenAt).
+      allow get: if isDriver() && resource.data.driverId == request.auth.uid;
       allow create: if isDriver()
         && request.resource.data.driverId == request.auth.uid
         && request.resource.data.status == 'sent'

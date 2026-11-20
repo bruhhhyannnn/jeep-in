@@ -143,10 +143,12 @@ describe("normalizeDriverReport", () => {
       directionId: "laoag_paoay",
       status: "sent",
       createdAt: { toMillis: () => 1_700_000 },
+      seenAt: { toMillis: () => 1_760_000 },
     });
     assert.equal(report.reason, "road_blocked");
     assert.equal(report.note, "Flood at Quiling Sur");
     assert.equal(report.createdAt, 1_700_000);
+    assert.equal(report.seenAt, 1_760_000);
     assert.equal(report.status, "sent");
   });
 
@@ -156,5 +158,6 @@ describe("normalizeDriverReport", () => {
     assert.equal(report.status, "withdrawn");
     assert.equal(report.lat, null);
     assert.equal(report.createdAt, null);
+    assert.equal(report.seenAt, null);
   });
 });

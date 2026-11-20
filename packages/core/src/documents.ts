@@ -178,4 +178,5 @@ export const normalizeDriverReport = (id: string, d: RawDoc): DriverReport => ({
   directionId: optionalStr(d.directionId),
   status: d.status === "withdrawn" ? "withdrawn" : "sent",
   createdAt: toMillis(d.createdAt),
+  seenAt: toMillis(d.seenAt),
 });

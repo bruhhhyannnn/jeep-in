@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EyeOff, MapPinOff, Phone, UserRoundPlus } from "lucide-react";
 import { OUT_OF_SERVICE } from "@jeep-in/core/fleet";
@@ -38,6 +38,7 @@ import {
   useDriverReports,
   useDrivers,
   useJeepneys,
+  useMarkDriverReportSeen,
   useNow,
   useOrgScope,
   useOrganization,
@@ -220,6 +221,13 @@ export default function AlertsPage() {
       ),
     },
   ];
+
+  // Opening a report tells the driver it was seen (Seen on their Report screen).
+  const { mutate: markSeen } = useMarkDriverReportSeen();
+  const openUnseen = reports.find((r) => r.id === openId && r.seenAt == null)?.id ?? null;
+  useEffect(() => {
+    if (openUnseen) markSeen(openUnseen);
+  }, [openUnseen, markSeen]);
 
   if (error) return <PageError message={error.message} />;
 
