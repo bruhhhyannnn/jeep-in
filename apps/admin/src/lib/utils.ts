@@ -45,6 +45,10 @@ export function serializeDoc<T extends Record<string, unknown>>(doc: T): T {
   return result as T;
 }
 
+/** A stop with a real position. Core reads a missing one as 0, 0, which is off the map. */
+export const hasLocation = (p: { lat: number; long: number }) =>
+  Number.isFinite(p.lat) && Number.isFinite(p.long) && !(p.lat === 0 && p.long === 0);
+
 /** "laoag_paoay" → "Laoag → Paoay" */
 export function formatDirection(dir: string): string {
   return dir
