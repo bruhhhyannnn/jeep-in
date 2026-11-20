@@ -6,7 +6,7 @@ import { router } from "@/lib/router";
 import { loginWithEmailPassword, logout } from "@/services/firebase/auth";
 import { layout } from "@/theme";
 import { Button, Pressable, TextField, ThemedText, ThemedView, View } from "@/components/ui";
-import logoJeepIn from "@/assets/images/logo-jeep-in.png";
+import jeepInIcon from "@/assets/images/jeepin-icon.png";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -88,9 +88,9 @@ export default function LoginScreen() {
         >
           <View className="gap-2 pt-4">
             <img
-              src={logoJeepIn}
+              src={jeepInIcon}
               alt={STRINGS.general.appName}
-              className="h-14 w-36 object-contain object-left"
+              className="h-14 w-[35px] self-start object-contain"
             />
             <ThemedText variant="title" accessibilityRole="header" className="mt-2">
               {t.title}
