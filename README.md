@@ -73,6 +73,20 @@ npx tsx scripts/deploy-firestore-rules.ts             # dry run: shows the live 
 npx tsx scripts/deploy-firestore-rules.ts --deploy    # puts firestore.rules live
 ```
 
+## Deploying
+
+Each Vercel project points at this repo with its app's folder as the **Root Directory**. Vercel installs the whole workspace from the root `package-lock.json`. Turn on each project's option to skip deployments when nothing in its Root Directory or its dependencies changed, so a push to one app doesn't rebuild the others.
+
+| App               | Host             | Root Directory / command                                                                               | Environment variables                                                                               |
+| ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `admin`           | Vercel           | `apps/admin`                                                                                           | `NEXT_PUBLIC_FIREBASE_*`, `FIREBASE_ADMIN_*`, and `MAPBOX_PUBLIC_KEY` so Simulate follows the roads |
+| `web-driver`      | Vercel           | `apps/web-driver` (`vercel.json` there)                                                                | `VITE_FIREBASE_*`                                                                                   |
+| `landing`         | Vercel           | `apps/landing`                                                                                         | none (`NEXT_PUBLIC_SITE_URL` optional)                                                              |
+| `web-commuter`    | Firebase Hosting | `npm run build -w @jeep-in/web-commuter`, then `firebase deploy --only hosting` in `apps/web-commuter` | `VITE_*` in `apps/web-commuter/.env.local` at build time                                            |
+| `mobile-commuter` | EAS              | `eas build` in `apps/mobile-commuter`                                                                  | `EXPO_PUBLIC_*`                                                                                     |
+
+To move a live Vercel project over from its old standalone repo (`jeep-in-admin`, `jeep-in-driver`, `jeep-in-landing`): Settings → Git → connect this repo, set the Root Directory above and the production branch, keep the environment variables, then redeploy.
+
 ## Checks
 
 Turborepo runs the same task in every app that has it:
